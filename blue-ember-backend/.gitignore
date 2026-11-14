@@ -1,0 +1,9 @@
+## .NET
+bin/
+obj/
+out/
+*.user
+*.suo
+.vs/
+*.swp
+appsettings.*.local.json
