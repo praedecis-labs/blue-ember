@@ -1,0 +1,82 @@
+/* Blue Ember — design tokens
+   Base: paleta e tipografia do site do NASA Space Apps Challenge.
+   Regra do MVP: sem bordas nem contornos. Separação por cor de fundo e espaço. */
+
+/* Fonte: carregar a Fira Sans no index.html (ver LEIA-ME.md). */
+
+:root {
+  /* Marca (Space Apps) */
+  --color-navy: #1B2B85;
+  --color-blue: #0050D8;
+  --color-sky: #2491FF;
+  --color-yellow: #E7F434;
+  --color-ink: #151622;
+
+  /* Texto */
+  --color-text: #1B1B1B;
+  --color-text-sub: #4A4D5E;
+  --color-text-muted: #8A8D9B;
+  --color-text-on-dark: #FFFFFF;
+  --color-text-on-dark-sub: #DADCE6;
+
+  /* Superfícies */
+  --color-bg: #F1F2F6;
+  --color-surface: #FFFFFF;
+  --color-field: #ECEEF4;
+  --color-surface-dark: #2A2C3D;   /* chips sobre o card de IA */
+  --color-info-bg: #E6EEFC;        /* "Entendi assim" */
+  --color-missing-bg: #FBFDD6;     /* campo que a IA não encontrou */
+
+  /* Categorias do desafio */
+  --cat-prevencao-bg: #FFE7DA;  --cat-prevencao-fg: #B23E00;
+  --cat-deteccao-bg: #DDEBFF;   --cat-deteccao-fg: #0050D8;
+  --cat-supressao-bg: #E2E5F4;  --cat-supressao-fg: #1B2B85;
+
+  /* Força da evidência */
+  --ev-strong-bg: #C8F7C5;   --ev-strong-fg: #10500C;
+  --ev-moderate-bg: #E7F434; --ev-moderate-fg: #151622;
+  --ev-weak-bg: #FFD6CC;     --ev-weak-fg: #8B0A03;
+  --ev-unknown-bg: #ECEEF4;  --ev-unknown-fg: #4A4D5E;
+
+  /* Lacunas ("o que falta testar") */
+  --gap-bg: #FFF0E6;
+  --gap-fg: #B23E00;
+
+  /* Tipografia */
+  --font-body: 'Fira Sans', system-ui, sans-serif;
+  --font-display: 'Fira Sans', system-ui, sans-serif;
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-md: 15px;
+  --text-lg: 18px;
+  --text-xl: 22px;
+  --text-2xl: 32px;
+  --text-hero: clamp(40px, 7vw, 72px);
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Espaço (base 4) */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px; --space-12: 48px;
+
+  /* Raios */
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  /* Foco: única linha permitida, por acessibilidade */
+  --focus-ring: 2px solid var(--color-blue);
+
+  /* Compatibilidade com as variáveis que já existem no index.css do time */
+  --bg-deep: var(--color-bg);
+  --bg-mid: var(--color-surface);
+  --ink: var(--color-text);
+  --ink-muted: var(--color-text-muted);
+  --ember: var(--color-yellow);
+  --ember-soft: var(--color-sky);
+  --cyan: var(--color-blue);
+  --line: transparent;
+}
