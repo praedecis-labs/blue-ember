@@ -7,7 +7,7 @@
 
 ## Prioridade alta
 
-- [ ] **Contrato FE estável**
+- [x] **Contrato FE estável**
   - Revisar DTOs de `ranking`, detalhe, `compare`, `gaps` e `export` no Swagger
   - Alinhar nomes (`criteria`, `category`, pesos) com o que o frontend vai tipar
   - Documentar query params obrigatórios/opcionais por rota

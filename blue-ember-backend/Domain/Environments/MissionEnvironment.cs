@@ -9,6 +9,13 @@ public enum MissionEnvironment
 
 public sealed record EnvironmentTargets(double TargetO2Percent, double TargetPressureKpa, double TargetFlowCms);
 
+public sealed record EnvironmentInfo(
+    string Id,
+    string Label,
+    double TargetO2Percent,
+    double TargetPressureKpa,
+    double TargetFlowCms);
+
 public static class MissionEnvironmentCatalog
 {
     public static EnvironmentTargets Targets(MissionEnvironment env) => env switch
@@ -18,24 +25,22 @@ public static class MissionEnvironmentCatalog
         _ => new(21.0, 101.3, 10.0)
     };
 
-    public static IReadOnlyList<object> List() =>
+    public static IReadOnlyList<EnvironmentInfo> List() =>
     [
         Describe(MissionEnvironment.Iss, "ISS / estação"),
         Describe(MissionEnvironment.Moon, "Base lunar"),
         Describe(MissionEnvironment.Mars, "Base marciana")
     ];
 
-    private static object Describe(MissionEnvironment env, string label)
+    private static EnvironmentInfo Describe(MissionEnvironment env, string label)
     {
         var t = Targets(env);
-        return new
-        {
-            id = env.ToString(),
+        return new(
+            env.ToString(),
             label,
-            targetO2Percent = t.TargetO2Percent,
-            targetPressureKpa = t.TargetPressureKpa,
-            targetFlowCms = t.TargetFlowCms
-        };
+            t.TargetO2Percent,
+            t.TargetPressureKpa,
+            t.TargetFlowCms);
     }
 
     public static bool TryParse(string? value, out MissionEnvironment environment)

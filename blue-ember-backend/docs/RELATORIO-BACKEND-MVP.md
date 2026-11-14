@@ -71,13 +71,15 @@ blue-ember-backend/
 │       ├── IInvestigationRepository.cs
 │       └── JsonInvestigationStore.cs
 └── Features/
-    ├── Health/                         # já existia
+    ├── Contracts/                      # DTOs tipados (Swagger / FE)
+    ├── Health/
     ├── Investigations/
     ├── Ranking/
     ├── Gaps/
     ├── Export/
     └── Nasa/
 ```
+
 
 ---
 
@@ -134,33 +136,58 @@ Lista: `GET /api/environments`.
 S = w1·C1 + w2·C2 + w3·C3 + w4·C4 + w5·C5   → escala ~0–10 na API
 ```
 
-| Critério | Significado | Campos |
-| --- | --- | --- |
-| C1 | Proximidade operacional vs ambiente | `o2_range`, `pressure_kpa`, `flow_speed_cms` |
-| C2 | Margem MOC (`O2_amb − moc`) | `moc_percent` |
-| C3 | Cinética de propagação | `flame_spread_rate_mms` |
-| C4 | Severidade térmica | `hrr_kw` |
-| C5 | Toxicidade (CO) | `co_ppm` |
+JSON estável (camelCase) — tipar estes nomes no FE:
 
-Categorias: `prevencao` / `deteccao` / `supressao` / `outro` (via acronym/sub_discipline).
+| Critério | Campo em `criteria` | Campos da investigação |
+| --- | --- | --- |
+| C1 | `c1Proximidade` | `o2Range`, `pressureKpa`, `flowSpeedCms` |
+| C2 | `c2MargemMoc` | `mocPercent` |
+| C3 | `c3Cinetica` | `flameSpreadRateMms` |
+| C4 | `c4SeveridadeTermica` | `hrrKw` |
+| C5 | `c5Toxicidade` | `coPpm` |
+
+Pesos: `weights.w1`…`w5`. Score total: `score` (0–10).  
+Categorias: `prevencao` / `deteccao` / `supressao` / `outro`.
+
+**CSV do export:** colunas curtas `c1`…`c5` mapeiam para os mesmos critérios (`c1` ↔ `c1Proximidade`, …).
 
 ---
 
 ## 9. Contratos HTTP entregues
+
+DTOs tipados em `Features/Contracts/` + schemas no Swagger (Dev). Erros de contrato: `{ error, missing? }`.
 
 | Método | Rota | Função |
 | --- | --- | --- |
 | GET | `/api/health` | Status do serviço |
 | GET | `/api/profiles` | Perfis mock + pesos |
 | GET | `/api/environments` | Ambientes + alvos |
-| GET | `/api/investigations` | Lista (default fire-safety; `featured=false` = tudo) |
+| GET | `/api/investigations` | Lista summary (default fire-safety; `featured=false` = tudo) |
 | GET | `/api/investigations/{id}` | Ficha completa + URL PSI / DOI |
-| GET | `/api/investigations/compare?ids=` | Compara 2–3 fichas |
-| GET | `/api/ranking?profile=&environment=` | Ranking C1–C5 (default fire-safety) |
+| GET | `/api/investigations/compare` | Compara 2–3 fichas |
+| GET | `/api/ranking` | Ranking + `criteria` C1–C5 (default fire-safety) |
 | GET | `/api/ranking/fire-safety` | Atalho explícito do ranking featured |
-| GET | `/api/gaps?environment=` | Grade O2×P + aviso gravidade parcial |
-| GET | `/api/export?format=json\|csv` | Export do ranking (mesmo default featured) |
+| GET | `/api/gaps` | Grade O2×P + aviso gravidade parcial |
+| GET | `/api/export` | Export JSON (criteria nomeados) ou CSV (mesmo default featured) |
 | POST | `/api/nasa/refresh` | Sync GEODE → memória (+ disk em Dev) |
+
+### Query params (obrigatório / opcional / default)
+
+| Rota | Params |
+| --- | --- |
+| `GET /api/investigations` | **Opcional:** `q`, `category`, `featured` (default `true`; `false` = catálogo completo), `o2Min`, `o2Max`, `pressureMin`, `pressureMax` |
+| `GET /api/investigations/{id}` | **Path obrigatório:** `id` |
+| `GET /api/investigations/compare` | **Obrigatório:** `ids` (2 ou 3 IDs separados por vírgula) |
+| `GET /api/ranking` | **Opcional:** `profile` (default `Student`), `environment` (default `Moon`), `category`, `featured` (default `true`), `w1`…`w5` |
+| `GET /api/ranking/fire-safety` | Mesmos params do ranking, sempre featured |
+| `GET /api/gaps` | **Opcional:** `environment` (default `Moon`); sempre filtra featured fire-safety |
+| `GET /api/export` | **Opcional:** `format` (default `json`; `csv` → download), `profile` (default `Student`), `environment` (default `Moon`), `category`, `featured` (default `true`; sem override `w*`) |
+
+### Shapes JSON principais
+
+- **Ranking / export JSON:** `profile`, `environment`, `featured`, `weights`, `count`, `items[]` — item de ranking: `rank`, `score`, `criteria`, `investigation` (summary); item de export: `id`, `acronym`, `title`, `category`, `score`, `criteria`, `nasaPsiUrl`, `doi`
+- **Lista:** `{ featured, count, items }` (summary); **compare:** `{ count, items }` (detail)
+- **Gaps:** `environment`, `targets` (`o2Percent`, `pressureKpa`, `flowCms`), `partialGravityWarning`, `nearTargetInvestigationIds`, `coverageCells[]`, `featuredCount`
 
 ---
 
