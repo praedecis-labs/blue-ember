@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Text;
 using BlueEmber.Api.Domain.Environments;
+using BlueEmber.Api.Domain.Investigations;
 using BlueEmber.Api.Domain.Profiles;
 using BlueEmber.Api.Domain.Scoring;
 using BlueEmber.Api.Infrastructure.Data;
@@ -26,8 +27,9 @@ public static class ExportEndpoints
                 return Results.BadRequest(new { error = "Invalid environment." });
 
             var weights = ScoreWeights.For(userProfile);
+            var featuredOnly = FeaturedFilter.RestrictToFireSafety(featured);
             IEnumerable<Domain.Investigations.Investigation> query = repo.GetAll();
-            if (featured is true)
+            if (featuredOnly)
                 query = query.Where(i => i.IsFeaturedFireSafety);
             if (!string.IsNullOrWhiteSpace(category))
                 query = query.Where(i => i.Category.Equals(category, StringComparison.OrdinalIgnoreCase));
@@ -67,6 +69,7 @@ public static class ExportEndpoints
             {
                 profile = userProfile.ToString(),
                 environment = missionEnv.ToString(),
+                featured = featuredOnly,
                 count = rows.Count,
                 items = rows
             });

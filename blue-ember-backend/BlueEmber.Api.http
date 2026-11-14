@@ -15,12 +15,27 @@ Accept: application/json
 
 ###
 
-GET {{BlueEmber.Api_HostAddress}}/api/investigations?featured=true
+GET {{BlueEmber.Api_HostAddress}}/api/investigations
 Accept: application/json
 
 ###
 
-GET {{BlueEmber.Api_HostAddress}}/api/ranking?profile=ShipEngineer&environment=Moon&featured=true
+GET {{BlueEmber.Api_HostAddress}}/api/investigations?featured=false
+Accept: application/json
+
+###
+
+GET {{BlueEmber.Api_HostAddress}}/api/ranking?profile=ShipEngineer&environment=Moon
+Accept: application/json
+
+###
+
+GET {{BlueEmber.Api_HostAddress}}/api/ranking/fire-safety?profile=ShipEngineer&environment=Moon
+Accept: application/json
+
+###
+
+GET {{BlueEmber.Api_HostAddress}}/api/ranking?profile=Student&environment=Iss&featured=false
 Accept: application/json
 
 ###
@@ -30,7 +45,7 @@ Accept: application/json
 
 ###
 
-GET {{BlueEmber.Api_HostAddress}}/api/export?format=csv&profile=Student&environment=Iss&featured=true
+GET {{BlueEmber.Api_HostAddress}}/api/export?format=csv&profile=Student&environment=Iss
 
 ###
 

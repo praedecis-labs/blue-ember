@@ -1,3 +1,4 @@
+using BlueEmber.Api.Domain.Investigations;
 using BlueEmber.Api.Infrastructure.Data;
 
 namespace BlueEmber.Api.Features.Investigations;
@@ -18,6 +19,7 @@ public static class InvestigationEndpoints
             double? pressureMin,
             double? pressureMax) =>
         {
+            var featuredOnly = FeaturedFilter.RestrictToFireSafety(featured);
             IEnumerable<Domain.Investigations.Investigation> query = repo.GetAll();
 
             if (!string.IsNullOrWhiteSpace(q))
@@ -33,7 +35,7 @@ public static class InvestigationEndpoints
             if (!string.IsNullOrWhiteSpace(category))
                 query = query.Where(i => i.Category.Equals(category, StringComparison.OrdinalIgnoreCase));
 
-            if (featured is true)
+            if (featuredOnly)
                 query = query.Where(i => i.IsFeaturedFireSafety);
 
             if (o2Min is not null)
@@ -46,7 +48,7 @@ public static class InvestigationEndpoints
                 query = query.Where(i => i.PressureKpa.Count == 0 || i.PressureKpa.Min() <= pressureMax);
 
             var items = query.Select(InvestigationDtos.ToSummary).ToList();
-            return Results.Ok(new { count = items.Count, items });
+            return Results.Ok(new { featured = featuredOnly, count = items.Count, items });
         })
         .WithName("ListInvestigations")
         .WithOpenApi();

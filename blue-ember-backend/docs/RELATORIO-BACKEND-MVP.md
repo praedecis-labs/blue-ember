@@ -153,12 +153,13 @@ Categorias: `prevencao` / `deteccao` / `supressao` / `outro` (via acronym/sub_di
 | GET | `/api/health` | Status do serviço |
 | GET | `/api/profiles` | Perfis mock + pesos |
 | GET | `/api/environments` | Ambientes + alvos |
-| GET | `/api/investigations` | Lista com filtros (`q`, `category`, `featured`, O2, pressão) |
+| GET | `/api/investigations` | Lista (default fire-safety; `featured=false` = tudo) |
 | GET | `/api/investigations/{id}` | Ficha completa + URL PSI / DOI |
 | GET | `/api/investigations/compare?ids=` | Compara 2–3 fichas |
-| GET | `/api/ranking?profile=&environment=` | Ranking + breakdown C1–C5 |
+| GET | `/api/ranking?profile=&environment=` | Ranking C1–C5 (default fire-safety) |
+| GET | `/api/ranking/fire-safety` | Atalho explícito do ranking featured |
 | GET | `/api/gaps?environment=` | Grade O2×P + aviso gravidade parcial |
-| GET | `/api/export?format=json\|csv` | Export do ranking |
+| GET | `/api/export?format=json\|csv` | Export do ranking (mesmo default featured) |
 | POST | `/api/nasa/refresh` | Sync GEODE → memória (+ disk em Dev) |
 
 ---
@@ -171,8 +172,8 @@ Executado contra `http://localhost:5006`:
 | --- | --- |
 | Health | `{ status: "ok", service: "BlueEmber.Api" }` |
 | Profiles | 3 perfis com pesos corretos |
-| Investigations `featured=true` | **19** fichas |
-| Ranking Moon + ShipEngineer | Top: SAFFIRE-II (PSI-99), SAFFIRE-III, SAFFIRE-I |
+| Investigations (sem `featured`) | **19** fichas (default fire-safety) |
+| Ranking Moon + ShipEngineer (sem `featured`) | Top: SAFFIRE-II (PSI-99), SAFFIRE-III, SAFFIRE-I |
 | Compare | 2 itens OK |
 | Gaps Moon | 19 featured + warning de gravidade parcial |
 | Export CSV | HTTP 200 |

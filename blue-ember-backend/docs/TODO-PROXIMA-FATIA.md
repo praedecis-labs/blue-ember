@@ -12,10 +12,11 @@
   - Alinhar nomes (`criteria`, `category`, pesos) com o que o frontend vai tipar
   - Documentar query params obrigatórios/opcionais por rota
 
-- [ ] **Seed / filtro fire-safety default**
-  - Facilitar o consumo das ~19 investigações featured (desafio)
-  - Opções: default `featured=true` no ranking **ou** rota dedicada (ex. `/api/ranking/fire-safety`)
-  - Evitar que o FE precise “adivinhar” o filtro
+- [x] **Seed / filtro fire-safety default**
+  - Default: omitir `featured` = só fire-safety (~19); `featured=false` = catálogo completo
+  - Rota dedicada: `GET /api/ranking/fire-safety` (sempre featured)
+  - Resposta inclui `featured: true|false` para o FE não adivinhar
+  - Aplicado em ranking, investigations e export
 
 - [ ] **Testes automatizados do score**
   - Cobrir 3–5 casos fixos (ex.: SAFFIRE-II Moon/ShipEngineer, SAME, FLEX)
