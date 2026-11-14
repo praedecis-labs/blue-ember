@@ -18,7 +18,7 @@
   - Resposta inclui `featured: true|false` para o FE não adivinhar
   - Aplicado em ranking, investigations e export
 
-- [ ] **Testes automatizados do score**
+- [x] **Testes automatizados do score**
   - Cobrir 3–5 casos fixos (ex.: SAFFIRE-II Moon/ShipEngineer, SAME, FLEX)
   - Garantir que mudanças em C1–C5 não passem silenciosas
   - Rodar no CI local (`dotnet test`) antes do commit de feature

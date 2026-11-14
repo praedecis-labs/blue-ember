@@ -11,4 +11,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="BlueEmber.Api.Tests/**" />
+    <Content Remove="BlueEmber.Api.Tests/**" />
+    <None Remove="BlueEmber.Api.Tests/**" />
+    <EmbeddedResource Remove="BlueEmber.Api.Tests/**" />
+  </ItemGroup>
+
 </Project>
