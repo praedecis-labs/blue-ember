@@ -1,3 +1,5 @@
+using BlueEmber.Api.Features.Health;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
@@ -5,7 +7,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
             .AllowAnyMethod());
 });
@@ -21,8 +23,6 @@ if (app.Environment.IsDevelopment())
 app.UseCors();
 app.UseHttpsRedirection();
 
-app.MapGet("/api/health", () => Results.Ok(new { status = "ok", service = "BlueEmber.Api" }))
-    .WithName("Health")
-    .WithOpenApi();
+app.MapHealthEndpoints();
 
 app.Run();
