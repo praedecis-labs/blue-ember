@@ -2,24 +2,26 @@
 
 NASA Space Apps 2026 — Flame in Freefall.
 
-## Estrutura
+## Estrutura (monorepo)
 
-| Pasta | Stack |
+| Pasta | Papel |
 | --- | --- |
-| `blue-ember-frontend/` | React + TypeScript + Vite (organização por layers) |
+| `blue-ember-frontend/` | React + TypeScript + Vite (app canônico) |
 | `blue-ember-backend/` | ASP.NET Core 8 Minimal API (Vertical Slice) |
-| `MVP.md` | Escopo e dados do MVP |
+| `blue-ember-backend/data/` | Cache NASA PSI (JSON) |
+| `blue-ember-backend/scripts/` | Utilitários de ingestão/teste (Python/Node) |
+| `blue-ember-backend/docs/` | Relatórios e documentação do backend |
 
 ### Backend — Vertical Slice
 
 | Pasta | Papel |
 | --- | --- |
-| `Features/Health/` | Endpoint + DTO da feature |
+| `Features/<Nome>/` | Endpoints da feature (Health, Investigations, Ranking, Gaps, Export, Nasa) |
+| `Domain/` | Score, perfis mock, ambientes, categorias |
+| `Infrastructure/` | Cliente GEODE + store JSON |
 | `Program.cs` | Composition root (DI, middleware, `Map*Endpoints`) |
 
-Novas capacidades entram como `Features/<Nome>/` (ex.: `Investigations`, `Ranking`).
-
-### Frontend (`src/`) — layers
+### Frontend (`blue-ember-frontend/src/`) — layers
 
 | Pasta | Papel |
 | --- | --- |
@@ -35,12 +37,7 @@ Novas capacidades entram como `Features/<Nome>/` (ex.: `Investigations`, `Rankin
 ## Pré-requisitos
 
 - Node.js 20+
-- .NET SDK 8 (`~/.dotnet` se instalado via script oficial)
-
-```bash
-export DOTNET_ROOT="$HOME/.dotnet"
-export PATH="$HOME/.dotnet:$PATH"
-```
+- .NET SDK 8
 
 ## Rodar
 
@@ -48,11 +45,16 @@ export PATH="$HOME/.dotnet:$PATH"
 
 ```bash
 cd blue-ember-backend
-dotnet run
+dotnet run --launch-profile http
 ```
 
-- Swagger (dev): HTTPS da API + `/swagger`
-- Health: `GET /api/health`
+- API: http://localhost:5006  
+- Swagger (dev): http://localhost:5006/swagger  
+- Health: `GET /api/health`  
+- Investigations: `GET /api/investigations`, `GET /api/investigations/{id}`, `GET /api/investigations/compare?ids=`  
+- Ranking: `GET /api/ranking?profile=ShipEngineer&environment=Moon`  
+- Profiles / Environments / Gaps / Export: `/api/profiles`, `/api/environments`, `/api/gaps`, `/api/export`  
+- NASA refresh: `POST /api/nasa/refresh`
 
 ### Frontend
 
@@ -63,4 +65,5 @@ npm run dev
 ```
 
 - App: http://localhost:3000  
-- CORS liberado para essa origem no backend
+- CORS liberado para essa origem no backend  
+- Proxy Vite: `/api` → `http://localhost:5006`
