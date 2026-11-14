@@ -1,20 +1,12 @@
-:root {
-  --bg-deep: #070d14;
-  --bg-mid: #0f1a26;
-  --ink: #e8eef4;
-  --ink-muted: #8b9aab;
-  --ember: #e85d04;
-  --ember-soft: #ff8c42;
-  --cyan: #3d8bfd;
-  --line: rgba(232, 238, 244, 0.12);
-  --font-display: 'Syne', sans-serif;
-  --font-body: 'Figtree', sans-serif;
+@import './styles/tokens.css';
+@import './styles/components.css';
 
+:root {
   font-family: var(--font-body);
-  font-size: 16px;
+  font-size: var(--text-md);
   line-height: 1.5;
-  color: var(--ink);
-  background: var(--bg-deep);
+  color: var(--color-text);
+  background: var(--color-bg);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -36,7 +28,18 @@ body {
 }
 
 a {
-  color: inherit;
+  color: var(--color-blue);
+  text-decoration: none;
+  font-weight: var(--weight-medium);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: reduce) {
