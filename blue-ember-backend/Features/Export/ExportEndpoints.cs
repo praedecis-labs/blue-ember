@@ -3,7 +3,9 @@ using System.Text;
 using BlueEmber.Api.Domain.Environments;
 using BlueEmber.Api.Domain.Profiles;
 using BlueEmber.Api.Domain.Scoring;
+using BlueEmber.Api.Features.Contracts;
 using BlueEmber.Api.Infrastructure.Data;
+using Microsoft.OpenApi.Models;
 
 namespace BlueEmber.Api.Features.Export;
 
@@ -21,9 +23,9 @@ public static class ExportEndpoints
             bool? featured) =>
         {
             if (!UserProfileCatalog.TryParse(profile, out var userProfile))
-                return Results.BadRequest(new { error = "Invalid profile." });
+                return Results.BadRequest(new ErrorResponse("Invalid profile."));
             if (!MissionEnvironmentCatalog.TryParse(environment, out var missionEnv))
-                return Results.BadRequest(new { error = "Invalid environment." });
+                return Results.BadRequest(new ErrorResponse("Invalid environment."));
 
             var weights = ScoreWeights.For(userProfile);
             IEnumerable<Domain.Investigations.Investigation> query = repo.GetAll();
@@ -32,21 +34,17 @@ public static class ExportEndpoints
             if (!string.IsNullOrWhiteSpace(category))
                 query = query.Where(i => i.Category.Equals(category, StringComparison.OrdinalIgnoreCase));
 
-            var rows = query
+            var items = query
                 .Select(inv =>
                 {
                     var b = calculator.Calculate(inv, missionEnv, weights);
-                    return new ExportRow(
+                    return new ExportItemDto(
                         inv.Id,
                         inv.Acronym,
                         inv.Title,
                         inv.Category,
                         b.Total,
-                        b.C1Proximidade,
-                        b.C2MargemMoc,
-                        b.C3Cinetica,
-                        b.C4SeveridadeTermica,
-                        b.C5Toxicidade,
+                        ScoreCriteriaDto.From(b),
                         inv.NasaPsiUrl,
                         inv.Doi);
                 })
@@ -56,45 +54,42 @@ public static class ExportEndpoints
             var fmt = (format ?? "json").Trim().ToLowerInvariant();
             if (fmt == "csv")
             {
-                var csv = ToCsv(rows);
+                var csv = ToCsv(items);
                 return Results.File(
                     Encoding.UTF8.GetBytes(csv),
                     "text/csv",
                     $"blue-ember-ranking-{userProfile}-{missionEnv}.csv");
             }
 
-            return Results.Ok(new
-            {
-                profile = userProfile.ToString(),
-                environment = missionEnv.ToString(),
-                count = rows.Count,
-                items = rows
-            });
+            return Results.Ok(new ExportResponse(
+                userProfile.ToString(),
+                missionEnv.ToString(),
+                ScoreWeightsDto.From(weights),
+                items.Count,
+                items));
         })
         .WithName("ExportRanking")
         .WithTags("Export")
-        .WithOpenApi();
+        .Produces<ExportResponse>(StatusCodes.Status200OK)
+        .Produces<ErrorResponse>(StatusCodes.Status400BadRequest)
+        .WithOpenApi(op =>
+        {
+            op.Summary = "Exporta ranking em JSON (criteria nomeados) ou CSV (colunas c1–c5).";
+            DescribeQuery(op, "format", "Opcional. Default: json. Valores: json | csv.");
+            DescribeQuery(op, "profile", "Opcional. Default: Student. Valores: Student, Researcher, ShipEngineer.");
+            DescribeQuery(op, "environment", "Opcional. Default: Moon. Valores: Iss, Moon, Mars.");
+            DescribeQuery(op, "category", "Opcional. prevencao | deteccao | supressao | outro.");
+            DescribeQuery(op, "featured", "Opcional. Se true, só featured fire-safety.");
+            return op;
+        });
 
         return app;
     }
 
-    private sealed record ExportRow(
-        string Id,
-        string Acronym,
-        string Title,
-        string Category,
-        double Score,
-        double C1,
-        double C2,
-        double C3,
-        double C4,
-        double C5,
-        string NasaPsiUrl,
-        string Doi);
-
-    private static string ToCsv(IReadOnlyList<ExportRow> rows)
+    private static string ToCsv(IReadOnlyList<ExportItemDto> rows)
     {
         var sb = new StringBuilder();
+        // CSV keeps short headers; JSON uses criteria.c1Proximidade… (see RELATORIO)
         sb.AppendLine("id,acronym,title,category,score,c1,c2,c3,c4,c5,nasa_psi_url,doi");
         foreach (var r in rows)
         {
@@ -103,11 +98,11 @@ public static class ExportEndpoints
                 .Append(Escape(r.Title)).Append(',')
                 .Append(Escape(r.Category)).Append(',')
                 .Append(r.Score.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(r.C1.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(r.C2.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(r.C3.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(r.C4.ToString(CultureInfo.InvariantCulture)).Append(',')
-                .Append(r.C5.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(r.Criteria.C1Proximidade.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(r.Criteria.C2MargemMoc.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(r.Criteria.C3Cinetica.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(r.Criteria.C4SeveridadeTermica.ToString(CultureInfo.InvariantCulture)).Append(',')
+                .Append(r.Criteria.C5Toxicidade.ToString(CultureInfo.InvariantCulture)).Append(',')
                 .Append(Escape(r.NasaPsiUrl)).Append(',')
                 .Append(Escape(r.Doi))
                 .AppendLine();
@@ -120,5 +115,12 @@ public static class ExportEndpoints
         if (value.Contains('"') || value.Contains(',') || value.Contains('\n'))
             return $"\"{value.Replace("\"", "\"\"")}\"";
         return value;
+    }
+
+    private static void DescribeQuery(OpenApiOperation op, string name, string description)
+    {
+        var param = op.Parameters?.FirstOrDefault(p => p.Name == name);
+        if (param is not null)
+            param.Description = description;
     }
 }

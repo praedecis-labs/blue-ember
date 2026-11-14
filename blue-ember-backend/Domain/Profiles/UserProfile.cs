@@ -24,13 +24,15 @@ public sealed record ScoreWeights(double W1, double W2, double W3, double W4, do
     }
 }
 
+public sealed record ProfileInfo(string Id, string Label, ScoreWeights Weights);
+
 public static class UserProfileCatalog
 {
-    public static IReadOnlyList<object> List() =>
+    public static IReadOnlyList<ProfileInfo> List() =>
     [
-        new { id = "Student", label = "Estudante", weights = ScoreWeights.For(UserProfile.Student) },
-        new { id = "Researcher", label = "Pesquisador", weights = ScoreWeights.For(UserProfile.Researcher) },
-        new { id = "ShipEngineer", label = "Engenheiro de nave", weights = ScoreWeights.For(UserProfile.ShipEngineer) }
+        new("Student", "Estudante", ScoreWeights.For(UserProfile.Student)),
+        new("Researcher", "Pesquisador", ScoreWeights.For(UserProfile.Researcher)),
+        new("ShipEngineer", "Engenheiro de nave", ScoreWeights.For(UserProfile.ShipEngineer))
     ];
 
     public static bool TryParse(string? value, out UserProfile profile)

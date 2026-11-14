@@ -1,8 +1,10 @@
 using BlueEmber.Api.Domain.Environments;
 using BlueEmber.Api.Domain.Profiles;
 using BlueEmber.Api.Domain.Scoring;
+using BlueEmber.Api.Features.Contracts;
 using BlueEmber.Api.Features.Investigations;
 using BlueEmber.Api.Infrastructure.Data;
+using Microsoft.OpenApi.Models;
 
 namespace BlueEmber.Api.Features.Ranking;
 
@@ -10,15 +12,38 @@ public static class RankingEndpoints
 {
     public static IEndpointRouteBuilder MapRankingEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/api/profiles", () => Results.Ok(new { items = UserProfileCatalog.List() }))
+        app.MapGet("/api/profiles", () =>
+            {
+                var items = UserProfileCatalog.List()
+                    .Select(p => new ProfileDto(p.Id, p.Label, ScoreWeightsDto.From(p.Weights)))
+                    .ToList();
+                return Results.Ok(new ProfileListResponse(items));
+            })
             .WithName("ListProfiles")
             .WithTags("Profiles")
-            .WithOpenApi();
+            .Produces<ProfileListResponse>(StatusCodes.Status200OK)
+            .WithOpenApi(op =>
+            {
+                op.Summary = "Lista perfis mock e pesos padrão (w1–w5).";
+                return op;
+            });
 
-        app.MapGet("/api/environments", () => Results.Ok(new { items = MissionEnvironmentCatalog.List() }))
+        app.MapGet("/api/environments", () =>
+            {
+                var items = MissionEnvironmentCatalog.List()
+                    .Select(e => new EnvironmentDto(
+                        e.Id, e.Label, e.TargetO2Percent, e.TargetPressureKpa, e.TargetFlowCms))
+                    .ToList();
+                return Results.Ok(new EnvironmentListResponse(items));
+            })
             .WithName("ListEnvironments")
             .WithTags("Environments")
-            .WithOpenApi();
+            .Produces<EnvironmentListResponse>(StatusCodes.Status200OK)
+            .WithOpenApi(op =>
+            {
+                op.Summary = "Lista ambientes de missão e alvos de O2 / pressão / fluxo.";
+                return op;
+            });
 
         app.MapGet("/api/ranking", (
             IInvestigationRepository repo,
@@ -34,10 +59,12 @@ public static class RankingEndpoints
             double? w5) =>
         {
             if (!UserProfileCatalog.TryParse(profile, out var userProfile))
-                return Results.BadRequest(new { error = "Invalid profile. Use Student, Researcher, or ShipEngineer." });
+                return Results.BadRequest(new ErrorResponse(
+                    "Invalid profile. Use Student, Researcher, or ShipEngineer."));
 
             if (!MissionEnvironmentCatalog.TryParse(environment, out var missionEnv))
-                return Results.BadRequest(new { error = "Invalid environment. Use Iss, Moon, or Mars." });
+                return Results.BadRequest(new ErrorResponse(
+                    "Invalid environment. Use Iss, Moon, or Mars."));
 
             var weights = ScoreWeights.TryFromOverrides(w1, w2, w3, w4, w5)
                           ?? ScoreWeights.For(userProfile);
@@ -52,43 +79,52 @@ public static class RankingEndpoints
                 .Select(inv =>
                 {
                     var breakdown = calculator.Calculate(inv, missionEnv, weights);
-                    return new
-                    {
-                        score = breakdown.Total,
-                        criteria = new
-                        {
-                            c1Proximidade = breakdown.C1Proximidade,
-                            c2MargemMoc = breakdown.C2MargemMoc,
-                            c3Cinetica = breakdown.C3Cinetica,
-                            c4SeveridadeTermica = breakdown.C4SeveridadeTermica,
-                            c5Toxicidade = breakdown.C5Toxicidade
-                        },
-                        investigation = InvestigationDtos.ToSummary(inv)
-                    };
+                    return (
+                        Score: breakdown.Total,
+                        Criteria: ScoreCriteriaDto.From(breakdown),
+                        Investigation: InvestigationDtos.ToSummary(inv));
                 })
-                .OrderByDescending(x => x.score)
-                .Select((x, index) => new
-                {
-                    rank = index + 1,
-                    x.score,
-                    x.criteria,
-                    x.investigation
-                })
+                .OrderByDescending(x => x.Score)
+                .Select((x, index) => new RankingItemDto(
+                    index + 1,
+                    x.Score,
+                    x.Criteria,
+                    x.Investigation))
                 .ToList();
 
-            return Results.Ok(new
-            {
-                profile = userProfile.ToString(),
-                environment = missionEnv.ToString(),
-                weights = new { w1 = weights.W1, w2 = weights.W2, w3 = weights.W3, w4 = weights.W4, w5 = weights.W5 },
-                count = ranked.Count,
-                items = ranked
-            });
+            return Results.Ok(new RankingResponse(
+                userProfile.ToString(),
+                missionEnv.ToString(),
+                ScoreWeightsDto.From(weights),
+                ranked.Count,
+                ranked));
         })
         .WithName("GetRanking")
         .WithTags("Ranking")
-        .WithOpenApi();
+        .Produces<RankingResponse>(StatusCodes.Status200OK)
+        .Produces<ErrorResponse>(StatusCodes.Status400BadRequest)
+        .WithOpenApi(op =>
+        {
+            op.Summary = "Ranking ponderado C1–C5 por perfil e ambiente.";
+            DescribeQuery(op, "profile", "Opcional. Default: Student. Valores: Student, Researcher, ShipEngineer.");
+            DescribeQuery(op, "environment", "Opcional. Default: Moon. Valores: Iss, Moon, Mars.");
+            DescribeQuery(op, "category", "Opcional. Filtro: prevencao | deteccao | supressao | outro.");
+            DescribeQuery(op, "featured", "Opcional. Se true, só investigações featured fire-safety.");
+            DescribeQuery(op, "w1", "Opcional. Override do peso C1 (se qualquer w* for enviado, slots omitidos = 0.2).");
+            DescribeQuery(op, "w2", "Opcional. Override do peso C2.");
+            DescribeQuery(op, "w3", "Opcional. Override do peso C3.");
+            DescribeQuery(op, "w4", "Opcional. Override do peso C4.");
+            DescribeQuery(op, "w5", "Opcional. Override do peso C5.");
+            return op;
+        });
 
         return app;
+    }
+
+    private static void DescribeQuery(OpenApiOperation op, string name, string description)
+    {
+        var param = op.Parameters?.FirstOrDefault(p => p.Name == name);
+        if (param is not null)
+            param.Description = description;
     }
 }

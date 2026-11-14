@@ -15,21 +15,43 @@ Accept: application/json
 
 ###
 
+# Lista — filtros opcionais: q, category, featured, o2Min, o2Max, pressureMin, pressureMax
 GET {{BlueEmber.Api_HostAddress}}/api/investigations?featured=true
 Accept: application/json
 
 ###
 
+# Detalhe — path id obrigatório
+GET {{BlueEmber.Api_HostAddress}}/api/investigations/PSI-99
+Accept: application/json
+
+###
+
+# Compare — ids obrigatório (2 ou 3)
+GET {{BlueEmber.Api_HostAddress}}/api/investigations/compare?ids=PSI-99,PSI-100
+Accept: application/json
+
+###
+
+# Ranking — profile default Student, environment default Moon; opcionais: category, featured, w1–w5
 GET {{BlueEmber.Api_HostAddress}}/api/ranking?profile=ShipEngineer&environment=Moon&featured=true
 Accept: application/json
 
 ###
 
+# Gaps — environment default Moon; sempre featured fire-safety
 GET {{BlueEmber.Api_HostAddress}}/api/gaps?environment=Moon
 Accept: application/json
 
 ###
 
+# Export JSON — criteria nomeados (c1Proximidade…) + weights
+GET {{BlueEmber.Api_HostAddress}}/api/export?format=json&profile=ShipEngineer&environment=Moon&featured=true
+Accept: application/json
+
+###
+
+# Export CSV — colunas curtas c1–c5
 GET {{BlueEmber.Api_HostAddress}}/api/export?format=csv&profile=Student&environment=Iss&featured=true
 
 ###

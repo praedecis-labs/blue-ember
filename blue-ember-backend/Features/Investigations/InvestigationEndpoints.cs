@@ -1,4 +1,6 @@
+using BlueEmber.Api.Features.Contracts;
 using BlueEmber.Api.Infrastructure.Data;
+using Microsoft.OpenApi.Models;
 
 namespace BlueEmber.Api.Features.Investigations;
 
@@ -46,10 +48,22 @@ public static class InvestigationEndpoints
                 query = query.Where(i => i.PressureKpa.Count == 0 || i.PressureKpa.Min() <= pressureMax);
 
             var items = query.Select(InvestigationDtos.ToSummary).ToList();
-            return Results.Ok(new { count = items.Count, items });
+            return Results.Ok(new InvestigationListResponse(items.Count, items));
         })
         .WithName("ListInvestigations")
-        .WithOpenApi();
+        .Produces<InvestigationListResponse>(StatusCodes.Status200OK)
+        .WithOpenApi(op =>
+        {
+            op.Summary = "Lista investigações (summary) com filtros opcionais.";
+            DescribeQuery(op, "q", "Opcional. Busca em id, acronym, title, objectives.");
+            DescribeQuery(op, "category", "Opcional. prevencao | deteccao | supressao | outro.");
+            DescribeQuery(op, "featured", "Opcional. Se true, só featured fire-safety.");
+            DescribeQuery(op, "o2Min", "Opcional. Filtro mínimo de O2 (%).");
+            DescribeQuery(op, "o2Max", "Opcional. Filtro máximo de O2 (%).");
+            DescribeQuery(op, "pressureMin", "Opcional. Filtro mínimo de pressão (kPa).");
+            DescribeQuery(op, "pressureMax", "Opcional. Filtro máximo de pressão (kPa).");
+            return op;
+        });
 
         group.MapGet("/compare", (IInvestigationRepository repo, string ids) =>
         {
@@ -58,35 +72,58 @@ public static class InvestigationEndpoints
                 .ToList();
 
             if (idList.Count is < 2 or > 3)
-                return Results.BadRequest(new { error = "Provide 2 or 3 investigation ids via ?ids=PSI-a,PSI-b" });
+                return Results.BadRequest(new ErrorResponse(
+                    "Provide 2 or 3 investigation ids via ?ids=PSI-a,PSI-b"));
 
             var found = idList
                 .Select(id => repo.GetById(id))
                 .Where(x => x is not null)
-                .Select(x => InvestigationDtos.ToDto(x!))
+                .Select(x => InvestigationDtos.ToDetail(x!))
                 .ToList();
 
             if (found.Count != idList.Count)
             {
                 var missing = idList.Where(id => repo.GetById(id) is null).ToList();
-                return Results.NotFound(new { error = "Some investigations were not found", missing });
+                return Results.NotFound(new ErrorResponse(
+                    "Some investigations were not found", missing));
             }
 
-            return Results.Ok(new { count = found.Count, items = found });
+            return Results.Ok(new CompareResponse(found.Count, found));
         })
         .WithName("CompareInvestigations")
-        .WithOpenApi();
+        .Produces<CompareResponse>(StatusCodes.Status200OK)
+        .Produces<ErrorResponse>(StatusCodes.Status400BadRequest)
+        .Produces<ErrorResponse>(StatusCodes.Status404NotFound)
+        .WithOpenApi(op =>
+        {
+            op.Summary = "Compara 2 ou 3 fichas completas.";
+            DescribeQuery(op, "ids", "Obrigatório. IDs separados por vírgula (2 ou 3), ex.: PSI-99,PSI-100.");
+            return op;
+        });
 
         group.MapGet("/{id}", (IInvestigationRepository repo, string id) =>
         {
             var inv = repo.GetById(id);
             return inv is null
-                ? Results.NotFound(new { error = $"Investigation '{id}' not found" })
-                : Results.Ok(InvestigationDtos.ToDto(inv));
+                ? Results.NotFound(new ErrorResponse($"Investigation '{id}' not found"))
+                : Results.Ok(InvestigationDtos.ToDetail(inv));
         })
         .WithName("GetInvestigation")
-        .WithOpenApi();
+        .Produces<InvestigationDetailDto>(StatusCodes.Status200OK)
+        .Produces<ErrorResponse>(StatusCodes.Status404NotFound)
+        .WithOpenApi(op =>
+        {
+            op.Summary = "Ficha completa de uma investigação.";
+            return op;
+        });
 
         return app;
+    }
+
+    private static void DescribeQuery(OpenApiOperation op, string name, string description)
+    {
+        var param = op.Parameters?.FirstOrDefault(p => p.Name == name);
+        if (param is not null)
+            param.Description = description;
     }
 }
