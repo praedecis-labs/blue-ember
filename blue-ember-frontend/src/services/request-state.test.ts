@@ -17,7 +17,7 @@ describe('messageFromUnknown', () => {
           missing: ['profile', 'environment'],
         }),
       ),
-    ).toBe('Invalid query. (faltando: profile, environment)')
+    ).toBe('Invalid query. (missing: profile, environment)')
   })
 
   it('falls back for generic Error', () => {
