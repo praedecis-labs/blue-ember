@@ -6,9 +6,14 @@ using Microsoft.Extensions.Options;
 namespace BlueEmber.Api.Features.Agent;
 
 /// <summary>
+<<<<<<< HEAD:blue-ember-backend/Features/Agent/NvidiaAgentProvider.cs
 /// Provider NVIDIA NIM (API compatível com OpenAI chat.completions).
 /// Endpoint: https://integrate.api.nvidia.com/v1
 /// Modelo default: nvidia/nemotron-3.5-super-vl-120b-a12b.
+=======
+/// Provider Groq (API compatível com OpenAI chat.completions).
+/// Modelo default: openai/gpt-oss-20b.
+>>>>>>> origin/main:blue-ember-backend/Features/Agent/GroqAgentProvider.cs
 /// </summary>
 public sealed class NvidiaAgentProvider(
     IHttpClientFactory httpClientFactory,
@@ -40,8 +45,13 @@ public sealed class NvidiaAgentProvider(
         var tools = scope.ServiceProvider.GetRequiredService<AgentTools>();
 
         var messages = BuildMessages(request);
+<<<<<<< HEAD:blue-ember-backend/Features/Agent/NvidiaAgentProvider.cs
         var client = httpClientFactory.CreateClient("nvidia");
         var model = string.IsNullOrWhiteSpace(opts.Model) ? "nvidia/nemotron-3.5-super-vl-120b-a12b" : opts.Model;
+=======
+        var client = httpClientFactory.CreateClient("groq");
+        var model = string.IsNullOrWhiteSpace(opts.Model) ? "openai/gpt-oss-20b" : opts.Model;
+>>>>>>> origin/main:blue-ember-backend/Features/Agent/GroqAgentProvider.cs
         var url = $"{opts.BaseUrl.TrimEnd('/')}/chat/completions";
 
         var toolSpecs = JsonSerializer.SerializeToNode(
@@ -91,13 +101,43 @@ public sealed class NvidiaAgentProvider(
             if (apiError is not null)
             {
                 var msg = apiError["message"]?.GetValue<string>()
+<<<<<<< HEAD:blue-ember-backend/Features/Agent/NvidiaAgentProvider.cs
                           ?? "NVIDIA API error";
+=======
+                          ?? "Groq API error";
+                // Malformed tool JSON / transient provider errors mid-loop: keep tools already run.
+                if (round > 0 && IsRecoverableProviderError(msg, (int)httpResponse.StatusCode))
+                {
+                    logger.LogWarning(
+                        "Groq recoverable error on round {Round}; finalizing with tools so far: {Msg}",
+                        round,
+                        msg);
+                    break;
+                }
+
+>>>>>>> origin/main:blue-ember-backend/Features/Agent/GroqAgentProvider.cs
                 throw new InvalidOperationException(msg);
             }
 
             if (!httpResponse.IsSuccessStatusCode)
+<<<<<<< HEAD:blue-ember-backend/Features/Agent/NvidiaAgentProvider.cs
                 throw new InvalidOperationException(
                     $"NVIDIA HTTP {(int)httpResponse.StatusCode}: {Trim(body, 400)}");
+=======
+            {
+                var msg = $"Groq HTTP {(int)httpResponse.StatusCode}: {Trim(body, 400)}";
+                if (round > 0 && IsRecoverableProviderError(msg, (int)httpResponse.StatusCode))
+                {
+                    logger.LogWarning(
+                        "Groq HTTP recoverable on round {Round}; finalizing with tools so far: {Msg}",
+                        round,
+                        msg);
+                    break;
+                }
+
+                throw new InvalidOperationException(msg);
+            }
+>>>>>>> origin/main:blue-ember-backend/Features/Agent/GroqAgentProvider.cs
 
             var message = root?["choices"]?[0]?["message"] as JsonObject;
             if (message is null)
@@ -135,7 +175,17 @@ public sealed class NvidiaAgentProvider(
                     }
                 }
 
-                var result = await tools.ExecuteAsync(name, args);
+                object result;
+                try
+                {
+                    result = await tools.ExecuteAsync(name, args);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogWarning(ex, "Tool {Tool} failed; returning error to model", name);
+                    result = new { error = ex.Message };
+                }
+
                 var resultJson = JsonSerializer.Serialize(
                     new Dictionary<string, object?> { ["result"] = result }, JsonOpts);
 
@@ -149,6 +199,15 @@ public sealed class NvidiaAgentProvider(
         }
 
         return await AgentCompletion.FinalizeAsync(request, tools, finalText, ct);
+    }
+
+    private static bool IsRecoverableProviderError(string message, int statusCode)
+    {
+        if (statusCode is 429 or 500 or 502 or 503)
+            return true;
+        return message.Contains("tool call", StringComparison.OrdinalIgnoreCase)
+               || message.Contains("rate limit", StringComparison.OrdinalIgnoreCase)
+               || message.Contains("arguments as JSON", StringComparison.OrdinalIgnoreCase);
     }
 
     private static JsonArray BuildMessages(AgentAskRequest request)

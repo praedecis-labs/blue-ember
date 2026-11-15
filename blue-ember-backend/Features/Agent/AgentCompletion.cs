@@ -26,7 +26,7 @@ public static class AgentCompletion
 
                 Dados:
                 - Use as ferramentas para ranking, lacunas e fichas NASA PSI.
-                - Use ask_jev quando precisar de julgamentos atômicos com probabilidade calibrada (ex.: proximidade de atmosfera, margem de MOC, cinética de chama, severidade térmica, toxicidade) em vez de score determinístico.
+                - ask_jev é opcional; se falhar ou não estiver disponível, continue só com ranking/gaps/PSI.
                 - Cite só o que as tools retornaram; não invente IDs, DOI, scores ou resultados.
 
                 Dashboards:
@@ -52,7 +52,7 @@ public static class AgentCompletion
 
             Data:
             - Use the tools for ranking, gaps, and NASA PSI investigation records.
-            - Use ask_jev when you need atomic judgments with calibrated probability (e.g. atmosphere proximity, MOC margin, flame kinetics, thermal severity, toxicity) instead of deterministic score.
+            - ask_jev is optional; if it fails or is unavailable, continue with ranking/gaps/PSI only.
             - Cite only what the tools returned; do not invent IDs, DOIs, scores, or results.
 
             Dashboards:
@@ -125,16 +125,6 @@ public static class AgentCompletion
         string? finalText,
         CancellationToken ct)
     {
-        if (string.IsNullOrWhiteSpace(finalText))
-        {
-            finalText =
-                DashboardComposer.IsPortuguese(request.Locale)
-                    ? "Consultei as ferramentas disponíveis, mas não consegui fechar uma resposta em prosa. " +
-                      "Tente reformular a hipótese com ambiente e material."
-                    : "I used the available tools but could not finish a prose answer. " +
-                      "Try rephrasing the hypothesis with environment and material.";
-        }
-
         var dashboard = tools.LastDashboard;
         if (dashboard is null && DashboardComposer.LooksLikeDashboardRequest(request.Message))
         {
@@ -160,6 +150,35 @@ public static class AgentCompletion
             dashboard = DashboardComposer.DefaultInterpretive(
                 tools.LastRanking?.Environment ?? request.Environment,
                 request.Locale);
+        }
+
+        if (string.IsNullOrWhiteSpace(finalText))
+        {
+            var pt = DashboardComposer.IsPortuguese(request.Locale);
+            if (dashboard is not null)
+            {
+                finalText = pt
+                    ? "Montei o painel com o ranking e as lacunas disponíveis. " +
+                      "A leitura e as legendas estão no dashboard abaixo."
+                    : "I built the panel from the available ranking and gaps. " +
+                      "The reading and legends are in the dashboard below.";
+            }
+            else if (tools.LastRanking is not null || tools.LastGaps is not null)
+            {
+                finalText = pt
+                    ? "Consultei ranking e lacunas, mas o modelo não fechou a prosa. " +
+                      "Use os detalhes e as fontes abaixo, ou peça um dashboard."
+                    : "I pulled ranking and gaps, but the model did not finish the prose. " +
+                      "Use the details and sources below, or ask for a dashboard.";
+            }
+            else
+            {
+                finalText = pt
+                    ? "Consultei as ferramentas disponíveis, mas não consegui fechar uma resposta em prosa. " +
+                      "Tente reformular a hipótese com ambiente e material."
+                    : "I used the available tools but could not finish a prose answer. " +
+                      "Try rephrasing the hypothesis with environment and material.";
+            }
         }
 
         return new AgentAskResponse(

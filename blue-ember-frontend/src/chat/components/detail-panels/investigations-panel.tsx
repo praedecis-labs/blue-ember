@@ -1,8 +1,8 @@
 import { useT } from '@/i18n'
-import { WEIGHTS } from '../../data'
-import { f1, fmt } from '../../engine'
-import type { CritKey, CritWeights } from '../../types'
-import type { AiMsg } from './types'
+import { WEIGHTS } from '../../domain/data'
+import { f1, fmt } from '../../domain/engine'
+import type { CritKey, CritWeights } from '../../domain/types'
+import { SHOW_DOI, type AiMsg } from './types'
 
 const CRIT_KEYS: CritKey[] = ['prox', 'moc', 'spread', 'hrr', 'tox']
 
@@ -102,7 +102,7 @@ export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
                 <a href={psiHref(d)} target="_blank" rel="noopener noreferrer">
                   {t('panels.viewPsi')}
                 </a>
-                {d.doi ? (
+                {SHOW_DOI && d.doi ? (
                   <>
                     {' '}
                     ·{' '}

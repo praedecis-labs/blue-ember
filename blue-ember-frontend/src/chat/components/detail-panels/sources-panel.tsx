@@ -1,5 +1,5 @@
 import { useT } from '@/i18n'
-import type { AiMsg } from './types'
+import { SHOW_DOI, type AiMsg } from './types'
 
 function psiHref(d: {
   id: string
@@ -56,7 +56,7 @@ export function SourcesPanel({ msg }: { msg: AiMsg }) {
               >
                 {t('panels.onPsi', { id: d.id })}
               </a>
-              {d.doi ? (
+              {SHOW_DOI && d.doi ? (
                 <>
                   {' '}
                   · DOI{' '}

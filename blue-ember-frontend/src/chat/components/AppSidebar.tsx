@@ -13,8 +13,8 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar'
 import { useI18n } from '@/i18n'
-import { LOGO_SRC } from '../data'
-import type { HistoryItem, ScreenId, ThemeId } from '../types'
+import { LOGO_SRC } from '../domain/data'
+import type { HistoryItem, ScreenId, ThemeId } from '../domain/types'
 
 type Props = {
   screen: ScreenId

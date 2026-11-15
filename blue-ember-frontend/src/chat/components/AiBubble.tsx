@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useT } from '@/i18n'
-import type { EnvironmentDto } from '@/services/contracts'
-import { LOGO_SRC } from '../data'
-import { f1, summaryFor } from '../engine'
-import type { ChatMessage, PanelId, QueryState } from '../types'
+import type { EnvironmentDto } from '@/services/shared/contracts'
+import { LOGO_SRC } from '../domain/data'
+import { f1, summaryFor } from '../domain/engine'
+import type { ChatMessage, PanelId, QueryState } from '../domain/types'
 import { DetailPanels } from './detail-panels'
 import { HypothesisDashboard } from './HypothesisDashboard'
 
@@ -61,6 +61,21 @@ export function AiBubble({
 
   const altMaterial =
     q.material === 'plastico' ? t('bubble.fabric') : t('bubble.acrylic')
+
+  if (msg.offTopic) {
+    return (
+      <div className="msg-ai" id={msg.id}>
+        <div className="head">
+          <span className="by">
+            <img className="avatar" src={LOGO_SRC} alt="" />
+            Blue Ember
+          </span>
+        </div>
+        {msg.lead ? <span className="why">{msg.lead}</span> : null}
+        <span className="ai-label">{t('bubble.offTopicLabel')}</span>
+      </div>
+    )
+  }
 
   return (
     <div className="msg-ai" id={msg.id}>
@@ -233,26 +248,26 @@ export function AiBubble({
         {q.env !== 'iss' ? (
           <button
             type="button"
-            onClick={() => onFollowup('E se fosse na ISS a 14,7 psi e 21%?')}
+            onClick={() => onFollowup(t('bubble.followIssPrompt'))}
           >
             {t('bubble.followIss')}
           </button>
         ) : (
           <button
             type="button"
-            onClick={() => onFollowup('E no habitat lunar a 8,2 psi e 34%?')}
+            onClick={() => onFollowup(t('bubble.followLunarPrompt'))}
           >
             {t('bubble.followLunar')}
           </button>
         )}
         {q.flow !== 0 ? (
-          <button type="button" onClick={() => onFollowup('E com ar parado?')}>
+          <button type="button" onClick={() => onFollowup(t('bubble.followStillPrompt'))}>
             {t('bubble.followStill')}
           </button>
         ) : (
           <button
             type="button"
-            onClick={() => onFollowup('E com ventilação de 20 cm/s?')}
+            onClick={() => onFollowup(t('bubble.followVentPrompt'))}
           >
             {t('bubble.followVent')}
           </button>
@@ -262,8 +277,8 @@ export function AiBubble({
           onClick={() =>
             onFollowup(
               q.material === 'plastico'
-                ? 'E se o material for tecido?'
-                : 'E se o material for plástico acrílico?',
+                ? t('bubble.followFabricPrompt')
+                : t('bubble.followAcrylicPrompt'),
             )
           }
         >

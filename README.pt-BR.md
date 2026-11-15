@@ -102,8 +102,11 @@ Porta: **http://localhost:5006** · Swagger (dev): `/swagger`
 | Caminho | Papel |
 | --- | --- |
 | `src/App.tsx` | Shell — `I18nProvider` + `ChatApp` |
-| `src/chat/` | Telas, painéis, hooks de sessão, adapters, parser |
-| `src/services/` | Client HTTP tipado (`contracts`, `http`, ranking, gaps, export, agent, …) |
+| `src/chat/components/` | Telas e painéis |
+| `src/chat/use-cases/` | Hooks de sessão, hydration, export, profiles/environments |
+| `src/chat/domain/` | Adapters, engine/parser, storage, mapeamento evidence/gaps |
+| `src/services/api/` | Clients HTTP tipados (ranking, gaps, export, agent, …) |
+| `src/services/shared/` | `contracts`, `http`, `request-state` |
 | `src/i18n/` | Catálogos `en-US` / `pt-BR` |
 | `src/components/ui/` | Primitivos no estilo shadcn |
 | `src/hooks/` | Hooks React compartilhados |
@@ -118,7 +121,7 @@ Porta: **http://localhost:5006** · Swagger (dev): `/swagger`
 | `eng` / `pesq` / `est` | `ShipEngineer` / `Researcher` / `Student` |
 | `lua` / `marte` / `iss` | `Moon` / `Mars` / `Iss` |
 
-Persistimos os IDs canônicos da API no `localStorage`. O mapeamento fica em `src/chat/adapters.ts`.
+Persistimos os IDs canônicos da API no `localStorage`. O mapeamento fica em `src/chat/domain/adapters.ts`.
 
 **Tracks (status):** T1–T6 feitos (client tipado → chat na API → export/polish). **T7** opcional: tela de ranking principal, detalhe dedicado, comparador, mapa 2D de gaps, spinoffs — ver `blue-ember-frontend/docs/TODO-FRONTEND.md`.
 

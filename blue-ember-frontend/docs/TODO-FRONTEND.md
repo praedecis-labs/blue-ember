@@ -87,7 +87,7 @@ Suggested owners (fill in):
 
 ### T1 — HTTP contract and service layer
 
-- [x] **TypeScript types mirroring DTOs** (`src/services/contracts.ts`)
+- [x] **TypeScript types mirroring DTOs** (`src/services/shared/contracts.ts`)
   - `ProfileDto`, `EnvironmentDto`, `InvestigationSummary/Detail`
   - `RankingResponse` / `RankingItemDto` (`criteria`, `weights`, `featured`)
   - `GapsResponse` (`partialGravityWarning`, `coverageCells`, `nearTargetInvestigationIds`)
@@ -98,8 +98,8 @@ Suggested owners (fill in):
   - `getRanking` / `getRankingFireSafety`
   - `getGaps`, `exportRanking` (json/csv)
   - Base: Vite proxy `/api` → `:5006` (already exists)
-- [x] **ID mapping** UI ↔ API (`src/chat/adapters.ts`)
-- [x] **Reusable network states**: `idle | loading | ok | error` + friendly message (`src/services/request-state.ts`)
+- [x] **ID mapping** UI ↔ API (`src/chat/domain/adapters.ts`)
+- [x] **Reusable network states**: `idle | loading | ok | error` + friendly message (`src/services/shared/request-state.ts`)
   - Data hooks left for T2; health still uses `use-api-health.ts`
 
 **Done when:** you can call fire-safety ranking in DevTools/console typed and type the response without `any`. ✅ (14/11/2026)
