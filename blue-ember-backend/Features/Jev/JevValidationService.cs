@@ -31,6 +31,8 @@ public sealed class JevValidationService
     {
         var breakdown = _calculator.Calculate(investigation, environment, weights);
 
+        // Juiz cego: NÃO envia deterministic_score nem c1…c5 no state.
+        // O juiz deve avaliar com base nos dados brutos da investigação e ambiente.
         var state = new
         {
             investigation_id = investigation.Id,
@@ -46,12 +48,12 @@ public sealed class JevValidationService
             inv_moc_percent = investigation.MocPercent,
             inv_hrr_kw = investigation.HrrKw,
             inv_co_ppm = investigation.CoPpm,
-            deterministic_score = breakdown.Total,
-            c1_proximidade = breakdown.C1Proximidade,
-            c2_margem_moc = breakdown.C2MargemMoc,
-            c3_cinetica = breakdown.C3Cinetica,
-            c4_severidade_termica = breakdown.C4SeveridadeTermica,
-            c5_toxicidade = breakdown.C5Toxicidade
+            regime = investigation.TestConditions.Count > 0
+                ? investigation.TestConditions.FirstOrDefault()?.Regime
+                : null,
+            pp_o2_kpa = investigation.TestConditions.Count > 0
+                ? investigation.TestConditions.FirstOrDefault()?.PpO2Kpa
+                : null,
         };
 
         var questions = new Dictionary<string, JevQuestion>
@@ -150,15 +152,33 @@ public sealed class JevValidationService
                 SelectedChoice = null
             });
 
+        // Acordo por critério: Jev vs determinístico (normalizado para 0-1)
+        var agreement = ComputeCriterionAgreement(judgments, breakdown);
+
         var confidences = judgments.Where(j => j.Confidence.HasValue).Select(j => j.Confidence!.Value).ToList();
         var avgConf = confidences.Count > 0 ? confidences.Average() : 0;
 
-        // Consistência: nenhum Noul crítico (C1, C2) na zona ambígua 0.3-0.7
+        // Consistência: 3 estados
+        // - Ambiguous: algum Noul crítico (C1, C2) na zona ambígua 0.3-0.7 OU confiança média baixa (< 0.5)
+        // - Discordant: critérios não concordam (|diff| > 0.25 em maioria)
+        // - Concordant: caso contrário
         var ambiguousNoul = judgments
-            .Where(j => j.Noul.HasValue)
+            .Where(j => j.Criterion is "C1" or "C2" && j.Noul.HasValue)
             .Any(j => j.Noul.Value is >= 0.3 and <= 0.7);
 
-        var summary = BuildSummary(breakdown, judgments, ambiguousNoul);
+        var lowConfidence = avgConf < 0.5;
+        var nonAgreeing = agreement.Values.Count(a => !a.Agrees);
+        var totalJudged = agreement.Count;
+
+        JevConsistencyState consistencyState;
+        if (ambiguousNoul || lowConfidence)
+            consistencyState = JevConsistencyState.Ambiguous;
+        else if (totalJudged > 0 && nonAgreeing > totalJudged / 2.0)
+            consistencyState = JevConsistencyState.Discordant;
+        else
+            consistencyState = JevConsistencyState.Concordant;
+
+        var summary = BuildSummary(breakdown, judgments, consistencyState, agreement);
 
         return new JevValidationResult
         {
@@ -169,16 +189,71 @@ public sealed class JevValidationService
             DeterministicScore = breakdown.Total,
             DeterministicBreakdown = breakdown,
             Judgments = judgments,
+            CriterionAgreement = agreement,
             JevAverageConfidence = Math.Round(avgConf, 3),
-            IsConsistent = !ambiguousNoul,
+            ConsistencyState = consistencyState,
             Summary = summary
         };
+    }
+
+    private static IReadOnlyDictionary<string, CriterionAgreement> ComputeCriterionAgreement(
+        IReadOnlyList<JevCriterionJudgment> judgments,
+        CriterionBreakdown breakdown)
+    {
+        var deterministicByCriterion = new Dictionary<string, double>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["C1"] = breakdown.C1Proximidade,
+            ["C2"] = breakdown.C2MargemMoc,
+            ["C3"] = breakdown.C3Cinetica,
+            ["C4"] = breakdown.C4SeveridadeTermica,
+            ["C5"] = breakdown.C5Toxicidade,
+        };
+
+        var result = new Dictionary<string, CriterionAgreement>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var j in judgments)
+        {
+            var detValue = deterministicByCriterion.TryGetValue(j.Criterion, out var dv) ? dv : 0.0;
+
+            double? jevValue = null;
+            double? normalizedJev = null;
+
+            if (j.Noul.HasValue)
+            {
+                jevValue = j.Noul.Value;
+                normalizedJev = j.Noul.Value; // noul já está em 0-1
+            }
+            else if (j.Score.HasValue)
+            {
+                jevValue = j.Score.Value;
+                normalizedJev = j.Score.Value / 4.0; // score 0-4 → 0-1
+            }
+
+            var agreement = new CriterionAgreement
+            {
+                Criterion = j.Criterion,
+                JevValue = jevValue,
+                DeterministicValue = detValue,
+                NormalizedJev = normalizedJev,
+            };
+
+            if (normalizedJev.HasValue)
+            {
+                agreement.Difference = Math.Abs(normalizedJev.Value - detValue);
+                agreement.Agrees = agreement.Difference <= 0.25;
+            }
+
+            result[j.Criterion] = agreement;
+        }
+
+        return result;
     }
 
     private static string BuildSummary(
         CriterionBreakdown breakdown,
         IReadOnlyList<JevCriterionJudgment> judgments,
-        bool ambiguous)
+        JevConsistencyState consistency,
+        IReadOnlyDictionary<string, CriterionAgreement> agreement)
     {
         var lines = new List<string>
         {
@@ -195,9 +270,18 @@ public sealed class JevValidationService
                 lines.Add($"Jev {j.Criterion}: {j.Score.Value:F2}/4 confidence={j.Confidence:P0} - {j.Question}");
         }
 
-        lines.Add(ambiguous
-            ? "Consistency: AMBIGUOUS - some Jev judgments fell in the 0.3-0.7 zone; review before trusting."
-            : "Consistency: OK - Jev judgments are decisive (near 0 or 1).");
+        foreach (var kv in agreement)
+        {
+            var a = kv.Value;
+            lines.Add($"Agreement {a.Criterion}: Jev={a.NormalizedJev:P0} vs Det={a.DeterministicValue:P0} diff={a.Difference:P0} {(a.Agrees ? "OK" : "DISCORDANT")}");
+        }
+
+        lines.Add(consistency switch
+        {
+            JevConsistencyState.Ambiguous => "Consistency: AMBIGUOUS - Jev in 0.3-0.7 zone or low confidence; review before trusting.",
+            JevConsistencyState.Discordant => "Consistency: DISCORDANT - Jev disagrees with deterministic on majority of criteria.",
+            _ => "Consistency: CONCORDANT - Jev judgments align with deterministic breakdown.",
+        });
 
         return string.Join(" | ", lines);
     }
