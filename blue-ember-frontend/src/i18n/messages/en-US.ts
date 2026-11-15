@@ -69,7 +69,7 @@ export const enUS = {
     hintKeys: 'Enter sends · Shift+Enter new line',
     send: 'Send',
     composerNote:
-      'Scores, investigations and coverage come from NASA PSI data via our API. Answers are written by Gemini, or by local templates when the AI is offline.',
+      'Scores, investigations and coverage come from NASA PSI data via our API. Answers are written by AI (Groq or Gemini), or by an automatic summary when the AI is offline.',
     writeHypothesis: 'Write your hypothesis or question.',
     offTopicHypothesis:
       'I can only help with fire safety in space habitats. Ask about materials, O₂, pressure, smoke detection, or ISS/Moon/Mars scenarios.',

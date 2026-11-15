@@ -45,28 +45,28 @@
 
 .dark,
 [data-theme='dark'] {
-  --background: #0d0f1e;
+  --background: #040b24;
   --foreground: #e9ebf5;
-  --card: #171a2e;
+  --card: #0e2258;
   --card-foreground: #e9ebf5;
-  --popover: #171a2e;
+  --popover: #0e2258;
   --popover-foreground: #e9ebf5;
-  --primary: #5aa2ff;
-  --primary-foreground: #0d0f1e;
-  --secondary: #232741;
+  --primary: #4080ff;
+  --primary-foreground: #ffffff;
+  --secondary: #142e70;
   --secondary-foreground: #e9ebf5;
-  --muted: #232741;
-  --muted-foreground: #b3b8ce;
-  --accent: #1b2547;
+  --muted: #142e70;
+  --muted-foreground: #a9bbe3;
+  --accent: #12285f;
   --accent-foreground: #e9ebf5;
   --destructive: #ff9a8f;
-  --border: #2a2f4c;
-  --input: #232741;
-  --ring: #5aa2ff;
-  --sidebar: #1b2b85;
+  --border: #1e3a80;
+  --input: #142e70;
+  --ring: #78c8ff;
+  --sidebar: #050e2c;
   --sidebar-foreground: #ffffff;
   --sidebar-primary: #ffffff;
-  --sidebar-primary-foreground: #1b2b85;
+  --sidebar-primary-foreground: #050e2c;
   --sidebar-accent: rgba(255, 255, 255, 0.15);
   --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(255, 255, 255, 0.25);
@@ -75,9 +75,9 @@
   /* Tokens NASA Space Apps Challenge (dark) */
   --space-neonyellow: #e7f434;
   --space-nasared: #ff9a8f;
-  --space-electricblue: #5aa2ff;
-  --space-deepblue: #171a2e;
-  --space-nearblack: #0d0f1e;
+  --space-electricblue: #4080ff;
+  --space-deepblue: #0e2258;
+  --space-nearblack: #040b24;
   --space-white: #ffffff;
   --space-paleyellow: #fafaad;
   --space-blueyonder: #5aa2ff;

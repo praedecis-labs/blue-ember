@@ -384,9 +384,10 @@ export function useChatSession(options: ChatSessionOptions = {}) {
       }
       upsertHistory(nextCurrent)
     } else if (snap.current) {
+      // Perguntas seguintes não trocam as condições do item: ele reabre a pergunta original
+      // com as condições dela (antes reabria a pergunta da Lua com as condições da ISS, por ex.)
       nextCurrent = {
         ...snap.current,
-        q: { ...base },
         level: aiMsg.r.level,
         top: '',
         topIds: [],

@@ -152,9 +152,8 @@ export function loadTheme(): ThemeId {
   } catch {
     /* ignore */
   }
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
-    ? 'dark'
-    : 'light'
+  // Padrão: tema escuro, com a identidade do vídeo; quem trocar de tema mantém a escolha
+  return 'dark'
 }
 
 export function saveTheme(theme: ThemeId) {
