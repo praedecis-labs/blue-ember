@@ -46,7 +46,7 @@ internal static class ScoreFixtures
             ]
         };
         inv.SyncAggregatesFromConditions();
-        inv.Category = CategoryMapper.Map(inv.Acronym, inv.SubDiscipline);
+        inv.Category = CategoryMapper.Map(inv.Acronym, inv.SubDiscipline).ToApiValue();
         return inv;
     }
 
@@ -91,7 +91,7 @@ internal static class ScoreFixtures
             ]
         };
         inv.SyncAggregatesFromConditions();
-        inv.Category = CategoryMapper.Map(inv.Acronym, inv.SubDiscipline);
+        inv.Category = CategoryMapper.Map(inv.Acronym, inv.SubDiscipline).ToApiValue();
         return inv;
     }
 
@@ -150,7 +150,7 @@ internal static class ScoreFixtures
             ]
         };
         inv.SyncAggregatesFromConditions();
-        inv.Category = CategoryMapper.Map(inv.Acronym, inv.SubDiscipline);
+        inv.Category = CategoryMapper.Map(inv.Acronym, inv.SubDiscipline).ToApiValue();
         return inv;
     }
 
@@ -192,7 +192,7 @@ internal static class ScoreFixtures
             ]
         };
         inv.SyncAggregatesFromConditions();
-        inv.Category = CategoryMapper.Map(inv.Acronym, inv.SubDiscipline);
+        inv.Category = CategoryMapper.Map(inv.Acronym, inv.SubDiscipline).ToApiValue();
         return inv;
     }
 
@@ -234,7 +234,7 @@ internal static class ScoreFixtures
             ]
         };
         inv.SyncAggregatesFromConditions();
-        inv.Category = CategoryMapper.Map(inv.Acronym, inv.SubDiscipline);
+        inv.Category = CategoryMapper.Map(inv.Acronym, inv.SubDiscipline).ToApiValue();
         return inv;
     }
 
@@ -263,7 +263,7 @@ internal static class ScoreFixtures
             ]
         };
         inv.SyncAggregatesFromConditions();
-        inv.Category = CategoryMapper.Map(inv.Acronym, inv.SubDiscipline);
+        inv.Category = CategoryMapper.Map(inv.Acronym, inv.SubDiscipline).ToApiValue();
         return inv;
     }
 }
