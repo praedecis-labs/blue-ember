@@ -75,3 +75,19 @@ export function gapsFromApi(
     partialG,
   }
 }
+
+/** Mesmas linhas de lacuna, montadas na hora a partir das células (seguem o idioma atual). */
+export function emptyCellBullets(
+  cells: CoverageCellDto[] | null | undefined,
+  o2Percent: number,
+  pressureKpa: number,
+  t: Translate,
+): string[] {
+  const empty = (cells ?? []).filter((c) => c.coverageCount === 0)
+  return [
+    ...empty.filter((c) => cellCoversTarget(c, o2Percent, pressureKpa)),
+    ...empty.filter((c) => !cellCoversTarget(c, o2Percent, pressureKpa)),
+  ]
+    .slice(0, CELL_BULLET_CAP)
+    .map((c) => formatEmptyCell(c, t))
+}

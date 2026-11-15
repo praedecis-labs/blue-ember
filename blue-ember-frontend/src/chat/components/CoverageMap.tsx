@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { useT } from '@/i18n'
+import { EstimatedBadge } from './EstimatedBadge'
 import type { CoverageCellDto } from '@/services/contracts'
 import { fmt, kpa } from '../engine'
 import type { QueryState } from '../types'
@@ -32,7 +33,7 @@ export function CoverageMap({ cells, q }: Props) {
 
   const userKpa = kpa(q.psi)
   const inBand = (v: number, [lo, hi]: [number, number], last: boolean) =>
-    v >= lo && (last ? v <= hi : v < hi)
+    v >= lo && (last ? v <= hi + 1 : v < hi)
   const userO2 = o2Bands.findIndex((b) =>
     inBand(q.o2, b, b[1] === Math.max(...o2Bands.map((x) => x[1]))),
   )
@@ -55,7 +56,10 @@ export function CoverageMap({ cells, q }: Props) {
   return (
     <div className="coverage-map">
       <div className="cm-head">
-        <b>{t('coverageMap.title')}</b>
+        <b>
+          {t('coverageMap.title')}
+          <EstimatedBadge />
+        </b>
         <span className="hint">
           {userCell
             ? t('coverageMap.caption', {

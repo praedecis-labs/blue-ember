@@ -339,14 +339,16 @@ export function useChatSession(options: ChatSessionOptions = {}) {
         )
         .filter((t) => t.text.trim().length > 0)
 
+      let askedLocale: string = localeRef.current
       let agent: AgentAskResponse | null = null
       try {
+        askedLocale = localeRef.current
         agent = await askAgent({
           message: userMessage,
           profile: toApiProfile(prof),
           environment: toApiEnvironment(query.env),
           category: toApiCategory(query.goal),
-          locale: localeRef.current,
+          locale: askedLocale,
           query: {
             env: toApiEnvironment(query.env),
             material: query.material,
@@ -378,6 +380,8 @@ export function useChatSession(options: ChatSessionOptions = {}) {
 
       const lead = sanitizeAgentProse(agent.text.trim())
       const dashboard = agent.dashboard ?? null
+      // Idioma em que a IA respondeu: se a pessoa trocar o idioma depois, a tela sabe
+      patchAiMessage(msgId, (msg) => ({ ...msg, agentLocale: askedLocale }))
       if (agent.ranking && agent.gaps) {
         await applyRankingAndGaps(msgId, agent.ranking, agent.gaps, opts, {
           lead,

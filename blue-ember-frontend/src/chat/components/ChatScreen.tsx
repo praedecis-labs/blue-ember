@@ -6,7 +6,7 @@ import { AiBubble } from './AiBubble'
 
 /** O quadro interpretativo da IA só aparece quando a pessoa pede um dashboard. */
 function asksForDashboard(prev: ChatMessage | undefined): boolean {
-  return prev?.kind === 'user' && /dashboard|painel/i.test(prev.text)
+  return prev?.kind === 'user' && /dashboard|painel|\bmap\b|mapa|coverage|cobertura|where .*fall|onde .*cai/i.test(prev.text)
 }
 
 type Props = {

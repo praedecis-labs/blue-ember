@@ -120,7 +120,33 @@ export const enUS = {
     partialGWarning:
       'The PSI has almost no partial-gravity data (Moon ~0.16 g / Mars ~0.38 g). Most tests ran at 0 g or 1 g; interpolating between those regimes may underestimate the risk.',
   },
+  answer: {
+    langNote: 'The AI answer was written in {{lang}}; above is the summary in the current language. Ask again for a new AI answer.',
+    showOriginal: 'Show original',
+    hideOriginal: 'Hide original',
+    langPt: 'Portuguese',
+    langEn: 'English',
+    shows: 'What the tests show',
+    tested: 'What NASA tested near your case',
+    unknown: 'What is still unknown',
+    samples: 'NASA test samples (rods, films, droplets) differ from the materials and layouts of a real habitat.',
+    disclaimer: 'Descriptive summary of NASA test records, not a safety assessment.',
+  },
+  evidenceTag: {
+    nearby: 'Nearby NASA evidence',
+    nearbyNote: 'NASA tests in this oxygen and pressure range: {{n}}. Similar conditions, not proof that your case is safe.',
+    adjacent: 'Tested only in other conditions',
+    adjacentNote: 'No NASA test in this exact oxygen and pressure range; the closest ones are in a neighboring range.',
+    none: 'No NASA test in these conditions',
+    noneNote: 'Nothing in the NASA data covers this oxygen and pressure. Treat it as a research gap, not a safe zone.',
+    gravity: 'All of these tests ran in microgravity; none in lunar or Martian gravity.',
+  },
+  estimated: {
+    badge: 'Estimated',
+    tip: 'Oxygen and pressure ranges per investigation are estimates still being checked against the NASA PSI tables.',
+  },
   coverageMap: {
+    show: 'See where your case falls among NASA tests',
     title: 'Where your case falls among NASA tests',
     caption: 'Your case: {{o2}}% O₂ · {{kpa}} kPa → {{n}} tests in this range',
     outside: 'Your case ({{o2}}% O₂ · {{kpa}} kPa) is outside every tested range',

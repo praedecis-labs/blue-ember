@@ -1,4 +1,5 @@
 import { useT } from '@/i18n'
+import { psiUrl } from '../../psi-url'
 import { WEIGHTS } from '../../data'
 import { f1, fmt } from '../../engine'
 import type { CritKey, CritWeights } from '../../types'
@@ -6,15 +7,7 @@ import { SHOW_DOI, type AiMsg } from './types'
 
 const CRIT_KEYS: CritKey[] = ['prox', 'moc', 'spread', 'hrr', 'tox']
 
-function psiHref(d: {
-  id: string
-  nasaPsiUrl?: string | null
-}): string {
-  return (
-    d.nasaPsiUrl ||
-    `https://psi.nasa.gov/physci/repo/data/investigations/${d.id}`
-  )
-}
+const psiHref = psiUrl
 
 function hasFlow(flow: [number, number]): boolean {
   return !(flow[0] === 0 && flow[1] === 0)

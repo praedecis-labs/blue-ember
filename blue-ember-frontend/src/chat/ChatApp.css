@@ -547,3 +547,32 @@
 .chat-app .msg-ai .top-inv-link:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; }
 .chat-app[data-theme="dark"] .msg-ai .top-inv-link { background: #1C2034; border-color: #2A2F4C; color: var(--navy); }
 .chat-app[data-theme="dark"] .msg-ai .top-inv-link:hover { background: #262B47; }
+
+/* ===== Rótulo honesto da evidência + selo "Estimado" ===== */
+.chat-app .msg-ai .evidence-tag { display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; border-radius: 10px; font-size: 14px; line-height: 1.45; background: var(--bg); }
+.chat-app .msg-ai .evidence-tag b { font-size: 13px; letter-spacing: .02em; }
+.chat-app .msg-ai .evidence-tag span { color: var(--sub); }
+.chat-app .msg-ai .evidence-tag.nearby { background: color-mix(in srgb, var(--blue) 10%, transparent); }
+.chat-app .msg-ai .evidence-tag.nearby b { color: var(--blue); }
+.chat-app .msg-ai .evidence-tag.adjacent { background: color-mix(in srgb, #D97706 12%, transparent); }
+.chat-app .msg-ai .evidence-tag.adjacent b { color: #B45309; }
+.chat-app .msg-ai .evidence-tag.none { background: color-mix(in srgb, #DC2626 10%, transparent); }
+.chat-app .msg-ai .evidence-tag.none b { color: #B91C1C; }
+.chat-app[data-theme="dark"] .msg-ai .evidence-tag.nearby b { color: #8FB8FF; }
+.chat-app[data-theme="dark"] .msg-ai .evidence-tag.adjacent b { color: #FBBF24; }
+.chat-app[data-theme="dark"] .msg-ai .evidence-tag.none b { color: #F87171; }
+.chat-app .estimated-badge { display: inline-block; margin-left: 8px; padding: 1px 7px; border-radius: 999px; font-size: 10.5px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; vertical-align: middle; color: #92400E; background: #FEF3C7; cursor: help; }
+.chat-app[data-theme="dark"] .estimated-badge { color: #FDE68A; background: #78350F; }
+.chat-app .msg-ai .map-toggle { align-self: flex-start; padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--blue) !important; background: color-mix(in srgb, var(--blue) 8%, transparent) !important; border: 0; cursor: pointer; }
+.chat-app .msg-ai .map-toggle:hover { background: color-mix(in srgb, var(--blue) 14%, transparent) !important; }
+
+/* ===== Resposta em 3 blocos ===== */
+.chat-app .msg-ai .ans-block { display: flex; flex-direction: column; gap: 8px; }
+.chat-app .msg-ai .ans-block + .ans-block { padding-top: 12px; border-top: 1px solid color-mix(in srgb, var(--muted) 22%, transparent); }
+.chat-app .msg-ai .ans-h { margin: 0; font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--sub); }
+.chat-app .msg-ai .ans-block .summary { margin: 0; }
+.chat-app .msg-ai .ans-block.unknown ul { margin: 0; padding-left: 18px; list-style: disc; display: flex; flex-direction: column; gap: 4px; font-size: 14px; line-height: 1.45; }
+.chat-app .msg-ai .ans-disclaimer { font-size: 12px; color: var(--muted); }
+.chat-app .msg-ai .lang-note { font-size: 12.5px; color: var(--muted); }
+.chat-app .msg-ai .lang-toggle { padding: 0; border: 0; font-size: 12.5px; font-weight: 600; color: var(--blue) !important; background: none !important; cursor: pointer; text-decoration: underline; }
+.chat-app .msg-ai .summary.original { opacity: .8; font-style: italic; }

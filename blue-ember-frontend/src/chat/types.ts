@@ -113,6 +113,8 @@ export type ChatMessage =
       weights: CritWeights | null
       /** True when `lead` came from Gemini agent prose (skip template summary). */
       agentReply?: boolean
+      /** Idioma em que a IA escreveu `lead` (pt-BR ou en-US). */
+      agentLocale?: string
       /** Dynamic dashboard composed by the agent (typed widget catalog). */
       dashboard?: DashboardSpec | null
       /** Raw gaps grid for heatmap widgets. */
