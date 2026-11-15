@@ -292,6 +292,8 @@ export function useChatSession(options: ChatSessionOptions = {}) {
   ) {
     const rankingParams = rankingParamsFromQuery(prof, query)
     const environmentApi = toApiEnvironment(query.env)
+    // Etapa real: buscando ranking e lacunas direto na API (modo sem IA)
+    patchAiMessage(msgId, (msg) => ({ ...msg, loadingPhase: 'ranking' }))
     void (async () => {
       try {
         const [ranking, gaps] = await Promise.all([
@@ -390,6 +392,8 @@ export function useChatSession(options: ChatSessionOptions = {}) {
         lead,
         agentReply: true,
         dashboard,
+        // Etapa real: o Gemini respondeu, faltam ranking e lacunas
+        loadingPhase: 'panels',
       }))
 
       try {
@@ -442,6 +446,8 @@ export function useChatSession(options: ChatSessionOptions = {}) {
       weights: null,
       agentReply: false,
       dashboard: null,
+      // Etapa real inicial: a pergunta foi para o Gemini
+      loadingPhase: 'agent',
       coverageCells: null,
       missionTargets: null,
     }

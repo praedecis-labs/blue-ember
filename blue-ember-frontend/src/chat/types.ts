@@ -118,6 +118,8 @@ export type ChatMessage =
       /** Raw gaps grid for heatmap widgets. */
       coverageCells?: CoverageCellDto[] | null
       missionTargets?: MissionTargetsDto | null
+      /** Etapa real do carregamento: esperando o Gemini, o ranking (sem IA) ou os painéis. */
+      loadingPhase?: 'agent' | 'ranking' | 'panels'
     }
 
 export type PersistedState = {

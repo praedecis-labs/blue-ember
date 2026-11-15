@@ -19,7 +19,6 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar'
 import { useI18n } from '@/i18n'
-import { LOGO_SRC } from '../data'
 import type { HistoryItem, ProfileId, ScreenId, ThemeId } from '../types'
 
 type Props = {
@@ -55,10 +54,11 @@ export function AppSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" onClick={onHome}>
+              {/* Símbolo do StellarHub (fundo transparente: serve nos temas claro e escuro) */}
               <img
-                src={LOGO_SRC}
-                alt=""
-                className="size-12 rounded-lg"
+                src="/stellarhub-simbolo.png"
+                alt="StellarHub"
+                className="size-12 object-contain"
               />
               <span className="flex flex-col leading-tight">
                 <span className="font-semibold text-xl">Blue Ember</span>
