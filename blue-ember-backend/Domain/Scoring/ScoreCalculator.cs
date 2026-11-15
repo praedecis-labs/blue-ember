@@ -4,6 +4,35 @@ using BlueEmber.Api.Domain.Profiles;
 
 namespace BlueEmber.Api.Domain.Scoring;
 
+public enum AggregationRule
+{
+    /// <summary>Usa a condição de maior total (melhor caso).</summary>
+    Best,
+    /// <summary>Usa a condição de menor total (pior caso — mais conservador para segurança contra incêndio).</summary>
+    Worst,
+    /// <summary>Usa a condição mais próxima da média (representativa).</summary>
+    Average,
+}
+
+public sealed record ScoreAggregation
+{
+    /// <summary>Maior total entre as condições (melhor caso para a investigação).</summary>
+    public double Best { get; init; }
+    /// <summary>Menor total entre as condições (pior caso — mais conservador para segurança).</summary>
+    public double Worst { get; init; }
+    /// <summary>Média dos totais de todas as condições.</summary>
+    public double Average { get; init; }
+    /// <summary>Cobertura: fração de condições com total acima de 5,0 (limiar de relevância).</summary>
+    public double Coverage { get; init; }
+    public int ConditionCount { get; init; }
+    public int BestConditionIndex { get; init; }
+    public int WorstConditionIndex { get; init; }
+    public TestCondition? BestCondition { get; init; }
+    public TestCondition? WorstCondition { get; init; }
+    public double? BestPpO2Kpa { get; init; }
+    public double? WorstPpO2Kpa { get; init; }
+}
+
 public sealed record CriterionBreakdown(
     double C1Proximidade,
     double C2MargemMoc,
@@ -13,39 +42,94 @@ public sealed record CriterionBreakdown(
     double Total,
     int? WinningConditionIndex = null,
     TestCondition? WinningCondition = null,
-    double? PpO2Kpa = null);
+    double? PpO2Kpa = null,
+    ScoreAggregation? Aggregation = null);
 
 public sealed class ScoreCalculator
 {
     public CriterionBreakdown Calculate(
         Investigation inv,
         MissionEnvironment environment,
-        ScoreWeights weights)
+        ScoreWeights weights,
+        AggregationRule rule = AggregationRule.Best)
     {
         var targets = MissionEnvironmentCatalog.Targets(environment);
         var conditions = inv.TestConditions.Count > 0
             ? inv.TestConditions
             : [SynthesizeLegacyCondition(inv)];
 
-        CriterionBreakdown? best = null;
-        var bestIndex = 0;
-
+        var breakdowns = new List<(CriterionBreakdown breakdown, TestCondition condition, int index)>();
         for (var i = 0; i < conditions.Count; i++)
         {
             var breakdown = CalculateCondition(conditions[i], inv, targets, weights);
-            if (best is null || breakdown.Total > best.Total)
-            {
-                best = breakdown with
-                {
-                    WinningConditionIndex = i,
-                    WinningCondition = conditions[i],
-                    PpO2Kpa = conditions[i].PpO2Kpa
-                };
-                bestIndex = i;
-            }
+            breakdowns.Add((breakdown, conditions[i], i));
         }
 
-        return best ?? new CriterionBreakdown(0, 0, 0, 0, 0, 0, bestIndex, null, null);
+        if (breakdowns.Count == 0)
+            return new CriterionBreakdown(0, 0, 0, 0, 0, 0, null, null, null, BuildAggregation([], rule));
+
+        var best = breakdowns.OrderByDescending(b => b.breakdown.Total).First();
+        var worst = breakdowns.OrderBy(b => b.breakdown.Total).First();
+        var average = breakdowns.Average(b => b.breakdown.Total);
+        var coverage = breakdowns.Count(b => b.breakdown.Total >= 5.0) / (double)breakdowns.Count;
+
+        var agg = new ScoreAggregation
+        {
+            Best = best.breakdown.Total,
+            Worst = worst.breakdown.Total,
+            Average = average,
+            Coverage = coverage,
+            ConditionCount = breakdowns.Count,
+            BestConditionIndex = best.index,
+            WorstConditionIndex = worst.index,
+            BestCondition = best.condition,
+            WorstCondition = worst.condition,
+            BestPpO2Kpa = best.condition.PpO2Kpa,
+            WorstPpO2Kpa = worst.condition.PpO2Kpa,
+        };
+
+        var selected = rule switch
+        {
+            AggregationRule.Worst => worst,
+            AggregationRule.Average => breakdowns.OrderBy(b => Math.Abs(b.breakdown.Total - average)).First(),
+            _ => best,
+        };
+
+        return selected.breakdown with
+        {
+            WinningConditionIndex = selected.index,
+            WinningCondition = selected.condition,
+            PpO2Kpa = selected.condition.PpO2Kpa,
+            Aggregation = agg,
+        };
+    }
+
+    private static ScoreAggregation BuildAggregation(
+        List<(CriterionBreakdown breakdown, TestCondition condition, int index)> breakdowns,
+        AggregationRule rule)
+    {
+        if (breakdowns.Count == 0)
+            return new ScoreAggregation { Best = 0, Worst = 0, Average = 0, Coverage = 0, ConditionCount = 0 };
+
+        var best = breakdowns.OrderByDescending(b => b.breakdown.Total).First();
+        var worst = breakdowns.OrderBy(b => b.breakdown.Total).First();
+        var average = breakdowns.Average(b => b.breakdown.Total);
+        var coverage = breakdowns.Count(b => b.breakdown.Total >= 5.0) / (double)breakdowns.Count;
+
+        return new ScoreAggregation
+        {
+            Best = best.breakdown.Total,
+            Worst = worst.breakdown.Total,
+            Average = average,
+            Coverage = coverage,
+            ConditionCount = breakdowns.Count,
+            BestConditionIndex = best.index,
+            WorstConditionIndex = worst.index,
+            BestCondition = best.condition,
+            WorstCondition = worst.condition,
+            BestPpO2Kpa = best.condition.PpO2Kpa,
+            WorstPpO2Kpa = worst.condition.PpO2Kpa,
+        };
     }
 
     public CriterionBreakdown CalculateCondition(
