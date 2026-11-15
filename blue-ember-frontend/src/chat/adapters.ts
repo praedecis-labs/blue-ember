@@ -1,10 +1,7 @@
+import type { ApiEnvironmentId, ApiProfileId } from '@/services/contracts'
 import type { EnvId, ProfileId } from './types'
 
-/** API profile ids (BlueEmber.Api Domain.Profiles). */
-export type ApiProfileId = 'Student' | 'Researcher' | 'ShipEngineer'
-
-/** API environment ids (BlueEmber.Api Domain.Environments). */
-export type ApiEnvironmentId = 'Iss' | 'Moon' | 'Mars'
+export type { ApiEnvironmentId, ApiProfileId }
 
 const PROFILE_TO_API: Record<ProfileId, ApiProfileId> = {
   eng: 'ShipEngineer',

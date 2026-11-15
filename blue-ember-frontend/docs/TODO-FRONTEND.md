@@ -86,22 +86,22 @@ Sugestão de donos (preencher):
 
 ### T1 — Contrato HTTP e camada de serviços
 
-- [ ] **Tipos TypeScript espelhando DTOs** (`src/types/api.ts` ou `src/services/contracts.ts`)
+- [x] **Tipos TypeScript espelhando DTOs** (`src/services/contracts.ts`)
   - `ProfileDto`, `EnvironmentDto`, `InvestigationSummary/Detail`
   - `RankingResponse` / `RankingItemDto` (`criteria`, `weights`, `featured`)
   - `GapsResponse` (`partialGravityWarning`, `coverageCells`, `nearTargetInvestigationIds`)
   - `ErrorResponse` `{ error, missing? }`
-- [ ] **Client HTTP** (`src/services/`)
+- [x] **Client HTTP** (`src/services/`)
   - `getHealth`, `getProfiles`, `getEnvironments`
   - `getInvestigations`, `getInvestigation(id)`, `compareInvestigations(ids)`
   - `getRanking` / `getRankingFireSafety`
   - `getGaps`, `exportRanking` (json/csv)
   - Base: proxy Vite `/api` → `:5006` (já existe)
 - [x] **Mapeamento de IDs** UI ↔ API (`src/chat/adapters.ts`)
-- [ ] **Estados de rede** reutilizáveis: `idle | loading | ok | error` + mensagem amigável  
-  - Parcial: `use-api-health.ts` existe; falta padrão nos demais serviços
+- [x] **Estados de rede** reutilizáveis: `idle | loading | ok | error` + mensagem amigável (`src/services/request-state.ts`)
+  - Hooks de dados ficam para T2; health ainda usa `use-api-health.ts`
 
-**Done quando:** dá para chamar ranking fire-safety no DevTools/console tipado e tipar a resposta sem `any`.
+**Done quando:** dá para chamar ranking fire-safety no DevTools/console tipado e tipar a resposta sem `any`. ✅ (14/11/2026)
 
 ---
 
@@ -223,4 +223,4 @@ Se forem **3+ pessoas:** T1 sozinho → em seguida T2 ∥ T3 ∥ T4 → T5 integ
 
 ---
 
-*Atualizado 14/11/2026 — sincronizado com Notion (protótipos visuais). Atualizar quando um track fechar (marcar checkboxes + data).*
+*Atualizado 14/11/2026 — T1 (contratos + client HTTP) fechado. Atualizar quando um track fechar (marcar checkboxes + data).*
