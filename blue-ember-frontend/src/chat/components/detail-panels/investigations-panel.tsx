@@ -1,6 +1,7 @@
 import { useT } from '@/i18n'
 import { WEIGHTS } from '../../domain/data'
 import { f1, fmt } from '../../domain/engine'
+import { psiUrl } from '../../domain/psi-url'
 import type { CritKey, CritWeights } from '../../domain/types'
 import { SHOW_DOI, type AiMsg } from './types'
 
@@ -11,8 +12,7 @@ function psiHref(d: {
   nasaPsiUrl?: string | null
 }): string {
   return (
-    d.nasaPsiUrl ||
-    `https://psi.nasa.gov/physci/repo/data/investigations/${d.id}`
+    psiUrl(d)
   )
 }
 
