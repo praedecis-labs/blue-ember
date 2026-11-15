@@ -1,3 +1,4 @@
+import { getCurrentLocale } from '@/i18n/locales'
 import { ApiError } from './http'
 
 export type RequestStatus = 'idle' | 'loading' | 'ok' | 'error'
@@ -24,9 +25,15 @@ export function errorState<T>(message: string, previous?: RequestState<T>): Requ
   return { status: 'error', data: previous?.data ?? null, message }
 }
 
+const pt = () => getCurrentLocale() === 'pt-BR'
+const offlineMsg = () =>
+  pt()
+    ? 'Não foi possível conectar à API. Verifique se o backend está no ar.'
+    : 'Could not reach the API. Check that the backend is running.'
+
 function appendMissing(base: string, missing?: string[]): string {
   if (!missing?.length) return base
-  return `${base} (faltando: ${missing.join(', ')})`
+  return `${base} (${pt() ? 'faltando' : 'missing'}: ${missing.join(', ')})`
 }
 
 /** Map thrown values to a short user-facing message. */
@@ -36,16 +43,18 @@ export function messageFromUnknown(err: unknown): string {
       return appendMissing(err.body.error, err.body.missing)
     }
     if (err.status === 0 || err.message.includes('Failed to fetch')) {
-      return 'Não foi possível conectar à API. Verifique se o backend está no ar.'
+      return offlineMsg()
     }
     return appendMissing(
-      err.message || `Erro da API (${err.status})`,
+      err.message || `${pt() ? 'Erro da API' : 'API error'} (${err.status})`,
       err.body?.missing,
     )
   }
   if (err instanceof TypeError && /fetch/i.test(err.message)) {
-    return 'Não foi possível conectar à API. Verifique se o backend está no ar.'
+    return offlineMsg()
   }
   if (err instanceof Error && err.message) return err.message
-  return 'Algo deu errado ao falar com a API.'
+  return pt()
+    ? 'Algo deu errado ao falar com a API.'
+    : 'Something went wrong talking to the API.'
 }

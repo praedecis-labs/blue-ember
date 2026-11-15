@@ -1,3 +1,4 @@
+import { getCurrentLocale } from '@/i18n/locales'
 import type { EnvironmentDto } from '@/services/contracts'
 import {
   envTargetsToQueryPartial,
@@ -37,9 +38,17 @@ export function buildQueryDefaults(
   return base
 }
 
+const ENV_EN: Record<EnvId, string> = {
+  lua: 'Lunar base',
+  marte: 'Mars base',
+  iss: 'ISS',
+}
+
 export function environmentLabel(
   env: EnvId,
   environments?: EnvironmentDto[] | null,
 ): string {
+  // O rótulo da API vem em português; em inglês usamos o nosso
+  if (getCurrentLocale() !== 'pt-BR') return ENV_EN[env]
   return findEnvironmentDto(env, environments)?.label ?? ENV[env]
 }

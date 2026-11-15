@@ -1,3 +1,4 @@
+import { getCurrentLocale } from '@/i18n/locales'
 import { CRIT, DATA, GAS, MAT, WEIGHTS } from './data'
 import type {
   ClaimId,
@@ -10,10 +11,14 @@ import type {
   ScoredInvestigation,
 } from './types'
 
-export const fmt = (n: number, d = 1) =>
-  (Math.round(n * 10 ** d) / 10 ** d).toString().replace('.', ',')
+/** Separador decimal do idioma da tela: vírgula em pt-BR, ponto em inglês. */
+const dec = (text: string) =>
+  getCurrentLocale() === 'pt-BR' ? text.replace('.', ',') : text
 
-export const f1 = (n: number) => n.toFixed(1).replace('.', ',')
+export const fmt = (n: number, d = 1) =>
+  dec((Math.round(n * 10 ** d) / 10 ** d).toString())
+
+export const f1 = (n: number) => dec(n.toFixed(1))
 
 export const kpa = (psi: number) => psi * 6.895
 
@@ -30,6 +35,10 @@ const num = (s: string) => Number(s.replace(',', '.'))
 const distTo = (v: number, [a, b]: [number, number]) =>
   v < a ? a - v : v > b ? v - b : 0
 
+/**
+ * Lê a pergunta em português ou inglês e extrai as condições.
+ * Cada regra aceita as duas línguas; números aceitam vírgula ou ponto.
+ */
 export function parseHypothesis(t: string): ParseResult {
   const s = t.toLowerCase()
   const o2m = s.match(/(\d{2,3}(?:[.,]\d+)?)\s*%/)
@@ -38,55 +47,90 @@ export function parseHypothesis(t: string): ParseResult {
 
   let flow: number | null = null
   if (flm) flow = num(flm[1])
-  else if (/ar parado|sem ventila|sem fluxo/.test(s)) flow = 0
-  else if (/pouca ventila|ventila[cç][aã]o fraca/.test(s)) flow = 5
+  else if (
+    /ar parado|sem ventila|sem fluxo|still air|stagnant air|quiescent|no (?:air ?flow|airflow|flow|ventilation)/.test(
+      s,
+    )
+  )
+    flow = 0
+  else if (
+    /pouca ventila|ventila[cç][aã]o fraca|low (?:air ?flow|airflow|ventilation)|weak (?:air ?flow|airflow|ventilation)/.test(
+      s,
+    )
+  )
+    flow = 5
 
+  // Negação de segurança primeiro ("not safe", "não é seguro", "unsafe")
   let claim: ClaimId = null
-  if (/segur|n[aã]o (pega|queima)|baixo risco|apaga mais f[aá]cil|percebe/.test(s))
+  if (
+    /(?:not|isn'?t|is not|no longer) safe|unsafe|n[aã]o [eé] segur|inseguro|insegura/.test(
+      s,
+    )
+  )
+    claim = 'risky'
+  else if (
+    /segur|n[aã]o (pega|queima)|baixo risco|apaga mais f[aá]cil|percebe|\bsafe\b|low risk|won'?t (?:burn|ignite|catch fire)|(?:does ?n'?t|does not|do ?n'?t|do not) (?:burn|ignite|catch fire)|extinguish(?:es)? (?:more )?easily|easier to (?:extinguish|put out)|\bnotice|\bdetect(?:s)? (?:it|the)/.test(
+      s,
+    )
+  )
     claim = 'safe'
-  else if (/perig|risco alto|mais r[aá]pido|queima mais|pega fogo/.test(s))
+  else if (
+    /perig|risco alto|mais r[aá]pido|queima mais|pega fogo|danger|high risk|faster|burns? more|catch(?:es)? fire|more flammable/.test(
+      s,
+    )
+  )
     claim = 'risky'
 
   return {
-    env: /marte/.test(s)
+    env: /marte|\bmars\b|martian/.test(s)
       ? 'marte'
-      : /\biss\b|esta[cç][aã]o espacial/.test(s)
+      : /\biss\b|esta[cç][aã]o espacial|space station/.test(s)
         ? 'iss'
-        : /lua|lunar/.test(s)
+        : /lua\b|lunar|\bmoon/.test(s)
           ? 'lua'
           : null,
-    material: /l[ií]quido|combust[ií]vel|gota/.test(s)
+    material: /l[ií]quido|combust[ií]vel|gota|liquid|\bfuel|droplet/.test(s)
       ? 'liquido'
-      : /pl[aá]stico|acr[ií]lico|pmma/.test(s)
+      : /pl[aá]stico|acr[ií]lico|pmma|plastic|acrylic|plexiglas/.test(s)
         ? 'plastico'
-        : /tecido|pano|roupa|nomex|algod[aã]o|cortina/.test(s)
+        : /tecido|pano|roupa|nomex|algod[aã]o|cortina|fabric|cloth|textile|cotton|curtain|garment/.test(
+              s,
+            )
           ? 'tecido'
           : null,
     o2: o2m ? num(o2m[1]) : null,
     psi: psim ? num(psim[1]) : null,
     flow,
-    thick: /\bfin[oa]s?\b|filme|leve/.test(s)
+    thick: /\bfin[oa]s?\b|filme|\bleve\b|\bthin\b|\bfilm\b/.test(s)
       ? 'fina'
-      : /gross[oa]|espess[oa]|placa|bloco/.test(s)
+      : /gross[oa]|espess[oa]|placa|bloco|\bthick\b|\bslab|\bblock|\bplate\b/.test(
+            s,
+          )
         ? 'grossa'
         : null,
-    dir: /a favor|mesma dire[cç][aã]o/.test(s)
+    dir: /a favor|mesma dire[cç][aã]o|with the flame|same direction|concurrent|flows? with/.test(
+      s,
+    )
       ? 'favor'
-      : /contra a chama|contra o fogo/.test(s)
+      : /contra a chama|contra o fogo|against the flame|opposed|opposing|counter-?flow/.test(
+            s,
+          )
         ? 'contra'
         : null,
-    gas: /co2|co₂|di[oó]xido/.test(s)
+    gas: /co2|co₂|di[oó]xido|carbon dioxide/.test(s)
       ? 'co2'
-      : /h[eé]lio/.test(s)
+      : /h[eé]lio|helium/.test(s)
         ? 'he'
         : /nitrog/.test(s)
           ? 'n2'
           : null,
-    goal: /apag|extin|suprim/.test(s)
+    goal: /apag|extin|suprim|suppress|put (?:it )?out/.test(s)
       ? 'apagar'
-      : /detect|fuma[cç]a|sensor|alarme/.test(s)
+      : /detect|fuma[cç]a|sensor|alarme|smoke|alarm|notice/.test(s)
         ? 'detectar'
-        : /evitar|prevenir|segur|risco|queima/.test(s)
+        : /evitar|prevenir|segur|risco|queima|prevent|avoid|\bsafe|risk|burn|ignit/.test(
+              s,
+            )
           ? 'prevenir'
           : null,
     claim,

@@ -32,6 +32,8 @@ function labelFor(
   profilesState: RequestState<ProfileDto[]>,
   fallback: string,
 ): string {
+  // O nome traduzido tem prioridade: o rótulo da API vem sempre em português
+  if (fallback && fallback !== id) return fallback
   if (profilesState.status === 'ok' && profilesState.data) {
     const apiId = toApiProfile(id)
     const dto = profilesState.data.find((p) => p.id === apiId)

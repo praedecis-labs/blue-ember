@@ -10,6 +10,7 @@ import {
 import {
   DEFAULT_LOCALE,
   isAppLocale,
+  setCurrentLocale,
   type AppLocale,
 } from './locales'
 import { loadLocale, saveLocale } from '@/chat/storage'
@@ -71,6 +72,9 @@ export function I18nProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.lang = locale === 'pt-BR' ? 'pt-BR' : 'en'
   }, [locale])
+
+  // Mantém números e mensagens fora do React no mesmo idioma da tela
+  setCurrentLocale(locale)
 
   const messages = catalogs[locale]
 

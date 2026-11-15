@@ -237,26 +237,26 @@ export function AiBubble({
         {q.env !== 'iss' ? (
           <button
             type="button"
-            onClick={() => onFollowup('E se fosse na ISS a 14,7 psi e 21%?')}
+            onClick={() => onFollowup(t('bubble.followIssPrompt'))}
           >
             {t('bubble.followIss')}
           </button>
         ) : (
           <button
             type="button"
-            onClick={() => onFollowup('E no habitat lunar a 8,2 psi e 34%?')}
+            onClick={() => onFollowup(t('bubble.followLunarPrompt'))}
           >
             {t('bubble.followLunar')}
           </button>
         )}
         {q.flow !== 0 ? (
-          <button type="button" onClick={() => onFollowup('E com ar parado?')}>
+          <button type="button" onClick={() => onFollowup(t('bubble.followStillPrompt'))}>
             {t('bubble.followStill')}
           </button>
         ) : (
           <button
             type="button"
-            onClick={() => onFollowup('E com ventilação de 20 cm/s?')}
+            onClick={() => onFollowup(t('bubble.followVentPrompt'))}
           >
             {t('bubble.followVent')}
           </button>
@@ -266,8 +266,8 @@ export function AiBubble({
           onClick={() =>
             onFollowup(
               q.material === 'plastico'
-                ? 'E se o material for tecido?'
-                : 'E se o material for plástico acrílico?',
+                ? t('bubble.followFabricPrompt')
+                : t('bubble.followAcrylicPrompt'),
             )
           }
         >

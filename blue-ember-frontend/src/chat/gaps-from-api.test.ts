@@ -1,6 +1,19 @@
 import { describe, expect, it } from 'vitest'
 import type { CoverageCellDto, GapsResponse } from '@/services/contracts'
-import { gapsFromApi } from '@/chat/gaps-from-api'
+import { gapsFromApi as gapsFromApiRaw } from '@/chat/gaps-from-api'
+import { enUS } from '@/i18n/messages/en-US'
+
+/** Tradutor de teste com o catálogo em inglês (o idioma padrão do app). */
+function t(key: string, vars?: Record<string, string | number>): string {
+  const raw = key
+    .split('.')
+    .reduce<unknown>((acc, k) => (acc as Record<string, unknown>)?.[k], enUS)
+  const text = typeof raw === 'string' ? raw : key
+  return text.replace(/\{\{(\w+)\}\}/g, (_, k: string) => String(vars?.[k] ?? ''))
+}
+
+const gapsFromApi = (g: GapsResponse) => gapsFromApiRaw(g, t)
+const PARTIAL_G = t('gapsApi.partialGWarning')
 
 function cell(
   partial: Partial<CoverageCellDto> &
@@ -37,7 +50,7 @@ describe('gapsFromApi', () => {
       }),
     )
     expect(result.partialG).toBe(true)
-    expect(result.partialGravityWarning).toBe('Missing partial-g data.')
+    expect(result.partialGravityWarning).toBe(PARTIAL_G)
   })
 
   it('treats whitespace-only warning as absent', () => {
@@ -89,10 +102,10 @@ describe('gapsFromApi', () => {
       }),
     )
     const cellBullets = result.gaps.filter((g: string) =>
-      g.startsWith('Sem cobertura em O₂'),
+      g.startsWith('No coverage at O₂'),
     )
     expect(cellBullets).toHaveLength(5)
-    expect(cellBullets[0]).toBe('Sem cobertura em O₂ 15–16% × 50–70.3 kPa')
+    expect(cellBullets[0]).toBe('No coverage at O₂ 15–16% × 50–70.3 kPa')
   })
 
   it('prioritizes empty cells that cover the mission target', () => {
@@ -126,9 +139,9 @@ describe('gapsFromApi', () => {
       }),
     )
     const cellBullets = result.gaps.filter((g: string) =>
-      g.startsWith('Sem cobertura em O₂'),
+      g.startsWith('No coverage at O₂'),
     )
-    expect(cellBullets[0]).toBe('Sem cobertura em O₂ 21–30% × 70.3–85 kPa')
+    expect(cellBullets[0]).toBe('No coverage at O₂ 21–30% × 70.3–85 kPa')
   })
 
   it('does not duplicate the gravity warning in the gaps list', () => {
@@ -140,7 +153,7 @@ describe('gapsFromApi', () => {
         coverageCells: [],
       }),
     )
-    expect(result.partialGravityWarning).toBe(warning)
+    expect(result.partialGravityWarning).toBe(PARTIAL_G)
     expect(result.gaps.some((g: string) => g.includes(warning))).toBe(false)
   })
 })
