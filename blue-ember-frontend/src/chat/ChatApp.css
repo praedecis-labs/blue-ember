@@ -252,10 +252,10 @@
 
   /* Botões */
   .chat-app button:not([data-slot="button"]) { transition: transform .15s ease, background .2s, color .2s; }
-  .chat-app button:not(.ghost):not(:disabled):not(.chip):not(.doc):not(.profile-opt) {
+  .chat-app button:not(.ghost):not(:disabled):not(.chip):not(.doc):not(.profile-opt):not([data-slot="button"]) {
     background: var(--yellow);
   }
-  .chat-app button:not(.ghost):not(:disabled):not(.chip):not(.doc):not(.profile-opt):hover { transform: translateY(-1px); }
+  .chat-app button:not(.ghost):not(:disabled):not(.chip):not(.doc):not(.profile-opt):not([data-slot="button"]):hover { transform: translateY(-1px); }
   .chat-app header button, .chat-app .details button, .chat-app .followups button, .chat-app .composer .send:disabled { box-shadow: none !important; }
   .chat-app header nav button, .chat-app .who, .chat-app .details button { background: none; }
   .chat-app header nav button[aria-current="page"] { background: rgba(255,255,255,.16) !important; }
