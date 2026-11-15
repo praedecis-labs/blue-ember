@@ -1,10 +1,7 @@
 using BlueEmber.Api.Domain.Environments;
 using BlueEmber.Api.Domain.Investigations;
 using BlueEmber.Api.Domain.Profiles;
-using BlueEmber.Api.Domain.Scoring;
 using BlueEmber.Api.Features.Contracts;
-using BlueEmber.Api.Features.Investigations;
-using BlueEmber.Api.Infrastructure.Data;
 using Microsoft.OpenApi.Models;
 
 namespace BlueEmber.Api.Features.Ranking;
@@ -47,8 +44,7 @@ public static class RankingEndpoints
             });
 
         app.MapGet("/api/ranking", (
-            IInvestigationRepository repo,
-            ScoreCalculator calculator,
+            RankingQueryService ranking,
             string? profile,
             string? environment,
             string? category,
@@ -59,8 +55,7 @@ public static class RankingEndpoints
             double? w4,
             double? w5) =>
             BuildRanking(
-                repo,
-                calculator,
+                ranking,
                 profile,
                 environment,
                 category,
@@ -86,8 +81,7 @@ public static class RankingEndpoints
         });
 
         app.MapGet("/api/ranking/fire-safety", (
-            IInvestigationRepository repo,
-            ScoreCalculator calculator,
+            RankingQueryService ranking,
             string? profile,
             string? environment,
             string? category,
@@ -96,7 +90,7 @@ public static class RankingEndpoints
             double? w3,
             double? w4,
             double? w5) =>
-            BuildRanking(repo, calculator, profile, environment, category, featuredOnly: true, w1, w2, w3, w4, w5))
+            BuildRanking(ranking, profile, environment, category, featuredOnly: true, w1, w2, w3, w4, w5))
         .WithName("GetFireSafetyRanking")
         .WithTags("Ranking")
         .Produces<RankingResponse>(StatusCodes.Status200OK)
@@ -119,8 +113,7 @@ public static class RankingEndpoints
     }
 
     private static IResult BuildRanking(
-        IInvestigationRepository repo,
-        ScoreCalculator calculator,
+        RankingQueryService ranking,
         string? profile,
         string? environment,
         string? category,
@@ -131,47 +124,12 @@ public static class RankingEndpoints
         double? w4,
         double? w5)
     {
-        if (!UserProfileCatalog.TryParse(profile, out var userProfile))
-            return Results.BadRequest(new ErrorResponse(
-                "Invalid profile. Use Student, Researcher, or ShipEngineer."));
+        if (!ranking.TryBuild(
+                profile, environment, category, featuredOnly, w1, w2, w3, w4, w5,
+                out var response, out var error))
+            return Results.BadRequest(new ErrorResponse(error!));
 
-        if (!MissionEnvironmentCatalog.TryParse(environment, out var missionEnv))
-            return Results.BadRequest(new ErrorResponse(
-                "Invalid environment. Use Iss, Moon, or Mars."));
-
-        var weights = ScoreWeights.TryFromOverrides(w1, w2, w3, w4, w5)
-                      ?? ScoreWeights.For(userProfile);
-
-        IEnumerable<Domain.Investigations.Investigation> query = repo.GetAll();
-        if (featuredOnly)
-            query = query.Where(i => i.IsFeaturedFireSafety);
-        if (!string.IsNullOrWhiteSpace(category))
-            query = query.Where(i => i.Category.Equals(category, StringComparison.OrdinalIgnoreCase));
-
-        var ranked = query
-            .Select(inv =>
-            {
-                var breakdown = calculator.Calculate(inv, missionEnv, weights);
-                return (
-                    Score: breakdown.Total,
-                    Criteria: ScoreCriteriaDto.From(breakdown),
-                    Investigation: InvestigationDtos.ToSummary(inv));
-            })
-            .OrderByDescending(x => x.Score)
-            .Select((x, index) => new RankingItemDto(
-                index + 1,
-                x.Score,
-                x.Criteria,
-                x.Investigation))
-            .ToList();
-
-        return Results.Ok(new RankingResponse(
-            userProfile.ToString(),
-            missionEnv.ToString(),
-            featuredOnly,
-            ScoreWeightsDto.From(weights),
-            ranked.Count,
-            ranked));
+        return Results.Ok(response);
     }
 
     private static void DescribeQuery(OpenApiOperation op, string name, string description)

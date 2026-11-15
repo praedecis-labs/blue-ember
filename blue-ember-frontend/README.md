@@ -1,32 +1,59 @@
-# React + TypeScript + Vite
+# Blue Ember — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React chat (Vite + TypeScript) that consumes the Blue Ember .NET API.
 
-Currently, two official plugins are available:
+Default UI locale: **en-US**. Header/sidebar toggle: **EN | PT** (persisted in `localStorage`).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Prerequisites
 
-## React Compiler
+- Node.js 20+
+- Backend running at `http://localhost:5006` (see monorepo root)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Run FE + BE together
 
-## Expanding the Oxlint configuration
+### 1. Backend (`:5006`)
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+cd ../blue-ember-backend
+dotnet run --launch-profile http
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+- API: http://localhost:5006  
+- Swagger (dev): http://localhost:5006/swagger  
+- Health: `GET /api/health`
+
+### 2. Frontend (`:3000`)
+
+```bash
+npm install
+npm run dev
+```
+
+- App: http://localhost:3000  
+- Vite proxy: `/api` → `http://localhost:5006` (see `vite.config.ts`)
+
+## Scripts
+
+| Command | Use |
+| --- | --- |
+| `npm run dev` | Dev server on port 3000 |
+| `npm test` | Vitest |
+| `npm run build` | Typecheck + build |
+| `npm run lint` | Oxlint |
+
+## Smoke checklist (demo)
+
+| # | Action | Expected |
+| --- | --- | --- |
+| 1 | BE `:5006` + FE `:3000` | Health ok in header |
+| 2 | Fresh load | English UI chrome |
+| 3 | Toggle PT | Profile/chat strings in Portuguese; survives reload |
+| 4 | Pick Ship Engineer | Weights = API ShipEngineer |
+| 5 | Example chip “Safe fabric on the Moon?” | Bubble with real PSI tops |
+| 6 | Open Investigations | C1–C5 bars from API |
+| 7 | Open Gaps (Moon) | Partial-gravity warning |
+| 8 | Switch to ISS in the form | Ranking/gaps change |
+| 9 | Export CSV | Download 200 |
+| 10 | API off | Clear message, no blank screen |
+
+Full list: [`docs/TODO-FRONTEND.md`](docs/TODO-FRONTEND.md).

@@ -1,14 +1,14 @@
+import type { HealthPayload } from './contracts'
+import { requestJson } from './http'
+
+export type { HealthPayload }
 export type HealthStatus = 'loading' | 'ok' | 'down'
 
-export type HealthPayload = {
-  status: string
-  service: string
+export function getHealth(): Promise<HealthPayload> {
+  return requestJson<HealthPayload>('/api/health')
 }
 
-export async function fetchHealth(): Promise<HealthPayload> {
-  const response = await fetch('/api/health')
-  if (!response.ok) {
-    throw new Error(`Health check failed: ${response.status}`)
-  }
-  return response.json() as Promise<HealthPayload>
+/** @deprecated Prefer getHealth — kept for existing chat/header callers. */
+export function fetchHealth(): Promise<HealthPayload> {
+  return getHealth()
 }

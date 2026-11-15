@@ -1,37 +1,37 @@
-# Relatório de implementação — Backend Blue Ember (MVP)
+# Implementation report — Blue Ember Backend (MVP)
 
-**Data:** 14/11/2026  
-**Projeto:** Blue Ember · NASA Space Apps 2026 · Flame in Freefall  
-**Equipe:** Stellar Hub  
-**Base documental:** Notion [Stellar Hub](https://app.notion.com/p/guraburieuru/Stellar-Hub-4187d339a47981df9daae02450da8c67) (Arquitetura, Dados e acesso, Modelo de Informações, Ranqueamento, Telas, Doc de Métricas)
-
----
-
-## 1. Resumo executivo
-
-Foi implementada a **API pública ASP.NET Core 8** (Minimal API, Vertical Slice) que:
-
-1. Consome o **banco oficial NASA PSI (GEODE)** + cache local JSON.
-2. Expõe investigações, ranking, gaps e exportação para o dashboard React.
-3. Trata **perfis de usuário como mock** (sem banco de users, sem OAuth/JWT).
-
-**Fora deste escopo (proposital):** worker Python, PostgreSQL/pgvector, endpoint `/ask`, autenticação real, ingestão S3 `nasa-psi`, telas React.
+**Date:** 14/11/2026  
+**Project:** Blue Ember · NASA Space Apps 2026 · Flame in Freefall  
+**Team:** Stellar Hub  
+**Documentation base:** Notion [Stellar Hub](https://app.notion.com/p/guraburieuru/Stellar-Hub-4187d339a47981df9daae02450da8c67) (Architecture, Data and access, Information Model, Ranking, Screens, Metrics Doc)
 
 ---
 
-## 2. Antes × depois
+## 1. Executive summary
 
-| Aspecto | Antes | Depois |
+The **ASP.NET Core 8 public API** (Minimal API, Vertical Slice) was implemented to:
+
+1. Consume the **official NASA PSI database (GEODE)** + local JSON cache.
+2. Expose investigations, ranking, gaps, and export for the React dashboard.
+3. Treat **user profiles as mock** (no user database, no OAuth/JWT).
+
+**Out of scope (intentional):** Python worker, PostgreSQL/pgvector, `/ask` endpoint, real authentication, S3 `nasa-psi` ingestion, React screens.
+
+---
+
+## 2. Before × after
+
+| Aspect | Before | After |
 | --- | --- | --- |
-| Endpoints | Só `GET /api/health` | Health + Investigations + Ranking + Profiles + Environments + Gaps + Export + NASA refresh |
-| Dados NASA | Cliente TS órfão na raiz + JSON em `data/` | Backend lê o JSON no boot; fallback e refresh via GEODE; protótipo Vite da raiz removido |
-| Perfis | Inexistentes | Enum mock: Student / Researcher / ShipEngineer |
-| Score | Inexistente | C1–C5 com pesos por perfil |
-| Persistência de users | — | **Não criada** (decisão confirmada) |
+| Endpoints | Only `GET /api/health` | Health + Investigations + Ranking + Profiles + Environments + Gaps + Export + NASA refresh |
+| NASA data | Orphan TS client at root + JSON in `data/` | Backend reads JSON on boot; fallback and refresh via GEODE; root Vite prototype removed |
+| Profiles | None | Mock enum: Student / Researcher / ShipEngineer |
+| Score | None | C1–C5 with weights per profile |
+| User persistence | — | **Not created** (confirmed decision) |
 
 ---
 
-## 3. Arquitetura aplicada
+## 3. Applied architecture
 
 ```
 NASA PSI GEODE  ──HttpClient──►  BlueEmber.Api (.NET 8)
@@ -42,23 +42,23 @@ normalized_investigations.json ───────┘  (boot + offline)
                               React (localhost:3000)
 ```
 
-- **Contrato futuro:** `IInvestigationRepository` permite trocar JSON/GEODE por Postgres sem mudar as rotas HTTP.
+- **Future contract:** `IInvestigationRepository` allows swapping JSON/GEODE for Postgres without changing HTTP routes.
 - **CORS:** `http://localhost:3000`
-- **Porta:** `http://localhost:5006` (Swagger em `/swagger`)
+- **Port:** `http://localhost:5006` (Swagger at `/swagger`)
 
 ---
 
-## 4. Estrutura de pastas criada
+## 4. Folder structure created
 
 ```
 blue-ember-backend/
 ├── Program.cs                          # DI, middleware, Map*Endpoints, bootstrap
 ├── appsettings.json                    # NasaPsi + Data paths
-├── BlueEmber.Api.http                  # requests de smoke
+├── BlueEmber.Api.http                  # smoke requests
 ├── Domain/
 │   ├── Investigations/Investigation.cs
 │   ├── Categories/CategoryMapper.cs
-│   ├── Profiles/UserProfile.cs         # mock + pesos
+│   ├── Profiles/UserProfile.cs         # mock + weights
 │   ├── Environments/MissionEnvironment.cs
 │   └── Scoring/ScoreCalculator.cs
 ├── Infrastructure/
@@ -71,7 +71,7 @@ blue-ember-backend/
 │       ├── IInvestigationRepository.cs
 │       └── JsonInvestigationStore.cs
 └── Features/
-    ├── Contracts/                      # DTOs tipados (Swagger / FE)
+    ├── Contracts/                      # typed DTOs (Swagger / FE)
     ├── Health/
     ├── Investigations/
     ├── Ranking/
@@ -83,9 +83,9 @@ blue-ember-backend/
 
 ---
 
-## 5. Configuração NASA
+## 5. NASA configuration
 
-Em `appsettings.json`:
+In `appsettings.json`:
 
 ```json
 "NasaPsi": {
@@ -100,45 +100,45 @@ Em `appsettings.json`:
 }
 ```
 
-**Boot:** carrega o JSON → se vazio, tenta GEODE.  
-**Refresh:** `POST /api/nasa/refresh` busca GEODE, faz merge com métricas enriquecidas do cache e, em Development, regrava o JSON.
+**Boot:** loads JSON → if empty, tries GEODE.  
+**Refresh:** `POST /api/nasa/refresh` fetches GEODE, merges with enriched metrics from cache and, in Development, rewrites JSON.
 
 ---
 
-## 6. Perfis (mock — sem banco de users)
+## 6. Profiles (mock — no user database)
 
-| Id | Label | Pesos (w1…w5) |
+| Id | Label | Weights (w1…w5) |
 | --- | --- | --- |
-| `Student` | Estudante | 0.20 uniforme |
-| `Researcher` | Pesquisador | C1=0.35; demais ≈0.1625 |
-| `ShipEngineer` | Engenheiro de nave | C2=0.25, C3=0.25, C1=0.20, C4=0.15, C5=0.15 |
+| `Student` | Student | 0.20 uniform |
+| `Researcher` | Researcher | C1=0.35; rest ≈0.1625 |
+| `ShipEngineer` | Ship engineer | C2=0.25, C3=0.25, C1=0.20, C4=0.15, C5=0.15 |
 
-Uso: query `?profile=ShipEngineer` (ou override `w1`…`w5`).  
-Lista: `GET /api/profiles`.
+Usage: query `?profile=ShipEngineer` (or override `w1`…`w5`).  
+List: `GET /api/profiles`.
 
 ---
 
-## 7. Ambientes de missão
+## 7. Mission environments
 
-| Id | Alvo O2 | Pressão | Uso |
+| Id | O2 target | Pressure | Use |
 | --- | --- | --- | --- |
-| `Iss` | 21% | 101.3 kPa | Estação |
-| `Moon` | 30% | 70.3 kPa | Base lunar (Notion) |
-| `Mars` | 30% | ~70 kPa | Base marciana (MVP) |
+| `Iss` | 21% | 101.3 kPa | Station |
+| `Moon` | 30% | 70.3 kPa | Lunar base (Notion) |
+| `Mars` | 30% | ~70 kPa | Martian base (MVP) |
 
-Lista: `GET /api/environments`.
+List: `GET /api/environments`.
 
 ---
 
 ## 8. Score (C1–C5)
 
 ```
-S = w1·C1 + w2·C2 + w3·C3 + w4·C4 + w5·C5   → escala ~0–10 na API
+S = w1·C1 + w2·C2 + w3·C3 + w4·C4 + w5·C5   → ~0–10 scale on API
 ```
 
-JSON estável (camelCase) — tipar estes nomes no FE:
+Stable JSON (camelCase) — type these names in FE:
 
-| Critério | Campo em `criteria` | Campos da investigação |
+| Criterion | Field in `criteria` | Investigation fields |
 | --- | --- | --- |
 | C1 | `c1Proximidade` | `o2Range`, `pressureKpa`, `flowSpeedCms` |
 | C2 | `c2MargemMoc` | `mocPercent` |
@@ -146,91 +146,91 @@ JSON estável (camelCase) — tipar estes nomes no FE:
 | C4 | `c4SeveridadeTermica` | `hrrKw` |
 | C5 | `c5Toxicidade` | `coPpm` |
 
-Pesos: `weights.w1`…`w5`. Score total: `score` (0–10).  
-Categorias: `prevencao` / `deteccao` / `supressao` / `outro`.
+Weights: `weights.w1`…`w5`. Total score: `score` (0–10).  
+Categories: `prevencao` / `deteccao` / `supressao` / `outro`.
 
-**CSV do export:** colunas curtas `c1`…`c5` mapeiam para os mesmos critérios (`c1` ↔ `c1Proximidade`, …).
+**Export CSV:** short columns `c1`…`c5` map to the same criteria (`c1` ↔ `c1Proximidade`, …).
 
 ---
 
-## 9. Contratos HTTP entregues
+## 9. Delivered HTTP contracts
 
-DTOs tipados em `Features/Contracts/` + schemas no Swagger (Dev). Erros de contrato: `{ error, missing? }`.
+Typed DTOs in `Features/Contracts/` + schemas in Swagger (Dev). Contract errors: `{ error, missing? }`.
 
-| Método | Rota | Função |
+| Method | Route | Purpose |
 | --- | --- | --- |
-| GET | `/api/health` | Status do serviço |
-| GET | `/api/profiles` | Perfis mock + pesos |
-| GET | `/api/environments` | Ambientes + alvos |
-| GET | `/api/investigations` | Lista summary (default fire-safety; `featured=false` = tudo) |
-| GET | `/api/investigations/{id}` | Ficha completa + URL PSI / DOI |
-| GET | `/api/investigations/compare` | Compara 2–3 fichas |
-| GET | `/api/ranking` | Ranking + `criteria` C1–C5 (default fire-safety) |
-| GET | `/api/ranking/fire-safety` | Atalho explícito do ranking featured |
-| GET | `/api/gaps` | Grade O2×P + aviso gravidade parcial |
-| GET | `/api/export` | Export JSON (criteria nomeados) ou CSV (mesmo default featured) |
-| POST | `/api/nasa/refresh` | Sync GEODE → memória (+ disk em Dev) |
+| GET | `/api/health` | Service status |
+| GET | `/api/profiles` | Mock profiles + weights |
+| GET | `/api/environments` | Environments + targets |
+| GET | `/api/investigations` | Summary list (default fire-safety; `featured=false` = all) |
+| GET | `/api/investigations/{id}` | Full card + PSI / DOI URL |
+| GET | `/api/investigations/compare` | Compare 2–3 cards |
+| GET | `/api/ranking` | Ranking + C1–C5 `criteria` (default fire-safety) |
+| GET | `/api/ranking/fire-safety` | Explicit featured ranking shortcut |
+| GET | `/api/gaps` | O2×P grid + partial gravity warning |
+| GET | `/api/export` | Export JSON (named criteria) or CSV (same featured default) |
+| POST | `/api/nasa/refresh` | Sync GEODE → memory (+ disk in Dev) |
 
-### Query params (obrigatório / opcional / default)
+### Query params (required / optional / default)
 
-| Rota | Params |
+| Route | Params |
 | --- | --- |
-| `GET /api/investigations` | **Opcional:** `q`, `category`, `featured` (default `true`; `false` = catálogo completo), `o2Min`, `o2Max`, `pressureMin`, `pressureMax` |
-| `GET /api/investigations/{id}` | **Path obrigatório:** `id` |
-| `GET /api/investigations/compare` | **Obrigatório:** `ids` (2 ou 3 IDs separados por vírgula) |
-| `GET /api/ranking` | **Opcional:** `profile` (default `Student`), `environment` (default `Moon`), `category`, `featured` (default `true`), `w1`…`w5` |
-| `GET /api/ranking/fire-safety` | Mesmos params do ranking, sempre featured |
-| `GET /api/gaps` | **Opcional:** `environment` (default `Moon`); sempre filtra featured fire-safety |
-| `GET /api/export` | **Opcional:** `format` (default `json`; `csv` → download), `profile` (default `Student`), `environment` (default `Moon`), `category`, `featured` (default `true`; sem override `w*`) |
+| `GET /api/investigations` | **Optional:** `q`, `category`, `featured` (default `true`; `false` = full catalog), `o2Min`, `o2Max`, `pressureMin`, `pressureMax` |
+| `GET /api/investigations/{id}` | **Required path:** `id` |
+| `GET /api/investigations/compare` | **Required:** `ids` (2 or 3 comma-separated IDs) |
+| `GET /api/ranking` | **Optional:** `profile` (default `Student`), `environment` (default `Moon`), `category`, `featured` (default `true`), `w1`…`w5` |
+| `GET /api/ranking/fire-safety` | Same params as ranking, always featured |
+| `GET /api/gaps` | **Optional:** `environment` (default `Moon`); always filters featured fire-safety |
+| `GET /api/export` | **Optional:** `format` (default `json`; `csv` → download), `profile` (default `Student`), `environment` (default `Moon`), `category`, `featured` (default `true`; no `w*` override) |
 
-### Shapes JSON principais
+### Main JSON shapes
 
-- **Ranking / export JSON:** `profile`, `environment`, `featured`, `weights`, `count`, `items[]` — item de ranking: `rank`, `score`, `criteria`, `investigation` (summary); item de export: `id`, `acronym`, `title`, `category`, `score`, `criteria`, `nasaPsiUrl`, `doi`
-- **Lista:** `{ featured, count, items }` (summary); **compare:** `{ count, items }` (detail)
+- **Ranking / export JSON:** `profile`, `environment`, `featured`, `weights`, `count`, `items[]` — ranking item: `rank`, `score`, `criteria`, `investigation` (summary); export item: `id`, `acronym`, `title`, `category`, `score`, `criteria`, `nasaPsiUrl`, `doi`
+- **List:** `{ featured, count, items }` (summary); **compare:** `{ count, items }` (detail)
 - **Gaps:** `environment`, `targets` (`o2Percent`, `pressureKpa`, `flowCms`), `partialGravityWarning`, `nearTargetInvestigationIds`, `coverageCells[]`, `featuredCount`
 
 ---
 
-## 10. Validação (smoke test)
+## 10. Validation (smoke test)
 
-Executado contra `http://localhost:5006`:
+Run against `http://localhost:5006`:
 
-| Teste | Resultado |
+| Test | Result |
 | --- | --- |
 | Health | `{ status: "ok", service: "BlueEmber.Api" }` |
-| Profiles | 3 perfis com pesos corretos |
-| Investigations (sem `featured`) | **19** fichas (default fire-safety) |
-| Ranking Moon + ShipEngineer (sem `featured`) | Top: SAFFIRE-II (PSI-99), SAFFIRE-III, SAFFIRE-I |
-| Compare | 2 itens OK |
-| Gaps Moon | 19 featured + warning de gravidade parcial |
+| Profiles | 3 profiles with correct weights |
+| Investigations (no `featured`) | **19** cards (default fire-safety) |
+| Ranking Moon + ShipEngineer (no `featured`) | Top: SAFFIRE-II (PSI-99), SAFFIRE-III, SAFFIRE-I |
+| Compare | 2 items OK |
+| Gaps Moon | 19 featured + partial gravity warning |
 | Export CSV | HTTP 200 |
-| `POST /api/nasa/refresh` | `refreshed: true`, **133** investigações, 19 featured |
+| `POST /api/nasa/refresh` | `refreshed: true`, **133** investigations, 19 featured |
 
-Build: `dotnet build` — 0 erros, 0 avisos.
+Build: `dotnet build` — 0 errors, 0 warnings.
 
 ---
 
-## 11. Fontes de dados usadas
+## 11. Data sources used
 
-| Arquivo / origem | Papel |
+| File / source | Role |
 | --- | --- |
-| `blue-ember-backend/data/normalized_investigations.json` | Cache principal no boot (~133 fichas) |
-| `https://psi.nasa.gov/geode-py/ws/repo/search` | Fonte oficial GEODE (refresh/fallback) |
-| `blue-ember-backend/scripts/normalize_nasa_data.py` | Origem histórica do enriquecimento |
-| Notion Stellar Hub | Requisitos de score, perfis, telas e arquitetura |
+| `blue-ember-backend/data/normalized_investigations.json` | Main cache on boot (~133 cards) |
+| `https://psi.nasa.gov/geode-py/ws/repo/search` | Official GEODE source (refresh/fallback) |
+| `blue-ember-backend/scripts/normalize_nasa_data.py` | Historical origin of enrichment |
+| Notion Stellar Hub | Score, profiles, screens, and architecture requirements |
 
 ---
 
-## 12. Decisões explícitas
+## 12. Explicit decisions
 
-1. **Perfis mock** — sem tabela de usuários, login ou JWT (evita tempo desnecessário no hackathon).
-2. **Sem Postgres nesta fatia** — JSON + GEODE; repositório interfaceado para migração futura.
-3. **Sem worker Python / IA `/ask`** — próximo incremento.
-4. **Merge no refresh** — GEODE atualiza metadados; métricas enriquecidas do cache local são preservadas quando o `id` já existe.
+1. **Mock profiles** — no user table, login, or JWT (avoids unnecessary hackathon time).
+2. **No Postgres in this slice** — JSON + GEODE; repository interfaced for future migration.
+3. **No Python worker / AI `/ask`** — next increment.
+4. **Refresh merge** — GEODE updates metadata; enriched metrics from local cache are preserved when `id` already exists.
 
 ---
 
-## 13. Como rodar
+## 13. How to run
 
 ```bash
 cd blue-ember-backend
@@ -239,9 +239,9 @@ dotnet run --launch-profile http
 
 - API: http://localhost:5006  
 - Swagger: http://localhost:5006/swagger  
-- Exemplos: `BlueEmber.Api.http`
+- Examples: `BlueEmber.Api.http`
 
-Frontend (já com proxy `/api` → `:5006`):
+Frontend (already with proxy `/api` → `:5006`):
 
 ```bash
 cd blue-ember-frontend
@@ -250,14 +250,14 @@ npm run dev
 
 ---
 
-## 14. Próximos passos sugeridos (não feitos)
+## 14. Suggested next steps (not done)
 
-- Worker Python + S3 `nasa-psi` + embeddings / pgvector  
-- Persistência Postgres atrás de `IInvestigationRepository`  
-- Endpoint `/ask` (proxy)  
-- Consumo das rotas no React (ranking, detalhe, comparador, gaps, export)  
-- Ajuste fino de pesos/normalização com o time de métricas  
+- Python worker + S3 `nasa-psi` + embeddings / pgvector  
+- Postgres persistence behind `IInvestigationRepository`  
+- `/ask` endpoint (proxy)  
+- React consuming routes (ranking, detail, comparer, gaps, export)  
+- Fine-tune weights/normalization with metrics team  
 
 ---
 
-*Relatório gerado a partir da implementação do plano Backend Blue Ember no repositório `blue-ember`.*
+*Report generated from the Backend Blue Ember implementation plan in the `blue-ember` repository.*
