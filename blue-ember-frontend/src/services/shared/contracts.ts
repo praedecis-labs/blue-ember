@@ -28,6 +28,34 @@ export type ScoreCriteriaDto = {
   c3Cinetica: number
   c4SeveridadeTermica: number
   c5Toxicidade: number
+  ppO2Kpa?: number | null
+  winningConditionIndex?: number | null
+}
+
+export type TestConditionDto = {
+  material?: string | null
+  geometry?: string | null
+  o2Percent?: number | null
+  pressureKpa?: number | null
+  flowSpeedCms?: number | null
+  flameSpreadRateMms?: number | null
+  mocPercent?: number | null
+  hrrKw?: number | null
+  coPpm?: number | null
+  provenance: string
+  regime?: string | null
+  ppO2Kpa?: number | null
+}
+
+export type WinningConditionDto = {
+  index: number
+  material?: string | null
+  o2Percent?: number | null
+  pressureKpa?: number | null
+  flowSpeedCms?: number | null
+  ppO2Kpa?: number | null
+  provenance: string
+  regime?: string | null
 }
 
 export type ProfileDto = {
@@ -62,6 +90,7 @@ export type InvestigationSummaryDto = {
   pressureKpa: number[]
   isFeaturedFireSafety: boolean
   nasaPsiUrl: string
+  testConditionCount?: number
 }
 
 export type InvestigationDetailDto = {
@@ -83,14 +112,15 @@ export type InvestigationDetailDto = {
   o2Range: number[]
   pressureKpa: number[]
   flowSpeedCms: number[]
-  flameSpreadRateMms: number
-  mocPercent: number
-  hrrKw: number
-  coPpm: number
+  flameSpreadRateMms: number | null
+  mocPercent: number | null
+  hrrKw: number | null
+  coPpm: number | null
   relevanceHabitat: string[]
   isFeaturedFireSafety: boolean
   nasaPsiUrl: string
   doi: string
+  testConditions?: TestConditionDto[]
 }
 
 export type InvestigationListResponse = {
@@ -109,6 +139,7 @@ export type RankingItemDto = {
   score: number
   criteria: ScoreCriteriaDto
   investigation: InvestigationSummaryDto
+  winningCondition?: WinningConditionDto | null
 }
 
 export type RankingResponse = {

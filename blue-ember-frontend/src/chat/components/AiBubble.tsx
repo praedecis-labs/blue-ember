@@ -346,8 +346,12 @@ export function AiBubble({
           <span className="ai-label">
             {msg.agentReply ? t('bubble.agentLabel') : t('bubble.localLabel')}
           </span>
-          {msg.dashboard && rankingStatus === 'ok' ? (
-            <HypothesisDashboard spec={msg.dashboard} top={r.top} />
+          {rankingStatus === 'ok' && r.top.length > 0 ? (
+            <HypothesisDashboard
+              spec={msg.dashboard}
+              top={r.top}
+              coverageCells={msg.coverageCells}
+            />
           ) : null}
         </>
       )}

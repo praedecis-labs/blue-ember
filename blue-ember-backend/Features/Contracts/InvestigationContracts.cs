@@ -1,5 +1,19 @@
 namespace BlueEmber.Api.Features.Contracts;
 
+public sealed record TestConditionDto(
+    string? Material,
+    string? Geometry,
+    double? O2Percent,
+    double? PressureKpa,
+    double? FlowSpeedCms,
+    double? FlameSpreadRateMms,
+    double? MocPercent,
+    double? HrrKw,
+    double? CoPpm,
+    string Provenance,
+    string? Regime,
+    double? PpO2Kpa);
+
 public sealed record InvestigationSummaryDto(
     string Id,
     string Acronym,
@@ -9,7 +23,8 @@ public sealed record InvestigationSummaryDto(
     IReadOnlyList<double> O2Range,
     IReadOnlyList<double> PressureKpa,
     bool IsFeaturedFireSafety,
-    string NasaPsiUrl);
+    string NasaPsiUrl,
+    int TestConditionCount = 0);
 
 public sealed record InvestigationDetailDto(
     string Id,
@@ -30,14 +45,15 @@ public sealed record InvestigationDetailDto(
     IReadOnlyList<double> O2Range,
     IReadOnlyList<double> PressureKpa,
     IReadOnlyList<double> FlowSpeedCms,
-    double FlameSpreadRateMms,
-    double MocPercent,
-    double HrrKw,
-    double CoPpm,
+    double? FlameSpreadRateMms,
+    double? MocPercent,
+    double? HrrKw,
+    double? CoPpm,
     IReadOnlyList<string> RelevanceHabitat,
     bool IsFeaturedFireSafety,
     string NasaPsiUrl,
-    string Doi);
+    string Doi,
+    IReadOnlyList<TestConditionDto> TestConditions);
 
 public sealed record InvestigationListResponse(
     bool Featured,

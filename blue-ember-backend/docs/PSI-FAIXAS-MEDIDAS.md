@@ -1,8 +1,8 @@
 # Faixas medidas das 19 investigações de incêndio (PSI)
 
 Extraído em 15/11/2026 das tabelas "Experimental table" de cada investigação no repositório PSI da NASA
-(`/geode-py/ws/studies/<PSI-id>/download`). Valores gravados em `data/normalized_investigations.json`
-(`o2_range`, `pressure_kpa`, `flow_speed_cms`). A atualização da NASA (`NasaRefreshService`) preserva esses campos.
+(`/geode-py/ws/studies/<PSI-id>/download`). **Status:** ainda NÃO aplicados. No merge com a main ficamos com o JSON do Carlos (`b05c5c0`), que usa
+`test_conditions` com `provenance`. Próximo passo: marcar como `measured` as condições que esta tabela comprova.
 
 Regra: só entra número que está na tabela. Onde a tabela não traz a coluna, fica o valor assumido de cabine da ISS
 (O2 21 %, 101,3 kPa, fluxo 5 cm/s) e o selo "Estimated" continua valendo.

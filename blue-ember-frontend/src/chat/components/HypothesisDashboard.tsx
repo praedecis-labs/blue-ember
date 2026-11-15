@@ -1,21 +1,48 @@
 import { useT } from '@/i18n'
-import type { DashboardSpec, DashboardWidget } from '@/services/shared/contracts'
-import { f1 } from '../domain/engine'
+import type {
+  CoverageCellDto,
+  DashboardSpec,
+  DashboardWidget,
+} from '@/services/shared/contracts'
 import type { ScoredInvestigation } from '../domain/types'
+import {
+  CriteriaBarsChart,
+  GapsHeatmapChart,
+  RankingTop3Chart,
+} from './charts/dashboard-charts'
 
 type Props = {
-  spec: DashboardSpec
+  spec?: DashboardSpec | null
   top: ScoredInvestigation[]
+  coverageCells?: CoverageCellDto[] | null
 }
 
+const CHART_TYPES = new Set(['rankingTop3', 'criteriaBars', 'gapsHeatmap'])
 const INTERPRETIVE = new Set([
   'materialHazard',
   'scenarioPredictability',
   'insight',
 ])
 
-function WidgetTitle({ children }: { children: string }) {
-  return <h3 className="dash-widget-title">{children}</h3>
+const DEFAULT_CHARTS: DashboardWidget[] = [
+  { type: 'rankingTop3' },
+  { type: 'criteriaBars' },
+  { type: 'gapsHeatmap' },
+]
+
+function WidgetTitle({
+  children,
+  subtitle,
+}: {
+  children: string
+  subtitle?: string
+}) {
+  return (
+    <div>
+      <h3 className="dash-widget-title">{children}</h3>
+      {subtitle ? <span className="hint">{subtitle}</span> : null}
+    </div>
+  )
 }
 
 function MaterialHazard({
@@ -53,7 +80,7 @@ function MaterialHazard({
                 <span
                   className={`pill ${level === 'high' ? 'weak' : level === 'mid' ? 'moderate' : 'strong'}`}
                 >
-                  {f1(item.nota)}
+                  {item.nota.toFixed(1)}
                 </span>
               </li>
             )
@@ -131,7 +158,65 @@ function legendForIntent(intent: string, t: (key: string) => string): string {
   return t('dashboard.legendDefault')
 }
 
-function renderWidget(
+function pickChartWidgets(specWidgets: DashboardWidget[]): DashboardWidget[] {
+  const fromSpec = specWidgets.filter((w) => CHART_TYPES.has(w.type)).slice(0, 3)
+  return fromSpec.length > 0 ? fromSpec : DEFAULT_CHARTS
+}
+
+function renderChartWidget(
+  widget: DashboardWidget,
+  top: ScoredInvestigation[],
+  coverageCells: CoverageCellDto[] | null | undefined,
+  t: (key: string) => string,
+) {
+  switch (widget.type) {
+    case 'rankingTop3':
+      return (
+        <section className="dash-widget">
+          <WidgetTitle subtitle={t('dash.rankingSubtitle')}>
+            {widget.title || t('dash.rankingTitle')}
+          </WidgetTitle>
+          <RankingTop3Chart top={top} emptyLabel={t('dash.emptyChart')} />
+        </section>
+      )
+    case 'criteriaBars':
+      return (
+        <section className="dash-widget">
+          <WidgetTitle subtitle={t('dash.criteriaSubtitle')}>
+            {widget.title || t('dash.criteriaTitle')}
+          </WidgetTitle>
+          <CriteriaBarsChart
+            top={top}
+            labels={[
+              t('crit.prox'),
+              t('crit.moc'),
+              t('crit.spread'),
+              t('crit.hrr'),
+              t('crit.tox'),
+            ]}
+            emptyLabel={t('dash.emptyChart')}
+            noMeasurement={t('dash.noMeasurement')}
+          />
+        </section>
+      )
+    case 'gapsHeatmap':
+      return (
+        <section className="dash-widget">
+          <WidgetTitle subtitle={t('dash.gapsSubtitle')}>
+            {widget.title || t('dash.gapsTitle')}
+          </WidgetTitle>
+          <GapsHeatmapChart
+            cells={coverageCells}
+            emptyLabel={t('dash.emptyChart')}
+          />
+        </section>
+      )
+    default:
+      return null
+  }
+}
+
+function renderInterpretive(
   widget: DashboardWidget,
   top: ScoredInvestigation[],
   t: (key: string) => string,
@@ -157,36 +242,51 @@ function renderWidget(
   }
 }
 
-export function HypothesisDashboard({ spec, top }: Props) {
+export function HypothesisDashboard({ spec, top, coverageCells }: Props) {
   const t = useT()
-  const widgets = (spec.widgets ?? []).filter((w) => INTERPRETIVE.has(w.type))
-  if (!widgets.length) return null
+  const widgets = spec?.widgets ?? []
+  const charts = pickChartWidgets(widgets)
+  const interpretive = widgets.filter((w) => INTERPRETIVE.has(w.type))
+
+  const title = spec?.title || t('dashboard.label')
+  const subtitle = spec?.subtitle
+  const intent = String(spec?.intent ?? 'ranking')
 
   return (
-    <div className="hypothesis-dashboard" data-intent={spec.intent}>
-      {/* div, não <header>: o estilo global de header pinta o fundo de azul */}
+    <div className="hypothesis-dashboard" data-intent={intent}>
       <div className="dash-head">
         <div>
           <span className="step">
             {t('dashboard.label')}
-            <span className="dash-ai-badge">{t('dashboard.aiBadge')}</span>
+            {spec ? (
+              <span className="dash-ai-badge">{t('dashboard.aiBadge')}</span>
+            ) : null}
           </span>
-          <h2>{spec.title}</h2>
-          {spec.subtitle ? <p className="why">{spec.subtitle}</p> : null}
+          <h2>{title}</h2>
+          {subtitle ? <p className="why">{subtitle}</p> : null}
         </div>
       </div>
-      <div className="dash-grid interpretive">
-        {widgets.map((w, i) => (
-          <div key={`${w.type}-${i}`} className="dash-cell">
-            {renderWidget(w, top, t)}
+
+      <div className="dash-grid charts">
+        {charts.map((w, i) => (
+          <div key={`chart-${w.type}-${i}`} className="dash-cell">
+            {renderChartWidget(w, top, coverageCells, t)}
           </div>
         ))}
       </div>
-      {/* Se a IA já trouxe "leitura e legendas", não repete a legenda fixa */}
-      {widgets.some((w) => w.type === 'insight') ? null : (
-        <p className="dash-legend hint">
-          {legendForIntent(String(spec.intent), t)}
-        </p>
+
+      {interpretive.length > 0 ? (
+        <div className="dash-grid interpretive">
+          {interpretive.map((w, i) => (
+            <div key={`interp-${w.type}-${i}`} className="dash-cell">
+              {renderInterpretive(w, top, t)}
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      {interpretive.some((w) => w.type === 'insight') ? null : (
+        <p className="dash-legend hint">{legendForIntent(intent, t)}</p>
       )}
     </div>
   )

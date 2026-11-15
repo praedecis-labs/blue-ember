@@ -14,7 +14,9 @@ public sealed record ScoreCriteriaDto(
     double C2MargemMoc,
     double C3Cinetica,
     double C4SeveridadeTermica,
-    double C5Toxicidade)
+    double C5Toxicidade,
+    double? PpO2Kpa = null,
+    int? WinningConditionIndex = null)
 {
     public static ScoreCriteriaDto From(CriterionBreakdown breakdown) =>
         new(
@@ -22,5 +24,7 @@ public sealed record ScoreCriteriaDto(
             breakdown.C2MargemMoc,
             breakdown.C3Cinetica,
             breakdown.C4SeveridadeTermica,
-            breakdown.C5Toxicidade);
+            breakdown.C5Toxicidade,
+            breakdown.PpO2Kpa,
+            breakdown.WinningConditionIndex);
 }

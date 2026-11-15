@@ -468,9 +468,15 @@
   .chat-app .dash-head h2 { font-size: 17px; margin: 2px 0 0; color: var(--navy); }
   .chat-app .dash-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
   .chat-app .dash-grid.interpretive .dash-cell:has(.insight) { grid-column: 1 / -1; }
+  .chat-app .dash-grid.charts .dash-cell { min-width: 0; }
   .chat-app .dash-legend { margin: 0; padding-top: 4px; border-top: 1px solid color-mix(in srgb, var(--navy) 10%, transparent); }
   @media (min-width: 640px) {
     .chat-app .dash-grid:not(.interpretive) { grid-template-columns: 1fr 1fr; }
+    .chat-app .dash-grid.charts { grid-template-columns: 1fr; }
+  }
+  @media (min-width: 900px) {
+    .chat-app .dash-grid.charts { grid-template-columns: 1fr 1fr; }
+    .chat-app .dash-grid.charts .dash-cell:last-child:nth-child(odd) { grid-column: 1 / -1; }
   }
   .chat-app .dash-widget { display: flex; flex-direction: column; gap: 8px; }
   .chat-app .dash-widget-title { font-size: 13px; font-weight: 600; color: var(--navy); margin: 0; }

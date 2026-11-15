@@ -166,6 +166,45 @@ ENRICHMENT = {
         'relevance_habitat': ['Moon Base (0.16g proxy)', 'Mars Base (0.38g proxy)'],
         'spinoff_relevance': 'Electrostatic control of industrial flames to curb soot and enhance heat exchange.'
     },
+    'ACME CLD Flame': {
+        'materials': ['Methane / Ethylene'],
+        'geometry': 'Coflow Laminar Diffusion Flame',
+        'o2_range': [21.0, 30.0],
+        'pressure_kpa': [70.0, 101.3],
+        'flow_speed_cms': [5.0, 15.0],
+        'flame_spread_rate_mms': 0.4,
+        'moc_percent': 16.0,
+        'hrr_kw': 1.9,
+        'co_ppm': 140,
+        'relevance_habitat': ['Space Station', 'Moon Base'],
+        'spinoff_relevance': 'Diffusion-flame soot and CO models for enclosed fire safety.'
+    },
+    'ACME s-Flame': {
+        'materials': ['Gaseous Fuels'],
+        'geometry': 'Spherical Flame Burner',
+        'o2_range': [18.0, 35.0],
+        'pressure_kpa': [70.0, 101.3],
+        'flow_speed_cms': [0.0, 8.0],
+        'flame_spread_rate_mms': 0.3,
+        'moc_percent': 14.5,
+        'hrr_kw': 1.5,
+        'co_ppm': 130,
+        'relevance_habitat': ['Moon Base', 'Mars Base'],
+        'spinoff_relevance': 'Spherical flame extinction limits for low-g combustion modeling.'
+    },
+    'ACME/Flame Design': {
+        'materials': ['Methane mixtures'],
+        'geometry': 'Designed Flame Geometry Burner',
+        'o2_range': [21.0, 40.0],
+        'pressure_kpa': [70.0, 101.3],
+        'flow_speed_cms': [5.0, 20.0],
+        'flame_spread_rate_mms': 0.6,
+        'moc_percent': 15.0,
+        'hrr_kw': 2.0,
+        'co_ppm': 150,
+        'relevance_habitat': ['Spacecraft', 'Moon Base'],
+        'spinoff_relevance': 'Flame-shape design for controlled heat release in confined volumes.'
+    },
     'SAME': {
         'materials': ['Combustion Aerosols from Overheated Wiring/Polymers'],
         'geometry': 'Particulate Cloud in Flow Loop',
@@ -233,6 +272,87 @@ ENRICHMENT = {
     }
 }
 
+REGIME = {
+    'SAFFIRE-I': 'solid_panel',
+    'SAFFIRE-II': 'solid_panel',
+    'SAFFIRE-III': 'solid_panel',
+    'BASS': 'solid_panel',
+    'BASS-II': 'solid_panel',
+    'FLEX': 'droplet',
+    'FLEX-2': 'droplet',
+    'CFI': 'droplet',
+    'ACME BRE': 'gas',
+    'ACME CFI-G': 'gas',
+    'ACME CLD Flame': 'gas',
+    'ACME E-FIELD Flames': 'gas',
+    'ACME s-Flame': 'gas',
+    'ACME/Flame Design': 'gas',
+    'SAME': 'detection',
+    'SAME-R': 'detection',
+    'DAFT / DAFT-2': 'detection',
+    'SPICE': 'gas',
+    'SLICE': 'gas',
+}
+
+
+def build_test_conditions(acronym, enrich):
+    """Build co-occurring condition rows (endpoint pairing), not a full cartesian product."""
+    if not enrich:
+        return []
+
+    materials = enrich.get('materials') or []
+    material = materials[0] if materials else None
+    geometry = enrich.get('geometry')
+    o2s = list(enrich.get('o2_range') or [])
+    ps = list(enrich.get('pressure_kpa') or [])
+    flows = list(enrich.get('flow_speed_cms') or [])
+    regime = REGIME.get(acronym)
+    n = max(len(o2s), len(ps), len(flows), 1)
+
+    conditions = []
+    seen = set()
+    for i in range(n):
+        o2 = o2s[min(i, len(o2s) - 1)] if o2s else None
+        p = ps[min(i, len(ps) - 1)] if ps else None
+        f = flows[min(i, len(flows) - 1)] if flows else None
+        key = (o2, p, f)
+        if key in seen:
+            continue
+        seen.add(key)
+        conditions.append({
+            'material': material,
+            'geometry': geometry,
+            'o2_percent': o2,
+            'pressure_kpa': p,
+            'flow_speed_cms': f,
+            'flame_spread_rate_mms': enrich.get('flame_spread_rate_mms'),
+            'moc_percent': enrich.get('moc_percent'),
+            'hrr_kw': enrich.get('hrr_kw'),
+            'co_ppm': enrich.get('co_ppm'),
+            'provenance': 'estimated',
+            'regime': regime,
+        })
+    return conditions
+
+
+def extract_real_doi(hw_link, src):
+    candidates = []
+    if hw_link and 'doi.org' in str(hw_link):
+        candidates.append(str(hw_link))
+    for key in ('DOI', 'Doi', 'doi'):
+        val = src.get(key)
+        if val:
+            candidates.append(str(val))
+    for raw in candidates:
+        idx = raw.find('10.')
+        if idx >= 0:
+            doi = raw[idx:].strip().rstrip('/')
+            if doi.startswith('10.25923/nasa.psi-'):
+                continue
+            return doi
+    return ''
+
+
 normalized_list = []
 
 for hit in hits:
@@ -240,21 +360,40 @@ for hit in hits:
     acronym = (src.get('Acronym') or '').strip()
     accession = src.get('Accession')
     title = src.get('Title') or 'Investigação sem título'
-    
-    # Check if target
+
     is_target = acronym in TARGET_ACRONYMS
     enrich = ENRICHMENT.get(acronym, {})
-    
-    # Normalize hardware
+
     hw_raw = src.get('Experiment Hardware') or {}
     hw_name = hw_raw.get('Name') if isinstance(hw_raw, dict) else str(hw_raw)
     hw_link = hw_raw.get('Link') if isinstance(hw_raw, dict) else ''
-    
-    # DOI extraction
-    doi = None
-    if isinstance(hw_raw, dict) and 'doi.org' in str(hw_link):
-        doi = hw_link
-    
+
+    doi = extract_real_doi(hw_link, src)
+    test_conditions = build_test_conditions(acronym, enrich) if enrich else []
+
+    if enrich:
+        materials = enrich.get('materials', [])
+        geometry = enrich.get('geometry', '')
+        o2_range = enrich.get('o2_range', [])
+        pressure_kpa = enrich.get('pressure_kpa', [])
+        flow_speed_cms = enrich.get('flow_speed_cms', [])
+        flame_spread = enrich.get('flame_spread_rate_mms')
+        moc = enrich.get('moc_percent')
+        hrr = enrich.get('hrr_kw')
+        co = enrich.get('co_ppm')
+        habitats = enrich.get('relevance_habitat', [])
+    else:
+        materials = []
+        geometry = ''
+        o2_range = []
+        pressure_kpa = []
+        flow_speed_cms = []
+        flame_spread = None
+        moc = None
+        hrr = None
+        co = None
+        habitats = []
+
     normalized_record = {
         'id': accession,
         'acronym': acronym,
@@ -268,19 +407,20 @@ for hit in hits:
         'approach': src.get('Approach') or '',
         'hypothesis': src.get('Hypothesis') or '',
         'earth_benefits': src.get('Research Impacts/Earth Benefits') or enrich.get('spinoff_relevance', ''),
-        'materials': enrich.get('materials', ['Amostras Diversas de Pesquisa']),
-        'geometry': enrich.get('geometry', 'Geometria Padrão de Ensaio'),
-        'o2_range': enrich.get('o2_range', [21.0]),
-        'pressure_kpa': enrich.get('pressure_kpa', [101.3]),
-        'flow_speed_cms': enrich.get('flow_speed_cms', [5.0]),
-        'flame_spread_rate_mms': enrich.get('flame_spread_rate_mms', 1.0),
-        'moc_percent': enrich.get('moc_percent', 18.0),
-        'hrr_kw': enrich.get('hrr_kw', 1.5),
-        'co_ppm': enrich.get('co_ppm', 100),
-        'relevance_habitat': enrich.get('relevance_habitat', ['ISS', 'Spacecraft']),
+        'materials': materials,
+        'geometry': geometry,
+        'o2_range': o2_range,
+        'pressure_kpa': pressure_kpa,
+        'flow_speed_cms': flow_speed_cms,
+        'flame_spread_rate_mms': flame_spread,
+        'moc_percent': moc,
+        'hrr_kw': hrr,
+        'co_ppm': co,
+        'relevance_habitat': habitats,
         'is_featured_fire_safety': is_target,
         'nasa_psi_url': f"https://psi.nasa.gov/physci/repo/investigations/{accession}",
-        'doi': doi or f"10.25923/nasa.{accession.lower() if accession else 'psi'}"
+        'doi': doi,
+        'test_conditions': test_conditions,
     }
     normalized_list.append(normalized_record)
 

@@ -3,10 +3,18 @@ import type { ChatMessage } from '../../domain/types'
 export type AiMsg = Extract<ChatMessage, { kind: 'ai' }>
 
 /**
- * DOIs escondidos até o backend trocar pelos reais.
- * Os DOIs da API (10.25923/nasa.psi-…) não existem no doi.org; os reais do PSI
- * usam o prefixo 10.60555 (ex.: SAFFIRE-II = 10.60555/2chp-m469). O link do PSI
- * continua visível e a página dele mostra o DOI verdadeiro.
- * Quando o backend corrigir, basta trocar para true.
+ * Show DOI when the API returns a real one (synthetic 10.25923/nasa.psi-* are stripped server-side).
  */
-export const SHOW_DOI = false
+export const SHOW_DOI = true
+
+export function provenanceLabel(
+  provenance: string | null | undefined,
+  estimated: string,
+  measured: string,
+  unknown: string,
+): string {
+  const p = (provenance ?? '').toLowerCase()
+  if (p === 'measured') return measured
+  if (p === 'estimated') return estimated
+  return unknown
+}

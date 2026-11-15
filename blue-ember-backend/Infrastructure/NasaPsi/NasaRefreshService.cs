@@ -85,9 +85,16 @@ public sealed class NasaRefreshService
             f.HrrKw = prev.HrrKw;
             f.CoPpm = prev.CoPpm;
             f.RelevanceHabitat = prev.RelevanceHabitat;
+            f.TestConditions = prev.TestConditions;
             f.IsFeaturedFireSafety = prev.IsFeaturedFireSafety || f.IsFeaturedFireSafety;
             if (string.IsNullOrWhiteSpace(f.EarthBenefits))
                 f.EarthBenefits = prev.EarthBenefits;
+            if (string.IsNullOrWhiteSpace(f.Doi) && !string.IsNullOrWhiteSpace(prev.Doi))
+                f.Doi = InvestigationNormalizer.SanitizeDoi(prev.Doi);
+            else
+                f.Doi = InvestigationNormalizer.SanitizeDoi(f.Doi);
+            if (f.TestConditions.Count > 0)
+                f.SyncAggregatesFromConditions();
             return f;
         }).ToList();
     }

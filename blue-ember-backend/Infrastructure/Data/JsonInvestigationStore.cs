@@ -180,6 +180,20 @@ public sealed class JsonInvestigationStore : IInvestigationRepository
         ["relevance_habitat"] = inv.RelevanceHabitat,
         ["is_featured_fire_safety"] = inv.IsFeaturedFireSafety,
         ["nasa_psi_url"] = inv.NasaPsiUrl,
-        ["doi"] = inv.Doi
+        ["doi"] = inv.Doi,
+        ["test_conditions"] = inv.TestConditions.Select(c => new Dictionary<string, object?>
+        {
+            ["material"] = c.Material,
+            ["geometry"] = c.Geometry,
+            ["o2_percent"] = c.O2Percent,
+            ["pressure_kpa"] = c.PressureKpa,
+            ["flow_speed_cms"] = c.FlowSpeedCms,
+            ["flame_spread_rate_mms"] = c.FlameSpreadRateMms,
+            ["moc_percent"] = c.MocPercent,
+            ["hrr_kw"] = c.HrrKw,
+            ["co_ppm"] = c.CoPpm,
+            ["provenance"] = c.Provenance,
+            ["regime"] = c.Regime
+        }).ToList()
     };
 }

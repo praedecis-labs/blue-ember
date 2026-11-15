@@ -1,10 +1,21 @@
 namespace BlueEmber.Api.Features.Contracts;
 
+public sealed record WinningConditionDto(
+    int Index,
+    string? Material,
+    double? O2Percent,
+    double? PressureKpa,
+    double? FlowSpeedCms,
+    double? PpO2Kpa,
+    string Provenance,
+    string? Regime);
+
 public sealed record RankingItemDto(
     int Rank,
     double Score,
     ScoreCriteriaDto Criteria,
-    InvestigationSummaryDto Investigation);
+    InvestigationSummaryDto Investigation,
+    WinningConditionDto? WinningCondition = null);
 
 public sealed record RankingResponse(
     string Profile,

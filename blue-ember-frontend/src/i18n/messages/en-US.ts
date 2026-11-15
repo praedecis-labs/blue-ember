@@ -154,7 +154,7 @@ export const enUS = {
     gravity: 'All of these tests ran in microgravity; none in lunar or Martian gravity.',
   },  estimated: {
     badge: 'Estimated',
-    tip: 'Where a NASA PSI table records oxygen, pressure or air flow we use it; missing values assume ISS cabin air (21% O₂, 101.3 kPa).',
+    tip: 'Oxygen, pressure and air-flow ranges per investigation are estimates; measured values from the NASA PSI tables are being added.',
   },  coverageMap: {
     hide: 'Hide the coverage map',
     show: 'See where your case falls among NASA tests',
@@ -264,11 +264,29 @@ export const enUS = {
     errFlow: 'Flow between 0 and 100 cm/s.',
     estimated: '(estimated)',
     flowLabel: 'flow',
+    ppO2: 'ppO₂',
+    provenanceEstimated: 'Estimate',
+    provenanceMeasured: 'Measured',
+    provenanceUnknown: 'Unknown source',
+  },
+  category: {
+    prevencao: 'Prevention',
+    deteccao: 'Detection',
+    supressao: 'Suppression',
+    outro: 'Other',
   },
   dash: {
     predHigh: 'High',
     predMedium: 'Medium',
     predLow: 'Low',
+    rankingTitle: 'Most relevant for this mission',
+    rankingSubtitle: 'API score 0–10 (worst-case test condition)',
+    criteriaTitle: 'Why the top result scored this way',
+    criteriaSubtitle: 'C1–C5 of the winning test condition',
+    gapsTitle: 'Where data is missing',
+    gapsSubtitle: 'O₂ × pressure coverage (test conditions)',
+    noMeasurement: 'No measurement',
+    emptyChart: 'Not enough data to chart.',
   },
   crit: {
     prox: 'C1 Proximity',

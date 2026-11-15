@@ -5,6 +5,20 @@ namespace BlueEmber.Api.Features.Investigations;
 
 public static class InvestigationDtos
 {
+    public static TestConditionDto ToCondition(TestCondition c) => new(
+        c.Material,
+        c.Geometry,
+        c.O2Percent,
+        c.PressureKpa,
+        c.FlowSpeedCms,
+        c.FlameSpreadRateMms,
+        c.MocPercent,
+        c.HrrKw,
+        c.CoPpm,
+        c.Provenance,
+        c.Regime,
+        c.PpO2Kpa);
+
     public static InvestigationDetailDto ToDetail(Investigation inv) => new(
         inv.Id,
         inv.Acronym,
@@ -31,7 +45,8 @@ public static class InvestigationDtos
         inv.RelevanceHabitat,
         inv.IsFeaturedFireSafety,
         inv.NasaPsiUrl,
-        inv.Doi);
+        inv.Doi,
+        inv.TestConditions.Select(ToCondition).ToList());
 
     public static InvestigationSummaryDto ToSummary(Investigation inv) => new(
         inv.Id,
@@ -42,5 +57,6 @@ public static class InvestigationDtos
         inv.O2Range,
         inv.PressureKpa,
         inv.IsFeaturedFireSafety,
-        inv.NasaPsiUrl);
+        inv.NasaPsiUrl,
+        inv.TestConditions.Count);
 }

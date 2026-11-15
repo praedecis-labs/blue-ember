@@ -157,7 +157,7 @@ export const ptBR: MessageTree = {
     gravity: 'Todos esses testes foram em microgravidade; nenhum na gravidade da Lua ou de Marte.',
   },  estimated: {
     badge: 'Estimado',
-    tip: 'Onde a tabela do PSI da NASA registra oxigênio, pressão ou fluxo de ar, usamos o valor medido; o que falta assume ar de cabine da ISS (21% O₂, 101,3 kPa).',
+    tip: 'As faixas de oxigênio, pressão e fluxo de ar de cada investigação são estimativas; os valores medidos nas tabelas do PSI da NASA estão sendo incorporados.',
   },  coverageMap: {
     hide: 'Esconder o mapa de cobertura',
     show: 'Ver onde o seu caso cai entre os testes da NASA',
@@ -268,11 +268,29 @@ export const ptBR: MessageTree = {
     errFlow: 'Fluxo entre 0 e 100 cm/s.',
     estimated: '(estimado)',
     flowLabel: 'fluxo',
+    ppO2: 'ppO₂',
+    provenanceEstimated: 'Estimativa',
+    provenanceMeasured: 'Medido',
+    provenanceUnknown: 'Origem desconhecida',
+  },
+  category: {
+    prevencao: 'Prevenção',
+    deteccao: 'Detecção',
+    supressao: 'Supressão',
+    outro: 'Outro',
   },
   dash: {
     predHigh: 'Alta',
     predMedium: 'Média',
     predLow: 'Baixa',
+    rankingTitle: 'Mais relevantes para esta missão',
+    rankingSubtitle: 'Nota da API 0–10 (pior condição de teste)',
+    criteriaTitle: 'Por que o 1º lugar teve essa nota',
+    criteriaSubtitle: 'C1–C5 da condição de teste vencedora',
+    gapsTitle: 'Onde faltam dados',
+    gapsSubtitle: 'Cobertura O₂ × pressão (condições de teste)',
+    noMeasurement: 'Sem medição',
+    emptyChart: 'Dados insuficientes para o gráfico.',
   },
   crit: {
     prox: 'C1 Proximidade',
