@@ -3,6 +3,7 @@ import { useT } from '@/i18n'
 import type { EnvironmentDto } from '@/services/shared/contracts'
 import { LOGO_SRC } from '../domain/data'
 import { f1, summaryFor } from '../domain/engine'
+import { psiUrl } from '../domain/psi-url'
 import type { ChatMessage, PanelId, QueryState } from '../domain/types'
 import { DetailPanels } from './detail-panels'
 import { HypothesisDashboard } from './HypothesisDashboard'
@@ -155,10 +156,7 @@ export function AiBubble({
                     {/* Link direto para a página oficial da investigação no PSI da NASA */}
                     <a
                       className="top-inv-link"
-                      href={
-                        d.nasaPsiUrl ||
-                        `https://psi.nasa.gov/physci/repo/data/investigations/${d.id}`
-                      }
+                      href={psiUrl(d)}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={t('panels.onPsi', { id: d.id })}
