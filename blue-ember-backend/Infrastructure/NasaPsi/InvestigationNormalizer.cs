@@ -74,7 +74,7 @@ public static class InvestigationNormalizer
             TestConditions = []
         };
 
-        investigation.Category = CategoryMapper.Map(investigation.Acronym, investigation.SubDiscipline);
+        investigation.Category = CategoryMapper.Map(investigation.Acronym, investigation.SubDiscipline).ToApiValue();
         return investigation;
     }
 
@@ -113,7 +113,7 @@ public static class InvestigationNormalizer
         if (investigation.TestConditions.Count > 0)
             investigation.SyncAggregatesFromConditions();
 
-        investigation.Category = CategoryMapper.Map(investigation.Acronym, investigation.SubDiscipline);
+        investigation.Category = CategoryMapper.Map(investigation.Acronym, investigation.SubDiscipline).ToApiValue();
         return investigation;
     }
 
