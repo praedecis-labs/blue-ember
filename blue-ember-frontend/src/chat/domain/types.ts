@@ -125,7 +125,7 @@ export type ChatMessage =
       rankingStatus: RequestStatus
       rankingError: string | null
       weights: CritWeights | null
-      /** True when `lead` came from Gemini agent prose (skip templte summary). */
+      /** True when `lead` came from agent prose (skip template summary). */
       agentReply?: boolean
       /** A IA falhou (limite, chave ou servidor): a resposta usa o resumo automático com os dados da NASA. */
       agentFailed?: boolean
@@ -135,7 +135,7 @@ export type ChatMessage =
       dashboard?: DashboardSpec | null
       coverageCells?: CoverageCellDto[] | null
       missionTargets?: MissionTargetsDto | null
-      /** Etapa real do carregamento: esperando o Gemini, o ranking (sem IA) ou os painéis. */
+      /** Etapa real do carregamento: esperando o agente (LLM), o ranking (sem IA) ou os painéis. */
       loadingPhase?: 'agent' | 'ranking' | 'panels'
     }
 
