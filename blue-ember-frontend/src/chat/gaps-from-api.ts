@@ -1,4 +1,7 @@
 import type { CoverageCellDto, GapsResponse } from '@/services/contracts'
+import { fmt } from './engine'
+
+type Translate = (key: string, vars?: Record<string, string | number>) => string
 
 export type GapsFromApi = {
   gaps: string[]
@@ -9,7 +12,7 @@ export type GapsFromApi = {
 const CELL_BULLET_CAP = 5
 
 function fmtNum(n: number): string {
-  return Number.isInteger(n) ? String(n) : String(n)
+  return Number.isInteger(n) ? String(n) : fmt(n)
 }
 
 function cellCoversTarget(
@@ -25,23 +28,33 @@ function cellCoversTarget(
   )
 }
 
-function formatEmptyCell(cell: CoverageCellDto): string {
-  return `Sem cobertura em O₂ ${fmtNum(cell.o2Min)}–${fmtNum(cell.o2Max)}% × ${fmtNum(cell.pressureMinKpa)}–${fmtNum(cell.pressureMaxKpa)} kPa`
+function formatEmptyCell(cell: CoverageCellDto, t: Translate): string {
+  return t('gapsApi.noCoverage', {
+    o2: `${fmtNum(cell.o2Min)}–${fmtNum(cell.o2Max)}`,
+    kpa: `${fmtNum(cell.pressureMinKpa)}–${fmtNum(cell.pressureMaxKpa)}`,
+  })
 }
 
 /**
  * Derive Gaps panel bullets + warning text from GET /api/gaps.
  * Gravity warning is returned separately for the callout (not duplicated in the list).
  */
-export function gapsFromApi(gaps: GapsResponse): GapsFromApi {
-  const partialGravityWarning = gaps.partialGravityWarning?.trim() ?? ''
-  const partialG = Boolean(partialGravityWarning)
+export function gapsFromApi(
+  gaps: GapsResponse,
+  t: Translate = (key) => key,
+): GapsFromApi {
+  // O aviso do backend vem sempre em português; a tela mostra a versão traduzida
+  const partialG = Boolean(gaps.partialGravityWarning?.trim())
+  const partialGravityWarning = partialG ? t('gapsApi.partialGWarning') : ''
   const bullets: string[] = []
 
   if (gaps.nearTargetInvestigationIds.length === 0) {
     const { o2Percent, pressureKpa } = gaps.targets
     bullets.push(
-      `Nenhuma investigação featured perto do alvo (O₂ ${fmtNum(o2Percent)}% ±5%, ${fmtNum(pressureKpa)} kPa ±15 kPa).`,
+      t('gapsApi.noneNear', {
+        o2: fmtNum(o2Percent),
+        kpa: fmtNum(pressureKpa),
+      }),
     )
   }
 
@@ -53,7 +66,7 @@ export function gapsFromApi(gaps: GapsResponse): GapsFromApi {
   ].slice(0, CELL_BULLET_CAP)
 
   for (const c of prioritized) {
-    bullets.push(formatEmptyCell(c))
+    bullets.push(formatEmptyCell(c, t))
   }
 
   return {
