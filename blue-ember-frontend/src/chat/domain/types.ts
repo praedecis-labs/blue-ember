@@ -127,6 +127,8 @@ export type ChatMessage =
       weights: CritWeights | null
       /** True when `lead` came from Gemini agent prose (skip templte summary). */
       agentReply?: boolean
+      /** Idioma em que a IA escreveu `lead` (pt-BR ou en-US). */
+      agentLocale?: string
       offTopic?: boolean
       dashboard?: DashboardSpec | null
       coverageCells?: CoverageCellDto[] | null

@@ -254,6 +254,8 @@ export function useChatHydration(deps: HydrationDeps) {
         )
         .filter((t) => t.text.trim().length > 0)
 
+      // Idioma da pergunta: a IA responde nele; a tela usa isso se a pessoa trocar o idioma depois
+      const askedLocale = localeRef.current
       let agent: AgentAskResponse | null = null
       try {
         agent = await askAgent({
@@ -261,7 +263,7 @@ export function useChatHydration(deps: HydrationDeps) {
           profile: toApiProfile(prof),
           environment: toApiEnvironment(query.env),
           category: toApiCategory(query.goal),
-          locale: localeRef.current,
+          locale: askedLocale,
           query: {
             env: toApiEnvironment(query.env),
             material: query.material,
@@ -303,6 +305,7 @@ export function useChatHydration(deps: HydrationDeps) {
 
       const lead = sanitizeAgentProse(agent.text.trim())
       const dashboard = agent.dashboard ?? null
+      patchAiMessage(msgId, (msg) => ({ ...msg, agentLocale: askedLocale }))
       if (agent.ranking && agent.gaps) {
         await applyRankingAndGaps(msgId, agent.ranking, agent.gaps, opts, {
           lead,
