@@ -109,6 +109,7 @@ export const enUS = {
   },
   dashboard: {
     label: 'Dashboard',
+    aiBadge: 'AI interpretation',
     hazardTitle: 'Relative hazard',
     noRanking: 'No ranking data to interpret.',
     predictabilityTitle: 'Predictability by scenario',
