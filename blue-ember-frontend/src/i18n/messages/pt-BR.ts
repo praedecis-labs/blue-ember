@@ -131,6 +131,12 @@ export const ptBR: MessageTree = {
       'O PSI quase não tem dados de gravidade parcial (Lua ~0,16 g / Marte ~0,38 g). A maior parte dos ensaios é em 0 g ou 1 g; interpolar entre esses regimes pode subestimar o risco.',
   },
   answer: {
+    nextStep: 'Próximo passo:',
+    evidencePill: 'Força da evidência: {{level}}',
+    yourHyp: 'Sua hipótese',
+    testedToggle: 'O que a NASA testou perto do seu caso',
+    unknownToggle: 'O que ainda não se sabe ({{n}})',
+    translating: 'Traduzindo a resposta da IA…',
     langNote: 'A resposta da IA foi escrita em {{lang}}; acima está o resumo no idioma atual. Pergunte de novo para uma nova resposta da IA.',
     showOriginal: 'Ver original',
     hideOriginal: 'Esconder original',
@@ -151,8 +157,9 @@ export const ptBR: MessageTree = {
     gravity: 'Todos esses testes foram em microgravidade; nenhum na gravidade da Lua ou de Marte.',
   },  estimated: {
     badge: 'Estimado',
-    tip: 'As faixas de oxigênio e pressão de cada investigação são estimativas que ainda estão sendo conferidas com as tabelas do PSI da NASA.',
+    tip: 'Onde a tabela do PSI da NASA registra oxigênio, pressão ou fluxo de ar, usamos o valor medido; o que falta assume ar de cabine da ISS (21% O₂, 101,3 kPa).',
   },  coverageMap: {
+    hide: 'Esconder o mapa de cobertura',
     show: 'Ver onde o seu caso cai entre os testes da NASA',
     title: 'Onde o seu caso cai entre os testes da NASA',
     caption: 'Seu caso: {{o2}}% de O₂ · {{kpa}} kPa → {{n}} testes nessa faixa',

@@ -128,6 +128,12 @@ export const enUS = {
       'The PSI has almost no partial-gravity data (Moon ~0.16 g / Mars ~0.38 g). Most tests ran at 0 g or 1 g; interpolating between those regimes may underestimate the risk.',
   },
   answer: {
+    nextStep: 'Next step:',
+    evidencePill: 'Evidence: {{level}}',
+    yourHyp: 'Your hypothesis',
+    testedToggle: 'What NASA tested near your case',
+    unknownToggle: 'What is still unknown ({{n}})',
+    translating: 'Translating the AI answer…',
     langNote: 'The AI answer was written in {{lang}}; above is the summary in the current language. Ask again for a new AI answer.',
     showOriginal: 'Show original',
     hideOriginal: 'Hide original',
@@ -148,8 +154,9 @@ export const enUS = {
     gravity: 'All of these tests ran in microgravity; none in lunar or Martian gravity.',
   },  estimated: {
     badge: 'Estimated',
-    tip: 'Oxygen and pressure ranges per investigation are estimates still being checked against the NASA PSI tables.',
+    tip: 'Where a NASA PSI table records oxygen, pressure or air flow we use it; missing values assume ISS cabin air (21% O₂, 101.3 kPa).',
   },  coverageMap: {
+    hide: 'Hide the coverage map',
     show: 'See where your case falls among NASA tests',
     title: 'Where your case falls among NASA tests',
     caption: 'Your case: {{o2}}% O₂ · {{kpa}} kPa → {{n}} tests in this range',

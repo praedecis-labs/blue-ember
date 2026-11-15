@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { useI18n } from '@/i18n'
+import { useEffect, useState } from 'react'
+import { translateAgentText } from '@/services/api/agent'
+import { useI18n, useT } from '@/i18n'
 import { retranslate } from '@/i18n/retranslate'
 import { emptyCellBullets } from '../domain/gaps-from-api'
 import type { EnvironmentDto } from '@/services/shared/contracts'
@@ -10,6 +11,8 @@ import { DetailPanels } from './detail-panels'
 import { HypothesisDashboard } from './HypothesisDashboard'
 import { CoverageMap } from './CoverageMap'
 import { EstimatedBadge } from './EstimatedBadge'
+import { CitedText } from './CitedText'
+import { splitNextStep } from '../domain/next-step'
 import { coverageStatus } from '../domain/coverage-status'
 import { psiUrl } from '../domain/psi-url'
 
@@ -34,12 +37,37 @@ export function AiBubble({
   // mostra o resumo local já traduzido e deixa o texto original a um clique.
   const staleAi = Boolean(msg.agentReply && msg.agentLocale && msg.agentLocale !== locale)
   const [showOriginal, setShowOriginal] = useState(false)
+  // Tradução da resposta da IA para o idioma atual (feita uma vez por idioma e guardada)
+  const [translations, setTranslations] = useState<Record<string, string>>({})
+  const [translating, setTranslating] = useState<string | null>(null)
+  const [translateFailed, setTranslateFailed] = useState<Record<string, boolean>>({})
+  const translated = translations[locale]
+  useEffect(() => {
+    if (!staleAi || !msg.lead || translations[locale] || translateFailed[locale]) return
+    let alive = true
+    setTranslating(locale)
+    translateAgentText(msg.lead, locale)
+      .then((res) => {
+        if (alive && res.text) setTranslations((cur) => ({ ...cur, [locale]: res.text }))
+      })
+      .catch(() => {
+        if (alive) setTranslateFailed((cur) => ({ ...cur, [locale]: true }))
+      })
+      .finally(() => {
+        if (alive) setTranslating(null)
+      })
+    return () => {
+      alive = false
+    }
+  }, [staleAi, locale, msg.lead, translations, translateFailed])
   const [openPanel, setOpenPanel] = useState<PanelId | null>(null)
   const { q, r, missing, rankingStatus, rankingError } = msg
   const cov = coverageStatus(msg.coverageCells, q)
   // Mapa só quando ajuda: pedido pela pessoa ou quando o caso cai numa lacuna
-  const autoMap = showDashboard || (cov != null && cov.status !== 'nearby')
-  const [mapOpen, setMapOpen] = useState(autoMap)
+  // Mapa e "o que ainda não se sabe" ficam guardados em botões; o mapa só abre sozinho quando pedido
+  const [mapOpen, setMapOpen] = useState(showDashboard)
+  const [unknownOpen, setUnknownOpen] = useState(false)
+  const [testedOpen, setTestedOpen] = useState(false)
   // "O que ainda não se sabe": lacunas da API (até 3) + limites fixos e verdadeiros dos dados
   const unknowns = [
     // recalculadas a partir das células para acompanhar o idioma atual
@@ -74,9 +102,6 @@ export function AiBubble({
         : r.level[0] === 'moderate'
           ? t('verdict.testsSimilar')
           : t('verdict.fewTests')
-  const verdictKicker = hyp
-    ? t('verdict.hypKicker', { level: retranslate(r.level[1], t).toLowerCase() })
-    : retranslate(r.level[1], t)
 
   const invCountLabel =
     rankingStatus === 'loading'
@@ -131,7 +156,17 @@ export function AiBubble({
           {/* 1. Veredito compacto primeiro: dá o contexto sem roubar a cena */}
           {rankingStatus === 'ok' ? (
             <div className={`verdict-big ${verdictTone}`} role="status">
-              <span className="kicker">{verdictKicker}</span>
+              {/* Selos lado a lado (estilo do vídeo): força da evidência + ambiente */}
+              <span className="verdict-pills">
+                <span className={`vpill ev ${r.level[0]}`}>
+                  {t('answer.evidencePill', { level: t(`evidence.${r.level[0]}`).toLowerCase() })}
+                </span>
+                <span className={`vpill env${q.env !== 'iss' ? ' est' : ''}`}>
+                  {t(`env.${q.env}`)}
+                  {q.env !== 'iss' ? ` · ${t('estimated.badge').toLowerCase()}` : ''}
+                </span>
+              </span>
+              {hyp ? <span className="kicker">{t('answer.yourHyp')}</span> : null}
               <span className="title">{verdictTitle}</span>
             </div>
           ) : null}
@@ -141,7 +176,13 @@ export function AiBubble({
             <h4 className="ans-h">{t('answer.shows')}</h4>
               {/* 2. A resposta: texto da IA ou, sem IA, o resumo local.
                   Esconde o "pensando…" provisório se ele sobrar no modo sem IA */}
-              {msg.agentReply && msg.lead && staleAi && rankingStatus === 'ok' ? (
+              {msg.agentReply && msg.lead && staleAi && translated ? (
+                <AnswerText text={translated} invs={r.top.slice(0, 8)} />
+              ) : msg.agentReply && msg.lead && staleAi && translating === locale ? (
+                <p className="summary translating" aria-busy="true">
+                  <span className="spinner" aria-hidden /> {t('answer.translating')}
+                </p>
+              ) : msg.agentReply && msg.lead && staleAi && rankingStatus === 'ok' ? (
                 <>
                   <p className="summary">{summaryFor(q, r, t)}</p>
                   <span className="lang-note">
@@ -163,7 +204,7 @@ export function AiBubble({
                   ) : null}
                 </>
               ) : msg.agentReply && msg.lead ? (
-                <p className="summary">{retranslate(msg.lead, t)}</p>
+                <AnswerText text={retranslate(msg.lead, t)} invs={r.top.slice(0, 8)} />
               ) : (
                 <>
                   {msg.lead && msg.lead !== t('bubble.thinking') ? (
@@ -175,7 +216,42 @@ export function AiBubble({
                 </>
               )}
           </section>
-          {rankingStatus === 'ok' || rankingStatus === 'error' ? (
+          {/* Extras sob demanda: o que a NASA testou perto, mapa de cobertura e o que ainda não se sabe */}
+          {rankingStatus === 'ok' ? (
+            <div className="ans-more">
+              {r.top.length ? (
+                <button
+                  type="button"
+                  className="ghost map-toggle"
+                  aria-expanded={testedOpen}
+                  onClick={() => setTestedOpen((v) => !v)}
+                >
+                  {t('answer.testedToggle')}
+                </button>
+              ) : null}
+              {msg.coverageCells?.length ? (
+                <button
+                  type="button"
+                  className="ghost map-toggle"
+                  aria-expanded={mapOpen}
+                  onClick={() => setMapOpen((v) => !v)}
+                >
+                  {mapOpen ? t('coverageMap.hide') : t('coverageMap.show')}
+                </button>
+              ) : null}
+              {unknowns.length ? (
+                <button
+                  type="button"
+                  className="ghost map-toggle"
+                  aria-expanded={unknownOpen}
+                  onClick={() => setUnknownOpen((v) => !v)}
+                >
+                  {t('answer.unknownToggle', { n: unknowns.length })}
+                </button>
+              ) : null}
+            </div>
+          ) : null}
+          {(rankingStatus === 'ok' && testedOpen) || rankingStatus === 'error' ? (
             <section className="ans-block tested">
               <h4 className="ans-h">{t('answer.tested')}</h4>
               {/* Rótulo honesto: o quanto a NASA testou nessas condições (de /api/gaps) */}
@@ -198,7 +274,7 @@ export function AiBubble({
                   </span>
                   <ol>
                     {r.top.slice(0, 3).map((d, i) => (
-                      <li key={d.id}>
+                      <li key={d.id} style={{ ['--i' as string]: i }}>
                         <button
                           type="button"
                           className="top-inv-row"
@@ -215,6 +291,10 @@ export function AiBubble({
                           </span>
                           <span className="score">
                             {t('panels.scoreNote', { n: f1(d.nota) })}
+                            {/* Barra da nota (0–10), no estilo do vídeo de demonstração */}
+                            <span className="score-bar" aria-hidden>
+                              <span style={{ width: `${Math.max(0, Math.min(10, d.nota)) * 10}%` }} />
+                            </span>
                           </span>
                         </button>
                         {/* Link direto para a página oficial da investigação no PSI da NASA */}
@@ -226,6 +306,7 @@ export function AiBubble({
                           aria-label={t('panels.onPsi', { id: d.id })}
                           title={t('panels.onPsi', { id: d.id })}
                         >
+                          <span className="psi-chip-id">{d.id}</span>
                           <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden>
                             <path
                               d="M6 3h7v7M13 3 4 12"
@@ -244,19 +325,12 @@ export function AiBubble({
               ) : (
                 <span className="best">{t('bubble.noneTop')}</span>
               )}
-              {/* Mapa de cobertura: aberto quando pedido ou numa lacuna; senão, um botão discreto */}
-              {rankingStatus === 'ok' && msg.coverageCells?.length ? (
-                mapOpen || autoMap ? (
-                  <CoverageMap cells={msg.coverageCells} q={q} />
-                ) : (
-                  <button type="button" className="ghost map-toggle" onClick={() => setMapOpen(true)}>
-                    {t('coverageMap.show')}
-                  </button>
-                )
-              ) : null}
             </section>
           ) : null}
-          {rankingStatus === 'ok' && unknowns.length ? (
+          {rankingStatus === 'ok' && mapOpen && msg.coverageCells?.length ? (
+            <CoverageMap cells={msg.coverageCells} q={q} />
+          ) : null}
+          {rankingStatus === 'ok' && unknownOpen && unknowns.length ? (
             <section className="ans-block unknown">
               <h4 className="ans-h">{t('answer.unknown')}</h4>
               <ul>
@@ -264,8 +338,10 @@ export function AiBubble({
                   <li key={u}>{u}</li>
                 ))}
               </ul>
-              <span className="ans-disclaimer">{t('answer.disclaimer')}</span>
             </section>
+          ) : null}
+          {rankingStatus === 'ok' ? (
+            <span className="ans-disclaimer">{t('answer.disclaimer')}</span>
           ) : null}
           <span className="ai-label">
             {msg.agentReply ? t('bubble.agentLabel') : t('bubble.localLabel')}
@@ -379,5 +455,23 @@ export function AiBubble({
         </>
       ) : null}
     </div>
+  )
+}
+
+/** Texto da IA com chips de fonte e a linha "Próximo passo" destacada (estilo do vídeo). */
+function AnswerText({ text, invs }: { text: string; invs: Parameters<typeof CitedText>[0]['invs'] }) {
+  const t = useT()
+  const { body, next } = splitNextStep(text)
+  return (
+    <>
+      <p className="summary">
+        <CitedText text={body} invs={invs} />
+      </p>
+      {next ? (
+        <p className="next-step">
+          <b>{t('answer.nextStep')}</b> {next}
+        </p>
+      ) : null}
+    </>
   )
 }

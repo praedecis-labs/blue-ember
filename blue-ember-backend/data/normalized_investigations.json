@@ -785,13 +785,13 @@
       ],
       "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21
+        21.6
       ],
       "pressure_kpa": [
         101.3
       ],
       "flow_speed_cms": [
-        5
+        20
       ],
       "flame_spread_rate_mms": 1,
       "moc_percent": 18,
@@ -1513,7 +1513,7 @@
         101.3
       ],
       "flow_speed_cms": [
-        5
+        30
       ],
       "flame_spread_rate_mms": 1,
       "moc_percent": 18,
@@ -1545,10 +1545,14 @@
       ],
       "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
+        17,
         21
       ],
       "pressure_kpa": [
-        101.3
+        50.7,
+        101.3,
+        202.7,
+        506.6
       ],
       "flow_speed_cms": [
         5
@@ -1589,7 +1593,8 @@
         101.3
       ],
       "flow_speed_cms": [
-        5
+        5,
+        10
       ],
       "flame_spread_rate_mms": 1,
       "moc_percent": 18,
@@ -1963,10 +1968,17 @@
       ],
       "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21
+        12,
+        18,
+        21,
+        30,
+        40
       ],
       "pressure_kpa": [
-        101.3
+        50.7,
+        101.3,
+        202.7,
+        304
       ],
       "flow_speed_cms": [
         5
@@ -2083,7 +2095,8 @@
         101.3
       ],
       "flow_speed_cms": [
-        5
+        0.5,
+        8.1
       ],
       "flame_spread_rate_mms": 1,
       "moc_percent": 18,
@@ -2191,7 +2204,9 @@
       ],
       "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21
+        13.6,
+        18,
+        22.2
       ],
       "pressure_kpa": [
         101.3
@@ -2533,13 +2548,15 @@
       ],
       "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21
+        21.5,
+        22.1
       ],
       "pressure_kpa": [
         101.3
       ],
       "flow_speed_cms": [
-        5
+        20,
+        30
       ],
       "flame_spread_rate_mms": 1,
       "moc_percent": 18,
@@ -2995,7 +3012,9 @@
         101.3
       ],
       "flow_speed_cms": [
-        5
+        0.66,
+        10,
+        85.3
       ],
       "flame_spread_rate_mms": 1,
       "moc_percent": 18,
@@ -3217,7 +3236,11 @@
       ],
       "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21
+        21,
+        25,
+        26.5,
+        34,
+        40
       ],
       "pressure_kpa": [
         101.3
@@ -4205,7 +4228,8 @@
       ],
       "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21
+        21,
+        30
       ],
       "pressure_kpa": [
         101.3
@@ -4471,10 +4495,16 @@
       ],
       "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21
+        20,
+        21,
+        30,
+        40
       ],
       "pressure_kpa": [
-        101.3
+        43.2,
+        101.3,
+        202.7,
+        305.8
       ],
       "flow_speed_cms": [
         5
@@ -4623,10 +4653,14 @@
       ],
       "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21
+        12,
+        21,
+        34
       ],
       "pressure_kpa": [
-        101.3
+        70.2,
+        101.3,
+        309.3
       ],
       "flow_speed_cms": [
         5
@@ -4927,12 +4961,19 @@
       ],
       "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21
+        17,
+        21,
+        25,
+        30
       ],
       "pressure_kpa": [
-        101.3
+        50.7,
+        101.3,
+        202.7,
+        304
       ],
       "flow_speed_cms": [
+        0.1,
         5
       ],
       "flame_spread_rate_mms": 1,
