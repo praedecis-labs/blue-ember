@@ -65,11 +65,27 @@ public sealed class RankingQueryService(IInvestigationRepository repo, ScoreCalc
                         wc.Regime);
                 }
 
+                AggregationDto? aggregation = null;
+                if (breakdown.Aggregation is { } agg)
+                {
+                    aggregation = new AggregationDto(
+                        agg.Best,
+                        agg.Worst,
+                        agg.Average,
+                        agg.Coverage,
+                        agg.ConditionCount,
+                        agg.BestConditionIndex,
+                        agg.WorstConditionIndex,
+                        agg.BestPpO2Kpa,
+                        agg.WorstPpO2Kpa);
+                }
+
                 return (
                     Score: breakdown.Total,
                     Criteria: ScoreCriteriaDto.From(breakdown),
                     Investigation: InvestigationDtos.ToSummary(inv),
-                    Winning: winning);
+                    Winning: winning,
+                    Aggregation: aggregation);
             })
             .OrderByDescending(x => x.Score)
             .Select((x, index) => new RankingItemDto(
@@ -77,7 +93,8 @@ public sealed class RankingQueryService(IInvestigationRepository repo, ScoreCalc
                 x.Score,
                 x.Criteria,
                 x.Investigation,
-                x.Winning))
+                x.Winning,
+                x.Aggregation))
             .ToList();
 
         response = new RankingResponse(

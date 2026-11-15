@@ -1,5 +1,7 @@
 namespace BlueEmber.Api.Features.Contracts;
 
+using BlueEmber.Api.Domain.Scoring;
+
 public sealed record WinningConditionDto(
     int Index,
     string? Material,
@@ -10,12 +12,25 @@ public sealed record WinningConditionDto(
     string Provenance,
     string? Regime);
 
+public sealed record AggregationDto(
+    double Best,
+    double Worst,
+    double Average,
+    double Coverage,
+    int ConditionCount,
+    int BestConditionIndex,
+    int WorstConditionIndex,
+    double? BestPpO2Kpa,
+    double? WorstPpO2Kpa);
+
 public sealed record RankingItemDto(
     int Rank,
     double Score,
     ScoreCriteriaDto Criteria,
     InvestigationSummaryDto Investigation,
-    WinningConditionDto? WinningCondition = null);
+    WinningConditionDto? WinningCondition = null,
+    AggregationDto? Aggregation = null,
+    JevConsistencyState? JevConsistency = null);
 
 public sealed record RankingResponse(
     string Profile,
