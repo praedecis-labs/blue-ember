@@ -32,6 +32,8 @@ builder.Services.AddHttpClient<NasaPsiClient>((sp, client) =>
 
 builder.Services.AddSingleton<IInvestigationRepository, JsonInvestigationStore>();
 builder.Services.AddSingleton<ScoreCalculator>();
+builder.Services.AddScoped<NasaRefreshService>();
+builder.Services.AddHostedService<InvestigationCacheRefreshWorker>();
 
 var app = builder.Build();
 
@@ -64,23 +66,27 @@ static async Task BootstrapInvestigationsAsync(WebApplication app)
     await repo.LoadFromDiskAsync();
     if (repo.GetAll().Count > 0)
     {
-        logger.LogInformation("Bootstrapped {Count} investigations from disk cache", repo.GetAll().Count);
+        var info = repo.GetCacheInfo();
+        logger.LogInformation(
+            "Bootstrapped {Count} investigations from disk cache (source={Source}, loadedAt={LoadedAt})",
+            info.Count,
+            info.Source,
+            info.LastLoadedAtUtc);
         return;
     }
 
     logger.LogWarning("Disk cache empty; attempting NASA PSI GEODE fallback");
     try
     {
-        var client = scope.ServiceProvider.GetRequiredService<NasaPsiClient>();
-        var fetched = await client.FetchInvestigationsAsync();
-        if (fetched.Count > 0)
+        var refresh = scope.ServiceProvider.GetRequiredService<NasaRefreshService>();
+        var result = await refresh.RefreshAsync();
+        if (result.Refreshed)
         {
-            repo.ReplaceAll(fetched);
-            logger.LogInformation("Bootstrapped {Count} investigations from NASA PSI GEODE", fetched.Count);
+            logger.LogInformation("Bootstrapped {Count} investigations from NASA PSI GEODE", result.Count);
         }
         else
         {
-            logger.LogError("NASA PSI GEODE returned zero investigations");
+            logger.LogError("NASA PSI GEODE bootstrap failed: {Error}", result.Error);
         }
     }
     catch (Exception ex)

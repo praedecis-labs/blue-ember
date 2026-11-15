@@ -27,9 +27,9 @@
 
 ## Prioridade média
 
-- [ ] **Cache GEODE com TTL / idade dos dados**
-  - Expor idade do cache (ex. header `X-Data-Age` ou campo no `/api/health`)
-  - Opcional: refresh automático leve se TTL expirar
+- [x] **Cache GEODE com TTL / idade dos dados**
+  - Expor idade do cache em `/api/health` (`dataAgeSeconds`, `lastLoadedAt`, `dataSource`, `cacheStale`)
+  - Opcional: refresh automático leve se TTL expirar (`Data:CacheTtlMinutes` > 0 + worker)
 
 - [ ] **Validação de query ampliada**
   - Ranges O2 / pressão inválidos → 400 claro

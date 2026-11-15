@@ -1,4 +1,3 @@
-using BlueEmber.Api.Infrastructure.Data;
 using BlueEmber.Api.Infrastructure.NasaPsi;
 
 namespace BlueEmber.Api.Features.Nasa;
@@ -8,51 +7,29 @@ public static class NasaEndpoints
     public static IEndpointRouteBuilder MapNasaEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapPost("/api/nasa/refresh", async (
-            NasaPsiClient client,
-            IInvestigationRepository repo,
-            IHostEnvironment env,
+            NasaRefreshService refresh,
             CancellationToken ct) =>
         {
             try
             {
-                var fetched = await client.FetchInvestigationsAsync(cancellationToken: ct);
-                if (fetched.Count == 0)
-                    return Results.Problem("NASA PSI returned zero investigations", statusCode: StatusCodes.Status502BadGateway);
-
-                // Prefer enriched cache metrics when the same id already exists
-                var existing = repo.GetAll().ToDictionary(i => i.Id, StringComparer.OrdinalIgnoreCase);
-                var merged = fetched.Select(f =>
+                var result = await refresh.RefreshAsync(ct);
+                if (!result.Refreshed)
                 {
-                    if (!existing.TryGetValue(f.Id, out var prev))
-                        return f;
-
-                    f.Materials = prev.Materials;
-                    f.Geometry = prev.Geometry;
-                    f.O2Range = prev.O2Range;
-                    f.PressureKpa = prev.PressureKpa;
-                    f.FlowSpeedCms = prev.FlowSpeedCms;
-                    f.FlameSpreadRateMms = prev.FlameSpreadRateMms;
-                    f.MocPercent = prev.MocPercent;
-                    f.HrrKw = prev.HrrKw;
-                    f.CoPpm = prev.CoPpm;
-                    f.RelevanceHabitat = prev.RelevanceHabitat;
-                    f.IsFeaturedFireSafety = prev.IsFeaturedFireSafety || f.IsFeaturedFireSafety;
-                    if (string.IsNullOrWhiteSpace(f.EarthBenefits))
-                        f.EarthBenefits = prev.EarthBenefits;
-                    return f;
-                }).ToList();
-
-                repo.ReplaceAll(merged);
-
-                if (env.IsDevelopment())
-                    await repo.PersistToDiskAsync(ct);
+                    var status = result.Error?.Contains("already in progress", StringComparison.OrdinalIgnoreCase) == true
+                        ? StatusCodes.Status409Conflict
+                        : StatusCodes.Status502BadGateway;
+                    return Results.Problem(
+                        detail: result.Error ?? "Refresh failed",
+                        title: "Failed to refresh NASA PSI data",
+                        statusCode: status);
+                }
 
                 return Results.Ok(new
                 {
                     refreshed = true,
-                    count = merged.Count,
-                    featuredFireSafetyCount = merged.Count(x => x.IsFeaturedFireSafety),
-                    persistedToDisk = env.IsDevelopment()
+                    count = result.Count,
+                    featuredFireSafetyCount = result.FeaturedFireSafetyCount,
+                    persistedToDisk = result.PersistedToDisk
                 });
             }
             catch (Exception ex)

@@ -13,6 +13,8 @@ public sealed class JsonInvestigationStore : IInvestigationRepository
     private readonly ILogger<JsonInvestigationStore> _logger;
     private readonly ConcurrentDictionary<string, Investigation> _byId = new(StringComparer.OrdinalIgnoreCase);
     private List<Investigation> _all = [];
+    private DateTimeOffset? _lastLoadedAtUtc;
+    private string? _source;
     private readonly object _gate = new();
 
     private static readonly JsonSerializerOptions WriteOptions = new()
@@ -42,7 +44,16 @@ public sealed class JsonInvestigationStore : IInvestigationRepository
         return inv;
     }
 
-    public void ReplaceAll(IEnumerable<Investigation> investigations)
+    public InvestigationCacheInfo GetCacheInfo()
+    {
+        lock (_gate)
+            return new InvestigationCacheInfo(_lastLoadedAtUtc, _source, _all.Count);
+    }
+
+    public void ReplaceAll(
+        IEnumerable<Investigation> investigations,
+        string source = "memory",
+        DateTimeOffset? loadedAtUtc = null)
     {
         var list = investigations.ToList();
         lock (_gate)
@@ -51,6 +62,8 @@ public sealed class JsonInvestigationStore : IInvestigationRepository
             _byId.Clear();
             foreach (var inv in list)
                 _byId[inv.Id] = inv;
+            _lastLoadedAtUtc = loadedAtUtc ?? DateTimeOffset.UtcNow;
+            _source = source;
         }
     }
 
@@ -77,8 +90,13 @@ public sealed class JsonInvestigationStore : IInvestigationRepository
             .Select(InvestigationNormalizer.FromCachedJson)
             .ToList();
 
-        ReplaceAll(list);
-        _logger.LogInformation("Loaded {Count} investigations from {Path}", list.Count, path);
+        var loadedAt = ReadTimestamp(doc.RootElement) ?? new DateTimeOffset(File.GetLastWriteTimeUtc(path));
+        ReplaceAll(list, "disk", loadedAt);
+        _logger.LogInformation(
+            "Loaded {Count} investigations from {Path} (age source timestamp {LoadedAt})",
+            list.Count,
+            path,
+            loadedAt);
     }
 
     public async Task PersistToDiskAsync(CancellationToken cancellationToken = default)
@@ -105,6 +123,18 @@ public sealed class JsonInvestigationStore : IInvestigationRepository
         await using var stream = File.Create(path);
         await JsonSerializer.SerializeAsync(stream, payload, WriteOptions, cancellationToken);
         _logger.LogInformation("Persisted {Count} investigations to {Path}", snapshot.Count, path);
+    }
+
+    private static DateTimeOffset? ReadTimestamp(JsonElement root)
+    {
+        if (!root.TryGetProperty("metadata", out var meta))
+            return null;
+        if (!meta.TryGetProperty("timestamp", out var ts))
+            return null;
+        var raw = ts.GetString();
+        if (string.IsNullOrWhiteSpace(raw))
+            return null;
+        return DateTimeOffset.TryParse(raw, out var parsed) ? parsed.ToUniversalTime() : null;
     }
 
     private string ResolvePath()
