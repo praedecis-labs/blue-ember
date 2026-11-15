@@ -1,5 +1,14 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
-import type { EnvironmentDto } from '@/services/contracts'
+import { useI18n } from '@/i18n'
+import { askAgent } from '@/services/agent'
+import type {
+  AgentAskResponse,
+  DashboardSpec,
+  EnvironmentDto,
+  GapsResponse,
+  RankingResponse,
+} from '@/services/contracts'
+import { ApiError } from '@/services/http'
 import { getGaps } from '@/services/gaps'
 import { getInvestigation } from '@/services/investigations'
 import { getRankingFireSafety } from '@/services/ranking'
@@ -7,9 +16,11 @@ import { messageFromUnknown } from '@/services/request-state'
 import {
   rankingItemToScored,
   rankingParamsFromQuery,
+  toApiCategory,
   toApiEnvironment,
+  toApiProfile,
 } from './adapters'
-import { EXTRA_KEYS, MAIN_KEYS, PROFILES } from './data'
+import { EXTRA_KEYS, MAIN_KEYS } from './data'
 import { buildQueryDefaults } from './env-defaults'
 import { evidenceFromRankingAndGaps } from './evidence-from-api'
 import { gapsFromApi } from './gaps-from-api'
@@ -32,6 +43,7 @@ import type {
   ScoredInvestigation,
   ScreenId,
 } from './types'
+import { sanitizeAgentProse } from './sanitize-agent-prose'
 import { scoreWeightsToCrit } from './weight-map'
 
 export type ChatSessionOptions = {
@@ -57,11 +69,14 @@ type HydrateOpts = {
 let msgSeq = 0
 const nextId = (prefix: string) => `${prefix}-${++msgSeq}`
 
-function emptyComputeResult(q: QueryState) {
+function emptyComputeResult(
+  q: QueryState,
+  loadingLabel: string,
+) {
   const { maxO2, above } = localGaps(q)
   return {
     top: [],
-    level: ['unknown', 'Carregando evidência…'] as [EvidenceLevel, string],
+    level: ['unknown', loadingLabel] as [EvidenceLevel, string],
     gaps: [] as string[],
     near: 0,
     maxO2,
@@ -95,6 +110,11 @@ export function useChatSession(options: ChatSessionOptions = {}) {
   const { environments = null } = options
   const environmentsRef = useRef(environments)
   environmentsRef.current = environments
+  const { locale, t } = useI18n()
+  const tRef = useRef(t)
+  tRef.current = t
+  const localeRef = useRef(locale)
+  localeRef.current = locale
 
   const reactId = useId()
   const [screen, setScreen] = useState<ScreenId>('profile')
@@ -170,6 +190,84 @@ export function useChatSession(options: ChatSessionOptions = {}) {
     })
   }
 
+  async function applyRankingAndGaps(
+    msgId: string,
+    ranking: RankingResponse,
+    gaps: GapsResponse,
+    opts: HydrateOpts = {},
+    extra?: {
+      lead?: string
+      agentReply?: boolean
+      dashboard?: DashboardSpec | null
+    },
+  ) {
+    const stillThere = snapRef.current.messages.some(
+      (m) => m.kind === 'ai' && m.id === msgId,
+    )
+    if (!stillThere) return
+
+    const translate = tRef.current
+    const evidence = evidenceFromRankingAndGaps(ranking, gaps, translate)
+    const gapUi = gapsFromApi(gaps)
+    const topBase = ranking.items.slice(0, 8).map(rankingItemToScored)
+    const top = await enrichTopWithDetails(topBase)
+    const topIds = top.slice(0, 3).map((item) => item.id)
+    const weights = scoreWeightsToCrit(ranking.weights)
+    const verdict =
+      opts.shouldVerdict
+        ? buildVerdict(
+            opts.claimForVerdict ?? null,
+            evidence.level[0],
+            translate,
+          )
+        : undefined
+
+    const stillThereAfterDetails = snapRef.current.messages.some(
+      (m) => m.kind === 'ai' && m.id === msgId,
+    )
+    if (!stillThereAfterDetails) return
+
+    patchAiMessage(msgId, (msg) => ({
+      ...msg,
+      lead: extra?.lead !== undefined ? extra.lead : msg.lead,
+      agentReply: extra?.agentReply ?? msg.agentReply,
+      dashboard:
+        extra?.dashboard !== undefined ? extra.dashboard : msg.dashboard,
+      coverageCells: gaps.coverageCells,
+      missionTargets: gaps.targets,
+      rankingStatus: 'ok',
+      rankingError: null,
+      weights,
+      verdict: verdict !== undefined ? verdict : msg.verdict,
+      r: {
+        ...msg.r,
+        top,
+        level: evidence.level,
+        near: evidence.near,
+        partialG: evidence.partialG,
+        partialGravityWarning: gapUi.partialGravityWarning,
+        gaps: gapUi.gaps,
+        featuredCount: evidence.featuredCount,
+      },
+    }))
+
+    const snap = snapRef.current
+    if (snap.current) {
+      const nextCurrent: HistoryItem = {
+        ...snap.current,
+        level: evidence.level,
+        top: top[0]?.name ?? '',
+        topIds,
+      }
+      setCurrent(nextCurrent)
+      setHistory((prev) => {
+        const without = prev.filter((h) => h.id !== nextCurrent.id)
+        return [nextCurrent, ...without].slice(0, 12)
+      })
+      syncSnap({ current: nextCurrent })
+    }
+  }
+
   function hydrateAiRanking(
     msgId: string,
     prof: ProfileId,
@@ -184,60 +282,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
           getRankingFireSafety(rankingParams),
           getGaps({ environment: environmentApi }),
         ])
-        const stillThere = snapRef.current.messages.some(
-          (m) => m.kind === 'ai' && m.id === msgId,
-        )
-        if (!stillThere) return
-
-        const evidence = evidenceFromRankingAndGaps(ranking, gaps)
-        const gapUi = gapsFromApi(gaps)
-        const topBase = ranking.items.slice(0, 3).map(rankingItemToScored)
-        const top = await enrichTopWithDetails(topBase)
-        const topIds = top.map((t) => t.id)
-        const weights = scoreWeightsToCrit(ranking.weights)
-        const verdict =
-          opts.shouldVerdict
-            ? buildVerdict(opts.claimForVerdict ?? null, evidence.level[0])
-            : undefined
-
-        const stillThereAfterDetails = snapRef.current.messages.some(
-          (m) => m.kind === 'ai' && m.id === msgId,
-        )
-        if (!stillThereAfterDetails) return
-
-        patchAiMessage(msgId, (msg) => ({
-          ...msg,
-          rankingStatus: 'ok',
-          rankingError: null,
-          weights,
-          verdict: verdict !== undefined ? verdict : msg.verdict,
-          r: {
-            ...msg.r,
-            top,
-            level: evidence.level,
-            near: evidence.near,
-            partialG: evidence.partialG,
-            partialGravityWarning: gapUi.partialGravityWarning,
-            gaps: gapUi.gaps,
-            featuredCount: evidence.featuredCount,
-          },
-        }))
-
-        const snap = snapRef.current
-        if (snap.current) {
-          const nextCurrent: HistoryItem = {
-            ...snap.current,
-            level: evidence.level,
-            top: top[0]?.name ?? '',
-            topIds,
-          }
-          setCurrent(nextCurrent)
-          setHistory((prev) => {
-            const without = prev.filter((h) => h.id !== nextCurrent.id)
-            return [nextCurrent, ...without].slice(0, 12)
-          })
-          syncSnap({ current: nextCurrent })
-        }
+        await applyRankingAndGaps(msgId, ranking, gaps, opts)
       } catch (err) {
         const stillThere = snapRef.current.messages.some(
           (m) => m.kind === 'ai' && m.id === msgId,
@@ -247,6 +292,112 @@ export function useChatSession(options: ChatSessionOptions = {}) {
         setError(message)
         patchAiMessage(msgId, (msg) => ({
           ...msg,
+          rankingStatus: 'error',
+          rankingError: message,
+        }))
+      }
+    })()
+  }
+
+  function hydrateAiWithAgent(
+    msgId: string,
+    prof: ProfileId,
+    query: QueryState,
+    userMessage: string,
+    opts: HydrateOpts = {},
+  ) {
+    void (async () => {
+      const rankingParams = rankingParamsFromQuery(prof, query)
+      const history = snapRef.current.messages
+        .filter((m) => m.id !== msgId)
+        .slice(-8)
+        .map((m) =>
+          m.kind === 'user'
+            ? { role: 'user' as const, text: m.text }
+            : {
+                role: 'model' as const,
+                text: m.lead || (m.verdict ? m.verdict[1] : ''),
+              },
+        )
+        .filter((t) => t.text.trim().length > 0)
+
+      let agent: AgentAskResponse | null = null
+      try {
+        agent = await askAgent({
+          message: userMessage,
+          profile: toApiProfile(prof),
+          environment: toApiEnvironment(query.env),
+          category: toApiCategory(query.goal),
+          locale: localeRef.current,
+          query: {
+            env: toApiEnvironment(query.env),
+            material: query.material,
+            o2: query.o2,
+            psi: query.psi,
+            flow: query.flow,
+            goal: query.goal,
+            claim: opts.claimForVerdict ?? null,
+          },
+          history,
+        })
+      } catch (err) {
+        const stillThere = snapRef.current.messages.some(
+          (m) => m.kind === 'ai' && m.id === msgId,
+        )
+        if (!stillThere) return
+        // 503 = agent not configured; fall back silently to ranking templates.
+        if (!(err instanceof ApiError && err.status === 503)) {
+          setError(messageFromUnknown(err))
+        }
+        hydrateAiRanking(msgId, prof, query, opts)
+        return
+      }
+
+      const stillThere = snapRef.current.messages.some(
+        (m) => m.kind === 'ai' && m.id === msgId,
+      )
+      if (!stillThere) return
+
+      const lead = sanitizeAgentProse(agent.text.trim())
+      const dashboard = agent.dashboard ?? null
+      if (agent.ranking && agent.gaps) {
+        await applyRankingAndGaps(msgId, agent.ranking, agent.gaps, opts, {
+          lead,
+          agentReply: true,
+          dashboard,
+        })
+        return
+      }
+
+      patchAiMessage(msgId, (msg) => ({
+        ...msg,
+        lead,
+        agentReply: true,
+        dashboard,
+      }))
+
+      try {
+        const [ranking, gaps] = await Promise.all([
+          agent.ranking
+            ? Promise.resolve(agent.ranking)
+            : getRankingFireSafety(rankingParams),
+          agent.gaps
+            ? Promise.resolve(agent.gaps)
+            : getGaps({ environment: toApiEnvironment(query.env) }),
+        ])
+        await applyRankingAndGaps(msgId, ranking, gaps, opts, {
+          lead,
+          agentReply: true,
+          dashboard,
+        })
+      } catch (err) {
+        const message = messageFromUnknown(err)
+        setError(message)
+        patchAiMessage(msgId, (msg) => ({
+          ...msg,
+          lead,
+          agentReply: true,
+          dashboard,
           rankingStatus: 'error',
           rankingError: message,
         }))
@@ -267,12 +418,16 @@ export function useChatSession(options: ChatSessionOptions = {}) {
       lead,
       q: { ...query },
       missing: [...miss],
-      r: emptyComputeResult(query),
+      r: emptyComputeResult(query, tRef.current('verdict.loading')),
       prof,
       verdict,
       rankingStatus: 'loading',
       rankingError: null,
       weights: null,
+      agentReply: false,
+      dashboard: null,
+      coverageCells: null,
+      missionTargets: null,
     }
   }
 
@@ -311,8 +466,9 @@ export function useChatSession(options: ChatSessionOptions = {}) {
 
     if (snap.q && changed) {
       setScreen('chat')
+      const profileName = t(`profile.${pendingProfile}.name`)
       const ai = makeAi(
-        `Perfil trocado para ${PROFILES[pendingProfile].name}. Reordenei as investigações com os novos pesos.`,
+        t('chat.profileSwitched', { name: profileName }),
         snap.q,
         snap.missing,
         pendingProfile,
@@ -323,7 +479,12 @@ export function useChatSession(options: ChatSessionOptions = {}) {
         syncSnap({ messages: next })
         return next
       })
-      hydrateAiRanking(ai.id, pendingProfile, snap.q)
+      hydrateAiWithAgent(
+        ai.id,
+        pendingProfile,
+        snap.q,
+        t('chat.reorderForProfile', { name: profileName }),
+      )
       return
     }
     if (snap.q) {
@@ -342,7 +503,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
     setMissing([])
     setCurrent(h)
     const ai = makeAi(
-      'Análise reaberta. Pergunte de novo ou abra os detalhes abaixo.',
+      t('bubble.thinking'),
       h.q,
       [],
       prof,
@@ -360,7 +521,10 @@ export function useChatSession(options: ChatSessionOptions = {}) {
       current: h,
       messages: msgs,
     })
-    hydrateAiRanking(ai.id, prof, h.q)
+    hydrateAiWithAgent(ai.id, prof, h.q, h.text, {
+      claimForVerdict: h.claim,
+      shouldVerdict: true,
+    })
     setScreen('chat')
   }
 
@@ -373,7 +537,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
     if (!activeProfile) return
     const text = raw.trim()
     if (text.length < 4) {
-      setError('Escreva sua hipótese ou pergunta.')
+      setError(t('chat.writeHypothesis'))
       return
     }
     setError(null)
@@ -412,18 +576,11 @@ export function useChatSession(options: ChatSessionOptions = {}) {
     const nextHypothesis =
       first || p.claim ? { text, claim: p.claim } : snap.hypothesis
 
-    let lead = ''
-    if (!first) {
-      lead = changed.length
-        ? `Atualizei: ${changed.map((k) => condLabel(k, base[k])).join(', ')}.`
-        : 'Não encontrei condições novas nessa mensagem; mantive as anteriores.'
-    }
-
     const placeholderVerdict = shouldVerdict
-      ? buildVerdict(claimForVerdict, 'unknown')
+      ? buildVerdict(claimForVerdict, 'unknown', t)
       : null
     const aiMsg = makeAi(
-      lead,
+      t('bubble.thinking'),
       base,
       nextMissing,
       activeProfile,
@@ -446,7 +603,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
     if (first) {
       nextCurrent = {
         id: `${reactId}-${nextId('hist')}`,
-        when: nowLabel(),
+        when: nowLabel(locale),
         text,
         claim: p.claim,
         q: { ...base },
@@ -474,7 +631,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
       messages: nextMessages,
       profile: activeProfile,
     })
-    hydrateAiRanking(aiMsg.id, activeProfile, base, {
+    hydrateAiWithAgent(aiMsg.id, activeProfile, base, text, {
       claimForVerdict,
       shouldVerdict,
     })
@@ -499,17 +656,12 @@ export function useChatSession(options: ChatSessionOptions = {}) {
     const nextMissing = baselineMissing.filter(
       (k) => !changed.includes(k as keyof QueryState),
     )
-    const apiAffecting = changed.some((k) => k === 'env' || k === 'goal')
-    let lead = changed.length
-      ? `Refiz com as condições ajustadas: ${changed
-          .map((k) => condLabel(k, nq[k]))
-          .join(', ')}.`
-      : 'Refiz com as mesmas condições.'
-    if (changed.length && !apiAffecting) {
-      lead +=
-        ' O score da API usa ambiente e categoria; O₂/pressão/fluxo ficam na síntese da UI.'
-    }
-    const aiMsg = makeAi(lead, nq, nextMissing, prof, null)
+    const conditionNote = changed.length
+      ? t('chat.conditionsAdjusted', {
+          list: changed.map((k) => condLabel(k, nq[k], t)).join(', '),
+        })
+      : t('chat.rerunSame')
+    const aiMsg = makeAi(t('bubble.thinking'), nq, nextMissing, prof, null)
     const nextMessages = [...snap.messages, aiMsg]
 
     setQ(nq)
@@ -535,7 +687,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
       current: nextCurrent,
       messages: nextMessages,
     })
-    hydrateAiRanking(aiMsg.id, prof, nq)
+    hydrateAiWithAgent(aiMsg.id, prof, nq, conditionNote)
   }
 
   function startExample(text: string) {

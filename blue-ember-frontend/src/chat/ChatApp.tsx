@@ -11,7 +11,7 @@ import {
   ProfileScreen,
   profileDisplayName,
 } from './components/ProfileScreen'
-import { PROFILES } from './data'
+import { useI18n } from '@/i18n'
 import { loadTheme, saveTheme } from './storage'
 import type { ThemeId } from './types'
 import { useApiHealth } from './use-api-health'
@@ -22,6 +22,7 @@ import { useProfiles } from './use-profiles'
 import './ChatApp.css'
 
 export function ChatApp() {
+  const { t } = useI18n()
   const [theme, setTheme] = useState<ThemeId>(() =>
     typeof window !== 'undefined' ? loadTheme() : 'light',
   )
@@ -56,7 +57,11 @@ export function ChatApp() {
   }
 
   const profileLabel = session.profile
-    ? profileDisplayName(session.profile, profilesState)
+    ? profileDisplayName(
+        session.profile,
+        profilesState,
+        t(`profile.${session.profile}.name`),
+      )
     : null
 
   if (!session.booted) return null
@@ -125,7 +130,7 @@ export function ChatApp() {
               {session.screen === 'chat' && session.profile ? (
                 <ChatScreen
                   profileLabel={
-                    profileLabel ?? PROFILES[session.profile].name
+                    profileLabel ?? t(`profile.${session.profile}.name`)
                   }
                   messages={session.messages}
                   draft={session.draft}

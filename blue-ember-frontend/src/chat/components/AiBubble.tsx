@@ -1,9 +1,11 @@
 import { useState } from 'react'
+import { useT } from '@/i18n'
 import type { EnvironmentDto } from '@/services/contracts'
 import { LOGO_SRC } from '../data'
 import { f1, summaryFor } from '../engine'
 import type { ChatMessage, PanelId, QueryState } from '../types'
 import { DetailPanels } from './detail-panels'
+import { HypothesisDashboard } from './HypothesisDashboard'
 
 type Props = {
   msg: Extract<ChatMessage, { kind: 'ai' }>
@@ -18,6 +20,7 @@ export function AiBubble({
   onApplyConditions,
   environments = null,
 }: Props) {
+  const t = useT()
   const [openPanel, setOpenPanel] = useState<PanelId | null>(null)
   const { q, r, missing, rankingStatus, rankingError } = msg
   const best = r.top[0]
@@ -33,6 +36,9 @@ export function AiBubble({
         ? '!'
         : String(r.top.length)
 
+  const altMaterial =
+    q.material === 'plastico' ? t('bubble.fabric') : t('bubble.acrylic')
+
   return (
     <div className="msg-ai" id={msg.id}>
       <div className="head">
@@ -45,37 +51,48 @@ export function AiBubble({
       {msg.lead ? <span className="why">{msg.lead}</span> : null}
       {msg.verdict ? (
         <div className="verdict">
-          <b>Sua hipótese:</b>
+          <b>{t('bubble.yourHypothesis')}</b>
           <span className={`pill ${msg.verdict[0]}`}>{msg.verdict[1]}</span>
         </div>
       ) : null}
-      <p className="summary">{summaryFor(q, r)}</p>
+      {!msg.agentReply && rankingStatus !== 'loading' ? (
+        <p className="summary">{summaryFor(q, r, t)}</p>
+      ) : null}
       {rankingStatus === 'loading' ? (
-        <span className="best">Carregando ranking da API…</span>
+        <span className="best">
+          {msg.agentReply
+            ? t('bubble.thinkingPanels')
+            : t('bubble.thinkingRanking')}
+        </span>
       ) : rankingStatus === 'error' ? (
         <span className="best" role="alert">
-          {rankingError ?? 'Falha ao carregar o ranking.'}
+          {rankingError ?? t('bubble.rankingFail')}
         </span>
       ) : best ? (
         <span className="best">
-          Mais relevante: <b>{best.name}</b> ({best.id}) · nota {f1(best.nota)}
-          /10 · {best.where}
+          {t('bubble.mostRelevant')} <b>{best.name}</b> ({best.id}) ·{' '}
+          {t('panels.scoreNote', { n: f1(best.nota) })} · {best.where}
         </span>
       ) : (
-        <span className="best">Nenhuma investigação no topo do ranking.</span>
+        <span className="best">{t('bubble.noneTop')}</span>
       )}
       <span className="ai-label">
-        Score via API · síntese local nos textos · abra as fontes nos detalhes
+        {msg.agentReply ? t('bubble.agentLabel') : t('bubble.localLabel')}
       </span>
-      <div className="details" role="group" aria-label="Detalhes da resposta">
+      {msg.dashboard && rankingStatus === 'ok' ? (
+        <HypothesisDashboard spec={msg.dashboard} top={r.top} />
+      ) : null}
+      <div className="details" role="group" aria-label={t('panels.detailsAria')}>
         <button
           type="button"
           aria-expanded={openPanel === 'cond'}
           onClick={() => toggle('cond')}
         >
-          Condições usadas
+          {t('bubble.conditions')}
           {missing.length ? (
-            <span className="count warn">{missing.length} padrão</span>
+            <span className="count warn">
+              {t('bubble.defaultCount', { n: missing.length })}
+            </span>
           ) : null}
         </button>
         <button
@@ -83,28 +100,29 @@ export function AiBubble({
           aria-expanded={openPanel === 'inv'}
           onClick={() => toggle('inv')}
         >
-          Investigações <span className="count">{invCountLabel}</span>
+          {t('bubble.investigations')}{' '}
+          <span className="count">{invCountLabel}</span>
         </button>
         <button
           type="button"
           aria-expanded={openPanel === 'ev'}
           onClick={() => toggle('ev')}
         >
-          Força da evidência
+          {t('bubble.evidence')}
         </button>
         <button
           type="button"
           aria-expanded={openPanel === 'gaps'}
           onClick={() => toggle('gaps')}
         >
-          O que falta testar <span className="count">{r.gaps.length}</span>
+          {t('bubble.gaps')} <span className="count">{r.gaps.length}</span>
         </button>
         <button
           type="button"
           aria-expanded={openPanel === 'src'}
           onClick={() => toggle('src')}
         >
-          Fontes
+          {t('bubble.sources')}
         </button>
       </div>
       <div className="panel-slot">
@@ -121,37 +139,45 @@ export function AiBubble({
             type="button"
             onClick={() => onFollowup('E se fosse na ISS a 14,7 psi e 21%?')}
           >
-            E se fosse na ISS?
+            {t('bubble.followIss')}
           </button>
         ) : (
           <button
             type="button"
             onClick={() => onFollowup('E no habitat lunar a 8,2 psi e 34%?')}
           >
-            E no habitat lunar?
+            {t('bubble.followLunar')}
           </button>
         )}
         {q.flow !== 0 ? (
           <button type="button" onClick={() => onFollowup('E com ar parado?')}>
-            E com ar parado?
+            {t('bubble.followStill')}
           </button>
         ) : (
           <button
             type="button"
             onClick={() => onFollowup('E com ventilação de 20 cm/s?')}
           >
-            E com 20 cm/s?
+            {t('bubble.followVent')}
           </button>
         )}
         <button
           type="button"
           onClick={() =>
             onFollowup(
-              `E se o material for ${q.material === 'plastico' ? 'tecido' : 'plástico acrílico'}?`,
+              q.material === 'plastico'
+                ? 'E se o material for tecido?'
+                : 'E se o material for plástico acrílico?',
             )
           }
         >
-          E com {q.material === 'plastico' ? 'tecido' : 'acrílico'}?
+          {t('bubble.followMaterial', { material: altMaterial })}
+        </button>
+        <button
+          type="button"
+          onClick={() => onFollowup(t('bubble.dashboardChip'))}
+        >
+          {t('bubble.dashboardChipLabel')}
         </button>
       </div>
     </div>

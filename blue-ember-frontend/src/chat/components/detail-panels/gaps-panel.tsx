@@ -1,13 +1,15 @@
+import { useT } from '@/i18n'
 import type { AiMsg } from './types'
 
 export function GapsPanel({ msg }: { msg: AiMsg }) {
+  const t = useT()
   const { r, rankingStatus, rankingError } = msg
 
   if (rankingStatus === 'loading') {
     return (
       <div className="panel gaps">
-        <b>O que falta testar</b>
-        <span className="hint">Carregando lacunas da API…</span>
+        <b>{t('panels.gapsTitle')}</b>
+        <span className="hint">{t('panels.loadingGaps')}</span>
         <div className="skel-stack" aria-hidden>
           <div className="skel-line" />
           <div className="skel-line short" />
@@ -19,9 +21,9 @@ export function GapsPanel({ msg }: { msg: AiMsg }) {
   if (rankingStatus === 'error') {
     return (
       <div className="panel gaps">
-        <b>O que falta testar</b>
+        <b>{t('panels.gapsTitle')}</b>
         <span className="hint" role="alert">
-          {rankingError ?? 'Não foi possível carregar as lacunas.'}
+          {rankingError ?? t('panels.gapsFail')}
         </span>
       </div>
     )
@@ -32,7 +34,7 @@ export function GapsPanel({ msg }: { msg: AiMsg }) {
 
   return (
     <div className="panel gaps">
-      <b>O que falta testar</b>
+      <b>{t('panels.gapsTitle')}</b>
       {hasGaps ? (
         <ul>
           {r.gaps.map((g) => (
@@ -40,11 +42,11 @@ export function GapsPanel({ msg }: { msg: AiMsg }) {
           ))}
         </ul>
       ) : !hasWarning ? (
-        <span className="why">Nenhuma lacuna importante para essas condições.</span>
+        <span className="why">{t('panels.noGaps')}</span>
       ) : null}
       {hasWarning ? (
         <div className="test">
-          <b style={{ color: 'var(--navy)' }}>Gravidade parcial (API):</b>{' '}
+          <b style={{ color: 'var(--navy)' }}>{t('panels.partialGApi')}</b>{' '}
           {r.partialGravityWarning}
         </div>
       ) : null}

@@ -1,13 +1,15 @@
 # Blue Ember — Frontend
 
-Chat React (Vite + TypeScript) que consome a API .NET do Blue Ember.
+React chat (Vite + TypeScript) that consumes the Blue Ember .NET API.
 
-## Pré-requisitos
+Default UI locale: **en-US**. Header/sidebar toggle: **EN | PT** (persisted in `localStorage`).
+
+## Prerequisites
 
 - Node.js 20+
-- Backend rodando em `http://localhost:5006` (ver monorepo)
+- Backend running at `http://localhost:5006` (see monorepo root)
 
-## Subir FE + BE juntos
+## Run FE + BE together
 
 ### 1. Backend (`:5006`)
 
@@ -28,28 +30,30 @@ npm run dev
 ```
 
 - App: http://localhost:3000  
-- Proxy Vite: `/api` → `http://localhost:5006` (ver `vite.config.ts`)
+- Vite proxy: `/api` → `http://localhost:5006` (see `vite.config.ts`)
 
 ## Scripts
 
-| Comando | Uso |
+| Command | Use |
 | --- | --- |
-| `npm run dev` | Dev server na porta 3000 |
+| `npm run dev` | Dev server on port 3000 |
 | `npm test` | Vitest |
 | `npm run build` | Typecheck + build |
 | `npm run lint` | Oxlint |
 
 ## Smoke checklist (demo)
 
-| # | Ação | Esperado |
+| # | Action | Expected |
 | --- | --- | --- |
-| 1 | BE `:5006` + FE `:3000` | Health ok no header |
-| 2 | Escolher Engenheiro | Pesos = API ShipEngineer |
-| 3 | Chip “Tecido seguro na Lua?” | Bolha com top PSI reais |
-| 4 | Abrir Investigações | Barras C1–C5 da API |
-| 5 | Abrir Gaps (Moon) | Warning gravidade parcial |
-| 6 | Trocar para ISS no form | Ranking/gaps mudam |
-| 7 | Export CSV | Download 200 |
-| 8 | API off | Mensagem clara, sem tela branca |
+| 1 | BE `:5006` + FE `:3000` | Health ok in header |
+| 2 | Fresh load | English UI chrome |
+| 3 | Toggle PT | Profile/chat strings in Portuguese; survives reload |
+| 4 | Pick Ship Engineer | Weights = API ShipEngineer |
+| 5 | Example chip “Safe fabric on the Moon?” | Bubble with real PSI tops |
+| 6 | Open Investigations | C1–C5 bars from API |
+| 7 | Open Gaps (Moon) | Partial-gravity warning |
+| 8 | Switch to ISS in the form | Ranking/gaps change |
+| 9 | Export CSV | Download 200 |
+| 10 | API off | Clear message, no blank screen |
 
-Lista completa: [`docs/TODO-FRONTEND.md`](docs/TODO-FRONTEND.md).
+Full list: [`docs/TODO-FRONTEND.md`](docs/TODO-FRONTEND.md).

@@ -1,7 +1,8 @@
+import { useT } from '@/i18n'
 import type { ProfileDto } from '@/services/contracts'
 import type { RequestState } from '@/services/request-state'
 import { PROFILE_IDS, toApiProfile } from '../adapters'
-import { CRIT, PROFILES, WEIGHTS } from '../data'
+import { WEIGHTS } from '../data'
 import type { CritKey, ProfileId } from '../types'
 import { critWeightsFromProfileDto, type CritWeights } from '../weight-map'
 
@@ -11,6 +12,8 @@ type Props = {
   onSelect: (id: ProfileId) => void
   onContinue: () => void
 }
+
+const CRIT_KEYS: CritKey[] = ['prox', 'moc', 'spread', 'hrr', 'tox']
 
 function weightsFor(
   id: ProfileId,
@@ -27,17 +30,26 @@ function weightsFor(
 function labelFor(
   id: ProfileId,
   profilesState: RequestState<ProfileDto[]>,
+  fallback: string,
 ): string {
   if (profilesState.status === 'ok' && profilesState.data) {
     const apiId = toApiProfile(id)
     const dto = profilesState.data.find((p) => p.id === apiId)
     if (dto?.label) return dto.label
   }
-  return PROFILES[id].name
+  return fallback
 }
 
-function maxWeight(weights: CritWeights): number {
-  return Math.max(...CRIT.map(([c]) => weights[c]), 0.35)
+function profileNameKey(id: ProfileId): string {
+  return `profile.${id}.name`
+}
+
+function profileFocusKey(id: ProfileId): string {
+  return `profile.${id}.focus`
+}
+
+function critShort(t: (k: string) => string, c: CritKey): string {
+  return t(`crit.${c}`).replace(/^C\d+\s+/i, '')
 }
 
 export function ProfileScreen({
@@ -46,6 +58,7 @@ export function ProfileScreen({
   onSelect,
   onContinue,
 }: Props) {
+  const t = useT()
   const loading =
     profilesState.status === 'idle' || profilesState.status === 'loading'
   const offlineFallback =
@@ -55,32 +68,29 @@ export function ProfileScreen({
   return (
     <section id="screen-profile" className="screen">
       <div className="profile-box">
-        <span className="step">Antes de começar</span>
-        <h1>Quem está perguntando?</h1>
+        <span className="step">{t('profile.step')}</span>
+        <h1>{t('profile.title')}</h1>
         <p className="why" style={{ maxWidth: 640 }}>
-          O perfil decide o que pesa mais na hora de ordenar as investigações da
-          NASA. Dá para trocar depois, no topo da tela.
+          {t('profile.why')}
         </p>
         {loading ? (
           <p className="hint" role="status">
-            Carregando perfis da API…
+            {t('profile.loading')}
           </p>
         ) : null}
         {profilesState.status === 'error' ? (
           <p className="hint" role="alert">
-            {profilesState.message ?? 'Não foi possível carregar os perfis.'}{' '}
-            Usando pesos locais temporariamente.
+            {profilesState.message ?? t('profile.apiError')}
           </p>
         ) : null}
         {!loading && profilesState.status === 'ok' && !offlineFallback ? (
           <p className="hint" role="status">
-            Pesos vindos da API.
+            {t('profile.apiOk')}
           </p>
         ) : null}
         <div className="profiles">
           {PROFILE_IDS.map((k) => {
             const weights = weightsFor(k, profilesState)
-            const barMax = maxWeight(weights)
             return (
               <button
                 key={k}
@@ -90,20 +100,22 @@ export function ProfileScreen({
                 disabled={loading}
                 onClick={() => onSelect(k)}
               >
-                <b>{labelFor(k, profilesState)}</b>
-                <span className="focus">{PROFILES[k].focus}</span>
+                <b>
+                  {labelFor(k, profilesState, t(profileNameKey(k)))}
+                </b>
+                <span className="focus">{t(profileFocusKey(k))}</span>
                 <span className="weights">
-                  {CRIT.map(([c, label]) => (
+                  {CRIT_KEYS.map((c) => (
                     <span className="w" key={c}>
-                      <span>{label.replace(/^C\S+ /, '')}</span>
+                      <span>{critShort(t, c)}</span>
                       <i>
                         <span
                           style={{
-                            width: `${(weights[c as CritKey] * 100) / barMax}%`,
+                            width: `${Math.round(weights[c] * 100)}%`,
                           }}
                         />
                       </i>
-                      <span>{Math.round(weights[c as CritKey] * 100)}%</span>
+                      <span>{Math.round(weights[c] * 100)}%</span>
                     </span>
                   ))}
                 </span>
@@ -113,10 +125,10 @@ export function ProfileScreen({
         </div>
         <div className="row">
           <button type="button" disabled={!pending || loading} onClick={onContinue}>
-            Continuar
+            {t('profile.continue')}
           </button>
           <span className="hint">
-            {pending ? '' : 'Escolha um perfil para continuar.'}
+            {pending ? '' : t('profile.pick')}
           </span>
         </div>
       </div>
@@ -127,6 +139,7 @@ export function ProfileScreen({
 export function profileDisplayName(
   id: ProfileId,
   profilesState: RequestState<ProfileDto[]>,
+  fallbackName?: string,
 ): string {
-  return labelFor(id, profilesState)
+  return labelFor(id, profilesState, fallbackName ?? id)
 }

@@ -1,13 +1,15 @@
+import { useT } from '@/i18n'
 import type { AiMsg } from './types'
 
 export function EvidencePanel({ msg }: { msg: AiMsg }) {
+  const t = useT()
   const { r, rankingStatus, rankingError } = msg
 
   if (rankingStatus === 'loading') {
     return (
       <div className="panel">
-        <b>Força da evidência</b>
-        <span className="hint">Derivando evidência do ranking e gaps da API…</span>
+        <b>{t('panels.evidenceTitle')}</b>
+        <span className="hint">{t('panels.loadingEvidence')}</span>
         <div className="skel-stack" aria-hidden>
           <div className="skel-line" />
           <div className="skel-line short" />
@@ -19,48 +21,49 @@ export function EvidencePanel({ msg }: { msg: AiMsg }) {
   if (rankingStatus === 'error') {
     return (
       <div className="panel">
-        <b>Força da evidência</b>
+        <b>{t('panels.evidenceTitle')}</b>
         <span className="hint" role="alert">
-          {rankingError ?? 'Não foi possível carregar a evidência.'}
+          {rankingError ?? t('panels.evidenceFail')}
         </span>
       </div>
     )
   }
 
   const where = [...new Set(r.top.map((d) => d.where).filter(Boolean))].join(
-    ' e ',
+    ' · ',
   )
   const denom = r.featuredCount || '—'
+  const levelShort = r.level[1]
+    .replace(/^Evidência\s+/i, '')
+    .replace(/\s+evidence$/i, '')
 
   return (
     <div className="panel">
-      <b>Força da evidência: {r.level[1].replace('Evidência ', '')}</b>
+      <b>{t('panels.evidenceTitleNamed', { level: levelShort })}</b>
       <div className="evidence">
         <div className="ev">
-          <small>Confiabilidade no ambiente</small>
-          <b>{r.partialG ? 'Baixa' : 'Alta'}</b>
+          <small>{t('panels.reliabilityEnv')}</small>
+          <b>{r.partialG ? t('panels.low') : t('panels.high')}</b>
           <small>
-            {r.partialG
-              ? 'alerta de gravidade parcial (API)'
-              : 'sem alerta de gravidade parcial'}
+            {r.partialG ? t('panels.partialGAlert') : t('panels.noPartialGAlert')}
           </small>
         </div>
         <div className="ev">
-          <small>Investigações perto do alvo</small>
+          <small>{t('panels.nearTarget')}</small>
           <b>
-            {r.near} de {denom}
+            {r.near} / {denom}
           </b>
-          <small>±5% O₂ e ±15 kPa dos alvos da missão</small>
+          <small>{t('panels.nearTargetHint')}</small>
         </div>
         <div className="ev">
-          <small>Onde foi testado</small>
+          <small>{t('panels.testedWhere')}</small>
           <b>{where || '—'}</b>
           <small>
             {where.includes('Cygnus')
-              ? 'Cygnus: cargueiro sem tripulação'
+              ? t('panels.cygnusHint')
               : where
-                ? 'plataformas do ranking'
-                : 'aguardando investigações'}
+                ? t('panels.platformsHint')
+                : t('panels.awaitingInv')}
           </small>
         </div>
       </div>

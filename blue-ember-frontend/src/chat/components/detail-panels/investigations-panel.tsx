@@ -1,7 +1,10 @@
-import { CRIT, PROFILES, WEIGHTS } from '../../data'
+import { useT } from '@/i18n'
+import { WEIGHTS } from '../../data'
 import { f1, fmt } from '../../engine'
-import type { CritWeights } from '../../types'
+import type { CritKey, CritWeights } from '../../types'
 import type { AiMsg } from './types'
+
+const CRIT_KEYS: CritKey[] = ['prox', 'moc', 'spread', 'hrr', 'tox']
 
 function psiHref(d: {
   id: string
@@ -18,14 +21,16 @@ function hasFlow(flow: [number, number]): boolean {
 }
 
 export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
+  const t = useT()
   const { r, prof, rankingStatus, rankingError, weights } = msg
   const panelWeights: CritWeights = weights ?? WEIGHTS[prof]
+  const profileName = t(`profile.${prof}.name`)
 
   if (rankingStatus === 'loading') {
     return (
       <div className="panel">
-        <b>Investigações da NASA</b>
-        <span className="hint">Carregando ranking da API…</span>
+        <b>{t('panels.nasaInv')}</b>
+        <span className="hint">{t('panels.loadingInv')}</span>
         <div className="skel-stack" aria-hidden>
           <div className="skel-line" />
           <div className="skel-line" />
@@ -38,9 +43,9 @@ export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
   if (rankingStatus === 'error') {
     return (
       <div className="panel">
-        <b>Investigações da NASA</b>
+        <b>{t('panels.nasaInv')}</b>
         <span className="hint" role="alert">
-          {rankingError ?? 'Não foi possível carregar o ranking.'}
+          {rankingError ?? t('panels.invFail')}
         </span>
       </div>
     )
@@ -49,10 +54,8 @@ export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
   if (r.top.length === 0) {
     return (
       <div className="panel">
-        <b>Investigações da NASA</b>
-        <span className="hint">
-          Nenhuma investigação featured para este perfil e ambiente.
-        </span>
+        <b>{t('panels.nasaInv')}</b>
+        <span className="hint">{t('panels.noInv')}</span>
       </div>
     )
   }
@@ -60,12 +63,12 @@ export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
   return (
     <div className="panel">
       <div className="row" style={{ justifyContent: 'space-between' }}>
-        <b>Investigações da NASA</b>
-        <span className="hint">Pesos do perfil {PROFILES[prof].name}</span>
+        <b>{t('panels.nasaInv')}</b>
+        <span className="hint">
+          {t('panels.profileWeights', { name: profileName })}
+        </span>
       </div>
-      <span className="hint">
-        Ordenadas pelo ranking fire-safety da API (C₁–C₅ com pesos do perfil).
-      </span>
+      <span className="hint">{t('panels.invHint')}</span>
       {r.top.map((d, i) => (
         <div className="item" key={d.id}>
           <div className="top">
@@ -86,7 +89,7 @@ export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
                 {hasFlow(d.flow) ? (
                   <>
                     {' '}
-                    · fluxo:{' '}
+                    · {t('panels.flowLabel')}:{' '}
                     {d.flow[0] === d.flow[1]
                       ? d.flow[0]
                       : `${d.flow[0]}–${d.flow[1]}`}{' '}
@@ -97,7 +100,7 @@ export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
               </span>
               <span>
                 <a href={psiHref(d)} target="_blank" rel="noopener noreferrer">
-                  Ver no PSI →
+                  {t('panels.viewPsi')}
                 </a>
                 {d.doi ? (
                   <>
@@ -116,25 +119,29 @@ export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
             </div>
             <div className="score">
               <b>{f1(d.nota)}</b>
-              <small>nota /10</small>
-              <small>relevância {f1((d.vals.prox ?? 0) * 10)}</small>
+              <small>{t('panels.scoreOutOf10')}</small>
+              <small>
+                {t('panels.relevance', {
+                  n: f1((d.vals.prox ?? 0) * 10),
+                })}
+              </small>
             </div>
           </div>
           <details className="crit">
             <summary>
-              Por que essa nota · {d.have} de 5 critérios com dado
+              {t('panels.whyScore', { have: d.have })}
             </summary>
             <div className="bars">
-              {CRIT.map(([k, l]) =>
+              {CRIT_KEYS.map((k) =>
                 d.vals[k] === null ? (
                   <div className="bar nodata" key={k}>
-                    <span>{l}</span>
+                    <span>{t(`crit.${k}`)}</span>
                     <div className="track" />
-                    <span className="v">sem dado</span>
+                    <span className="v">{t('panels.noData')}</span>
                   </div>
                 ) : (
                   <div className="bar" key={k}>
-                    <span>{l}</span>
+                    <span>{t(`crit.${k}`)}</span>
                     <div className="track">
                       <div
                         className="fill"
@@ -148,10 +155,7 @@ export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
                   </div>
                 ),
               )}
-              <span className="hint">
-                Valor de 0 a 10 · peso do perfil (API). &quot;Sem dado&quot;: a
-                investigação não mediu esse critério.
-              </span>
+              <span className="hint">{t('panels.barsHint')}</span>
             </div>
           </details>
         </div>

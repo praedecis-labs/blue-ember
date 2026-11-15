@@ -1,83 +1,83 @@
-# 🚀 Missão do Dashboard — Análise do Relatório Técnico
+# 🚀 Dashboard Mission — Technical Report Analysis
 
-## Objetivo Central
+## Central Objective
 
-> Conceber um **painel interativo (dashboard) potencializado por IA** capaz de **sintetizar, ranquear por criticidade e interpretar** os achados experimentais da NASA, convertendo dados brutos em **recomendações acionáveis** de prevenção, detecção e supressão de incêndios para a exploração espacial humana.
+> Design an **AI-powered interactive dashboard** capable of **synthesizing, ranking by criticality, and interpreting** NASA experimental findings, turning raw data into **actionable recommendations** for fire prevention, detection, and suppression during human space exploration.
 
 ---
 
-## O Problema
+## The Problem
 
-| Aspecto | Descrição |
+| Aspect | Description |
 |---------|-----------|
-| **Volume** | Décadas de dados experimentais acumulados |
-| **Dispersão** | Dados espalhados em múltiplos repositórios e formatos |
-| **Complexidade** | Alta barreira técnica para consulta e interpretação |
-| **Urgência** | Programa Artemis (Lua) e futuras missões a Marte dependem desses dados |
+| **Volume** | Decades of accumulated experimental data |
+| **Dispersion** | Data scattered across multiple repositories and formats |
+| **Complexity** | High technical barrier to query and interpretation |
+| **Urgency** | Artemis program (Moon) and future Mars missions depend on this data |
 
 ---
 
-## Física: Terra vs. Microgravidade
+## Physics: Earth vs. Microgravity
 
-| Parâmetro | 🌍 Terra (1g) | 🛸 Espaço (0g) |
+| Parameter | 🌍 Earth (1g) | 🛸 Space (0g) |
 |-----------|--------------|----------------|
-| **Mecanismo** | Convecção natural (empuxo térmico) | Difusão molecular / ventilação forçada |
-| **Geometria da chama** | Lágrima (alongada vertical) | Esférica / hemisférica |
-| **Cor / Luminosidade** | Amarela/alaranjada intensa | Azul pálida ou **invisível** |
-| **Temperatura** | Elevada (pluma superior) | Mais baixa — **chamas frias (300-400°C)** |
-| **Fumaça** | Sobe → acumula no teto | Suspensa em nuvens → segue dutos de ar |
+| **Mechanism** | Natural convection (thermal buoyancy) | Molecular diffusion / forced ventilation |
+| **Flame geometry** | Teardrop (elongated vertical) | Spherical / hemispherical |
+| **Color / luminosity** | Intense yellow/orange | Pale blue or **invisible** |
+| **Temperature** | High (upper plume) | Lower — **cold flames (300-400°C)** |
+| **Smoke** | Rises → accumulates on ceiling | Suspended in clouds → follows air ducts |
 
 ---
 
-## 5 Riscos Críticos em Missões Tripuladas
+## 5 Critical Risks in Crewed Missions
 
 ```mermaid
 flowchart TD
-    R1["👁️ Baixa Detectabilidade\nChamas azuis/invisíveis\nFumaça não sobe ao teto"]
-    R2["🫁 Sustentação em Baixo O₂\nMateriais 'seguros' na Terra\nqueimam no espaço"]
-    R3["👻 Chamas Frias Invisíveis\n300-400°C sem luz visível\nLiberam gases tóxicos"]
-    R4["☠️ Toxicidade em Circuito Fechado\nCO, HCN, HCl, formaldeído\nSem evacuação possível"]
-    R5["💨 Paradoxo da Ventilação\nVentiladores alimentam a chama\nExtintores dispersam brasas"]
+    R1["👁️ Low Detectability\nBlue/invisible flames\nSmoke does not rise to ceiling"]
+    R2["🫁 Sustained Burn at Low O₂\nMaterials 'safe' on Earth\nburn in space"]
+    R3["👻 Invisible Cold Flames\n300-400°C without visible light\nRelease toxic gases"]
+    R4["☠️ Toxicity in Closed Loop\nCO, HCN, HCl, formaldehyde\nNo evacuation possible"]
+    R5["💨 Ventilation Paradox\nFans feed the flame\nExtinguishers scatter embers"]
     
-    R1 & R2 & R3 & R4 & R5 --> RISCO["⚠️ Ameaça Silenciosa\ne Complexa"]
+    R1 & R2 & R3 & R4 & R5 --> RISCO["⚠️ Silent\nand Complex Threat"]
     
     style RISCO fill:#e74c3c,color:#fff
 ```
 
 ---
 
-## 3 Programas Experimentais Core (Fontes de Dados)
+## 3 Core Experimental Programs (Data Sources)
 
-| Programa | Foco | Ambiente | Dados Chave |
+| Program | Focus | Environment | Key Data |
 |----------|------|----------|-------------|
-| **FLEX** | Gotas de combustível líquido | ISS (CIR) | Transição chama quente → fria, diâmetros de extinção |
-| **Saffire** | Materiais sólidos em escala real | Cygnus (pós-ISS) | Propagação, liberação de calor, geração de fumaça |
-| **ACME** | Chamas gasosas não pré-misturadas | ISS (CIR) | Estrutura da chama, fuligem, limites de extinção |
+| **FLEX** | Liquid fuel droplets | ISS (CIR) | Hot-to-cold flame transition, extinction diameters |
+| **Saffire** | Full-scale solid materials | Cygnus (post-ISS) | Spread, heat release, smoke generation |
+| **ACME** | Non-premixed gas flames | ISS (CIR) | Flame structure, soot, extinction limits |
 
 ---
 
-## Arquitetura de 3 Camadas do Dashboard
+## 3-Layer Dashboard Architecture
 
 ```mermaid
 flowchart TD
-    subgraph C1["🔵 Camada 1: Condições Ambientais (INPUT)"]
+    subgraph C1["🔵 Layer 1: Environmental Conditions (INPUT)"]
         O2["O₂ % — 21% ISS → 30-34% EVA"]
-        P["Pressão Total — kPa/psi"]
-        V["Velocidade do Ar — 5-20 cm/s"]
-        G["Nível de Gravidade — 0g, 0.16g, 0.38g"]
+        P["Total Pressure — kPa/psi"]
+        V["Air Velocity — 5-20 cm/s"]
+        G["Gravity Level — 0g, 0.16g, 0.38g"]
     end
     
-    subgraph C2["🟠 Camada 2: Propagação & Severidade (EXPERIMENT)"]
-        TP["Taxa de Propagação — mm/s"]
-        MOC["MOC — Mínimo O₂ para combustão"]
-        HRR["HRR — Taxa de Liberação de Calor (kW)"]
-        EXT["Diâmetro/Tempo de Extinção"]
+    subgraph C2["🟠 Layer 2: Spread & Severity (EXPERIMENT)"]
+        TP["Spread Rate — mm/s"]
+        MOC["MOC — Minimum O₂ for combustion"]
+        HRR["HRR — Heat Release Rate (kW)"]
+        EXT["Extinction Diameter/Time"]
     end
     
-    subgraph C3["🔴 Camada 3: Toxicidade & Detecção (SAFETY)"]
-        TOX["Gases Tóxicos — CO, HCN, HCl, CH₂O (ppm)"]
-        PART["Partículas de Fuligem — tamanho/densidade"]
-        SUP["Eficácia de Supressão — CO₂, N₂, névoa"]
+    subgraph C3["🔴 Layer 3: Toxicity & Detection (SAFETY)"]
+        TOX["Toxic Gases — CO, HCN, HCl, CH₂O (ppm)"]
+        PART["Soot Particles — size/density"]
+        SUP["Suppression Effectiveness — CO₂, N₂, mist"]
     end
     
     C1 --> C2 --> C3
@@ -87,71 +87,71 @@ flowchart TD
     style C3 fill:#e74c3c,color:#fff
 ```
 
-### Tabela de Variáveis Prioritárias
+### Priority Variables Table
 
-| Camada | Variável | Unidade | Relevância |
+| Layer | Variable | Unit | Relevance |
 |--------|----------|---------|------------|
-| **1. Ambientais** | Concentração O₂ | % | Inflamabilidade — atmosferas EVA usam 30-34% |
-| | Pressão Total | kPa / psi | Hipobárica (56 kPa Lua/Marte) altera difusividade |
-| | Velocidade do Ar | cm/s | 5-20 cm/s intensifica transporte de O₂ à chama |
-| | Nível de Gravidade | g | Interpolar 0g ↔ 0.16g (Lua) ↔ 0.38g (Marte) |
-| **2. Severidade** | Taxa de Propagação | mm/s | Tempo disponível para resposta da tripulação |
-| | MOC (Min O₂) | % | Linha de corte para homologação de materiais |
-| | HRR (Calor) | kW | Risco de falha estrutural / ignição secundária |
-| | Diâmetro de Extinção | mm / s | Limiar de transição para chama fria invisível |
-| **3. Segurança** | Gases Tóxicos | ppm | Dimensionar autonomia de máscaras |
-| | Partículas de Fuligem | µm / mg/m³ | Calibrar detectores ópticos/ionização |
-| | Eficácia de Supressão | L / L/s | Volume de agente sem reignição |
+| **1. Environmental** | O₂ concentration | % | Flammability — EVA atmospheres use 30-34% |
+| | Total pressure | kPa / psi | Hypobaric (56 kPa Moon/Mars) alters diffusivity |
+| | Air velocity | cm/s | 5-20 cm/s intensifies O₂ transport to flame |
+| | Gravity level | g | Interpolate 0g ↔ 0.16g (Moon) ↔ 0.38g (Mars) |
+| **2. Severity** | Spread rate | mm/s | Time available for crew response |
+| | MOC (Min O₂) | % | Cutoff line for material qualification |
+| | HRR (Heat) | kW | Structural failure / secondary ignition risk |
+| | Extinction diameter | mm / s | Threshold for transition to invisible cold flame |
+| **3. Safety** | Toxic gases | ppm | Size mask autonomy |
+| | Soot particles | µm / mg/m³ | Calibrate optical/ionization detectors |
+| | Suppression effectiveness | L / L/s | Agent volume without reignition |
 
 ---
 
-## Camada de IA — 3 Funções Inteligentes
+## AI Layer — 3 Intelligent Functions
 
-| Função | O que faz | Exemplo |
+| Function | What it does | Example |
 |--------|-----------|---------|
-| **🎯 Ranqueamento Dinâmico** | Usuário define perfil de missão (O₂%, pressão, g) → IA reordena materiais do maior ao menor risco | "32% O₂, 56.5 kPa, 0.16g" → lista de materiais ranqueados |
-| **⚠️ Índice de Criticidade** | Cruza propagação × MOC × toxicidade → alerta quando material seguro na ISS vira perigoso em Artemis | Material aprovado a 21% O₂ → ALERTA a 34% O₂ |
-| **📊 Síntese Comparativa** | Compara automaticamente resultados entre campanhas experimentais → destaca lacunas | Polímero X no Saffire (fluxo forçado) vs. condições quiescentes |
+| **🎯 Dynamic Ranking** | User defines mission profile (O₂%, pressure, g) → AI reorders materials from highest to lowest risk | "32% O₂, 56.5 kPa, 0.16g" → ranked material list |
+| **⚠️ Criticality Index** | Crosses spread × MOC × toxicity → alert when ISS-safe material becomes Artemis-dangerous | Material approved at 21% O₂ → ALERT at 34% O₂ |
+| **📊 Comparative Synthesis** | Automatically compares results across experimental campaigns → highlights gaps | Polymer X in Saffire (forced flow) vs. quiescent conditions |
 
 ---
 
-## Mapa Completo: Fontes → Dashboard
+## Full Map: Sources → Dashboard
 
 ```mermaid
 flowchart TD
-    subgraph HIST["🕰️ POR QUE EXISTE"]
+    subgraph HIST["🕰️ WHY IT EXISTS"]
         A1["Apollo 1"] --> A13["Apollo 13"] --> MIR["Mir Fire"]
     end
     
-    subgraph PROG["📖 COMO FUNCIONA"]
+    subgraph PROG["📖 HOW IT WORKS"]
         GCS["Glenn Combustion Science"]
         RG["Researcher's Guide"]
     end
     
-    subgraph DATA["📊 DADOS EXPERIMENTAIS"]
+    subgraph DATA["📊 EXPERIMENTAL DATA"]
         FLEX["FLEX"] & SAFFIRE["Saffire"] & ACME["ACME"]
         PSI["PSI Repository"]
         FLEX & SAFFIRE & ACME --> PSI
     end
     
-    subgraph IMPACT["🌍 IMPACTO TERRESTRE"]
-        SP1["Tanques de Ar"]
-        SP2["Detector Incipiente"]
+    subgraph IMPACT["🌍 TERRESTRIAL IMPACT"]
+        SP1["Air Tanks"]
+        SP2["Incipient Detector"]
         SP3["Project FIRES"]
     end
     
-    subgraph DASH["🎯 DASHBOARD INTELIGENTE"]
-        C1B["Camada 1: Ambiente"]
-        C2B["Camada 2: Severidade"]
-        C3B["Camada 3: Toxicidade"]
-        AI["🤖 IA: Ranqueamento + Criticidade + Síntese"]
+    subgraph DASH["🎯 INTELLIGENT DASHBOARD"]
+        C1B["Layer 1: Environment"]
+        C2B["Layer 2: Severity"]
+        C3B["Layer 3: Toxicity"]
+        AI["🤖 AI: Ranking + Criticality + Synthesis"]
         C1B --> C2B --> C3B --> AI
     end
     
-    HIST -->|"motivou"| PROG
-    PROG -->|"gerou"| DATA
-    DATA -->|"alimenta"| DASH
-    DATA -->|"produziu"| IMPACT
+    HIST -->|"motivated"| PROG
+    PROG -->|"produced"| DATA
+    DATA -->|"feeds"| DASH
+    DATA -->|"yielded"| IMPACT
     
     style DASH fill:#1a1a2e,color:#fff
     style AI fill:#e74c3c,color:#fff
@@ -160,4 +160,4 @@ flowchart TD
 ---
 
 > [!IMPORTANT]
-> **Síntese Estratégica:** O sucesso do dashboard depende de conectar a física fundamental da microgravidade (ausência de convecção, chamas esféricas, combustão fria e fumaça não ascendente) diretamente às decisões de projeto de engenharia. Ao estruturar os dados FLEX, Saffire e ACME em torno de atmosfera de cabine, severidade térmica e toxicidade, a IA capacita engenheiros a mitigarem riscos **antes** da seleção final dos materiais de voo.
+> **Strategic synthesis:** Dashboard success depends on connecting fundamental microgravity physics (no convection, spherical flames, cold combustion, non-rising smoke) directly to engineering design decisions. By structuring FLEX, Saffire, and ACME data around cabin atmosphere, thermal severity, and toxicity, AI enables engineers to mitigate risks **before** final flight material selection.

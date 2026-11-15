@@ -5,5 +5,10 @@ obj/
 .vs/
 *.user
 .DS_Store
+.env
+.env.*
+!.env.example
+**/secrets.json
+appsettings.*.local.json
 
 .docs/

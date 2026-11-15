@@ -197,3 +197,81 @@ export type ExportQueryParams = {
   category?: string
   featured?: boolean
 }
+
+export type AgentQueryStateDto = {
+  env?: string | null
+  material?: string | null
+  o2?: number | null
+  psi?: number | null
+  flow?: number | null
+  goal?: string | null
+  claim?: string | null
+}
+
+export type AgentHistoryTurnDto = {
+  role: 'user' | 'model' | 'assistant'
+  text: string
+}
+
+export type AgentLocale = 'en-US' | 'pt-BR'
+
+export type AgentAskRequest = {
+  message: string
+  profile?: ApiProfileId | string
+  environment?: ApiEnvironmentId | string
+  category?: string
+  locale?: AgentLocale | string
+  query?: AgentQueryStateDto
+  history?: AgentHistoryTurnDto[]
+}
+
+export type DashboardIntent =
+  | 'hazard'
+  | 'prediction'
+  | 'coverage'
+  | 'ranking'
+  | 'custom'
+
+export type DashboardPredictability = 'high' | 'medium' | 'low'
+
+export type DashboardScenario = {
+  label: string
+  environment: ApiEnvironmentId | string
+  note?: string | null
+  predictability: DashboardPredictability | string
+}
+
+export type DashboardWidget =
+  | { type: 'rankingTop3'; title?: string | null }
+  | { type: 'gapsHeatmap'; title?: string | null }
+  | {
+      type: 'criteriaBars'
+      title?: string | null
+      investigationId?: string | null
+    }
+  | {
+      type: 'materialHazard'
+      title?: string | null
+      limit?: number | null
+    }
+  | {
+      type: 'scenarioPredictability'
+      title?: string | null
+      scenarios: DashboardScenario[]
+    }
+  | { type: 'insight'; title?: string | null; body: string }
+
+export type DashboardSpec = {
+  title: string
+  subtitle?: string | null
+  intent: DashboardIntent | string
+  widgets: DashboardWidget[]
+}
+
+export type AgentAskResponse = {
+  text: string
+  ranking: RankingResponse | null
+  gaps: GapsResponse | null
+  toolsUsed: string[]
+  dashboard: DashboardSpec | null
+}

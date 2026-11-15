@@ -124,21 +124,21 @@ export const WEIGHTS: Record<ProfileId, Record<CritKey, number>> = {
   est: { prox: 0.2, moc: 0.2, spread: 0.2, hrr: 0.2, tox: 0.2 },
 }
 
+/** Fallback English labels; UI prefers t('profile.*') / API labels. */
 export const PROFILES: Record<ProfileId, { name: string; focus: string }> = {
   eng: {
-    name: 'Engenheiro de missão',
+    name: 'Ship engineer',
     focus:
-      'Aprovar ou reprovar materiais e conter danos. Pesa mais a margem de oxigênio e a velocidade da chama.',
+      'Approve or reject materials and contain damage. Weighs oxygen margin and flame spread more.',
   },
   pesq: {
-    name: 'Pesquisador',
+    name: 'Researcher',
     focus:
-      'Rigor dos dados e lacunas. Pesa mais o quanto os testes se parecem com a sua condição.',
+      'Data rigor and gaps. Weighs how closely tests match your conditions more.',
   },
   est: {
-    name: 'Estudante',
-    focus:
-      'Entender a física do fogo no espaço. Todos os critérios com o mesmo peso.',
+    name: 'Student',
+    focus: 'Understand fire physics in space. All criteria weighted equally.',
   },
 }
 

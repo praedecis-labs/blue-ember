@@ -86,9 +86,11 @@ describe('compute (legacy local DATA ranking)', () => {
 
 describe('buildVerdict', () => {
   it('rejects safe claim when evidence is weak', () => {
-    expect(buildVerdict('safe', 'weak')).toEqual([
+    const t = (key: string) =>
+      key === 'verdict.unconfirmed' ? 'Cannot confirm' : key
+    expect(buildVerdict('safe', 'weak', t)).toEqual([
       'weak',
-      'Não dá para confirmar',
+      'Cannot confirm',
     ])
   })
 })

@@ -1,3 +1,4 @@
+import { useI18n } from '@/i18n'
 import type { HealthStatus } from '@/services/health'
 import type { ProfileId, ScreenId, ThemeId } from '../types'
 
@@ -34,12 +35,14 @@ export function ChatHeader({
   onWho,
   onToggleTheme,
 }: Props) {
+  const { locale, setLocale, t } = useI18n()
+
   const healthLabel =
     apiHealth === 'loading'
-      ? 'API…'
+      ? t('header.apiLoading')
       : apiHealth === 'ok'
-        ? 'API online'
-        : 'API offline'
+        ? t('header.apiOnline')
+        : t('header.apiOffline')
 
   return (
     <header>
@@ -49,14 +52,14 @@ export function ChatHeader({
           aria-current={screen === 'home' ? 'page' : undefined}
           onClick={onHome}
         >
-          Início
+          {t('nav.home')}
         </button>
         <button
           type="button"
           aria-current={screen === 'chat' ? 'page' : undefined}
           onClick={onNew}
         >
-          Nova análise
+          {t('nav.newAnalysis')}
         </button>
       </nav>
       {profile && screen !== 'profile' ? (
@@ -64,14 +67,32 @@ export function ChatHeader({
           {profileLabel ?? profile} ▾
         </button>
       ) : null}
+      <span className="lang-toggle" role="group" aria-label={t('header.toggleLang')}>
+        <button
+          type="button"
+          className="lang-btn"
+          aria-pressed={locale === 'en-US'}
+          onClick={() => setLocale('en-US')}
+        >
+          {t('header.langEn')}
+        </button>
+        <button
+          type="button"
+          className="lang-btn"
+          aria-pressed={locale === 'pt-BR'}
+          onClick={() => setLocale('pt-BR')}
+        >
+          {t('header.langPt')}
+        </button>
+      </span>
       <button
         type="button"
         className="theme-btn"
-        aria-label="Alternar tema claro e escuro"
+        aria-label={t('nav.toggleTheme')}
         aria-pressed={theme === 'dark'}
         onClick={onToggleTheme}
       >
-        {theme === 'dark' ? '☀ Claro' : '☾ Escuro'}
+        {theme === 'dark' ? `☀ ${t('header.light')}` : `☾ ${t('header.dark')}`}
       </button>
       {onExportCsv || onExportJson ? (
         <span className="export-actions">
@@ -82,7 +103,7 @@ export function ChatHeader({
             aria-busy={exportBusy}
             onClick={onExportCsv}
           >
-            Export CSV
+            {t('header.exportCsv')}
           </button>
           <button
             type="button"
@@ -91,17 +112,17 @@ export function ChatHeader({
             aria-busy={exportBusy}
             onClick={onExportJson}
           >
-            JSON
+            {t('header.exportJson')}
           </button>
         </span>
       ) : null}
       <span className={`tag tag-health tag-health--${apiHealth}`}>
         {healthLabel}
       </span>
-      <span className="tag">Score via API · síntese local</span>
+      <span className="tag">{t('header.scoreTag')}</span>
       {environmentsError ? (
         <span className="tag tag-warn" role="alert">
-          Ambientes: {environmentsError}
+          {t('header.environmentsError', { error: environmentsError })}
         </span>
       ) : null}
     </header>

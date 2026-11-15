@@ -1,3 +1,8 @@
+import type {
+  CoverageCellDto,
+  DashboardSpec,
+  MissionTargetsDto,
+} from '@/services/contracts'
 import type { RequestStatus } from '@/services/request-state'
 
 export type ProfileId = 'eng' | 'pesq' | 'est'
@@ -104,6 +109,13 @@ export type ChatMessage =
       rankingStatus: RequestStatus
       rankingError: string | null
       weights: CritWeights | null
+      /** True when `lead` came from Gemini agent prose (skip template summary). */
+      agentReply?: boolean
+      /** Dynamic dashboard composed by the agent (typed widget catalog). */
+      dashboard?: DashboardSpec | null
+      /** Raw gaps grid for heatmap widgets. */
+      coverageCells?: CoverageCellDto[] | null
+      missionTargets?: MissionTargetsDto | null
     }
 
 export type PersistedState = {

@@ -1,4 +1,9 @@
 import {
+  DEFAULT_LOCALE,
+  isAppLocale,
+  type AppLocale,
+} from '@/i18n/locales'
+import {
   fromApiEnvironment,
   fromApiProfile,
   toApiEnvironment,
@@ -16,6 +21,7 @@ import type {
 
 const STATE_KEY = 'blueEmberChat'
 const THEME_KEY = 'blueEmberTheme'
+const LOCALE_KEY = 'blueEmberLocale'
 const DEFAULT_ENV: EnvId = 'lua'
 
 const EVIDENCE_LEVELS: EvidenceLevel[] = [
@@ -152,6 +158,24 @@ export function loadTheme(): ThemeId {
 export function saveTheme(theme: ThemeId) {
   try {
     localStorage.setItem(THEME_KEY, theme)
+  } catch {
+    /* ignore */
+  }
+}
+
+export function loadLocale(): AppLocale {
+  try {
+    const raw = localStorage.getItem(LOCALE_KEY)
+    if (isAppLocale(raw)) return raw
+  } catch {
+    /* ignore */
+  }
+  return DEFAULT_LOCALE
+}
+
+export function saveLocale(locale: AppLocale) {
+  try {
+    localStorage.setItem(LOCALE_KEY, locale)
   } catch {
     /* ignore */
   }

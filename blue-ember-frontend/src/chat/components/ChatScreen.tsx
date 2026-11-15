@@ -1,6 +1,6 @@
 import { useEffect, useRef, type KeyboardEvent } from 'react'
+import { translatedExamples, useT } from '@/i18n'
 import type { EnvironmentDto } from '@/services/contracts'
-import { EXAMPLES } from '../data'
 import type { ChatMessage, QueryState } from '../types'
 import { AiBubble } from './AiBubble'
 
@@ -29,6 +29,8 @@ export function ChatScreen({
   onApplyConditions,
   onExample,
 }: Props) {
+  const t = useT()
+  const examples = translatedExamples(t)
   const threadRef = useRef<HTMLDivElement>(null)
   const empty = messages.length === 0
 
@@ -51,15 +53,13 @@ export function ChatScreen({
         <div className="thread-inner" id="thread-inner">
           {empty ? (
             <div className="welcome" id="welcome">
-              <span className="step">Perfil: {profileLabel}</span>
-              <h1>O que você quer saber sobre fogo na sua missão?</h1>
-              <p className="why">
-                Escreva sua hipótese do seu jeito. A resposta vem resumida, com
-                os detalhes a um clique: condições, investigações da NASA, força
-                da evidência e o que falta testar.
-              </p>
+              <span className="step">
+                {t('chat.profileStep', { name: profileLabel })}
+              </span>
+              <h1>{t('chat.welcomeTitle')}</h1>
+              <p className="why">{t('chat.welcomeWhy')}</p>
               <div className="chips" style={{ justifyContent: 'center' }}>
-                {EXAMPLES.map(([label, text]) => (
+                {examples.map(([label, text]) => (
                   <button
                     key={label}
                     type="button"
@@ -94,24 +94,21 @@ export function ChatScreen({
       <div className="composer-wrap">
         <div className="composer">
           <textarea
-            aria-label="Mensagem"
-            placeholder="Ex.: o tecido da cabine continua seguro no habitat lunar a 8,2 psi e 34% de O₂?"
+            aria-label={t('chat.messageAria')}
+            placeholder={t('chat.placeholder')}
             value={draft}
             onChange={(e) => onDraftChange(e.target.value)}
             onKeyDown={onKeyDown}
           />
           {error ? <span className="error">{error}</span> : null}
           <div className="actions">
-            <span className="hint">Enter envia · Shift+Enter quebra a linha</span>
+            <span className="hint">{t('chat.hintKeys')}</span>
             <button type="button" className="send" onClick={onSend}>
-              Enviar
+              {t('chat.send')}
             </button>
           </div>
         </div>
-        <p className="hint composer-note">
-          Score e PSI/DOI vêm da API; textos de síntese e veredicto são locais
-          na UI.
-        </p>
+        <p className="hint composer-note">{t('chat.composerNote')}</p>
       </div>
     </section>
   )

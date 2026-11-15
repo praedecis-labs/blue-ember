@@ -1,4 +1,5 @@
 using BlueEmber.Api.Domain.Scoring;
+using BlueEmber.Api.Features.Agent;
 using BlueEmber.Api.Features.Export;
 using BlueEmber.Api.Features.Gaps;
 using BlueEmber.Api.Features.Health;
@@ -22,6 +23,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.Configure<NasaPsiOptions>(builder.Configuration.GetSection(NasaPsiOptions.SectionName));
 builder.Services.Configure<DataOptions>(builder.Configuration.GetSection(DataOptions.SectionName));
+builder.Services.Configure<GeminiOptions>(builder.Configuration.GetSection(GeminiOptions.SectionName));
 
 builder.Services.AddHttpClient<NasaPsiClient>((sp, client) =>
 {
@@ -30,8 +32,19 @@ builder.Services.AddHttpClient<NasaPsiClient>((sp, client) =>
     client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
 });
 
+builder.Services.AddHttpClient("gemini", client =>
+{
+    client.Timeout = TimeSpan.FromSeconds(180);
+    client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
+});
+
 builder.Services.AddSingleton<IInvestigationRepository, JsonInvestigationStore>();
 builder.Services.AddSingleton<ScoreCalculator>();
+builder.Services.AddSingleton<RankingQueryService>();
+builder.Services.AddSingleton<GapsQueryService>();
+builder.Services.AddSingleton<InvestigationQueryService>();
+builder.Services.AddScoped<AgentTools>();
+builder.Services.AddSingleton<GeminiAgentService>();
 builder.Services.AddScoped<NasaRefreshService>();
 builder.Services.AddHostedService<InvestigationCacheRefreshWorker>();
 
@@ -52,6 +65,7 @@ app.MapRankingEndpoints();
 app.MapGapEndpoints();
 app.MapExportEndpoints();
 app.MapNasaEndpoints();
+app.MapAgentEndpoints();
 
 await BootstrapInvestigationsAsync(app);
 

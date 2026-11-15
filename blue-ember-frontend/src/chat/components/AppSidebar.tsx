@@ -18,6 +18,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar'
+import { useI18n } from '@/i18n'
 import { LOGO_SRC } from '../data'
 import type { HistoryItem, ProfileId, ScreenId, ThemeId } from '../types'
 
@@ -46,6 +47,8 @@ export function AppSidebar({
   onOpenDoc,
   onToggleTheme,
 }: Props) {
+  const { locale, setLocale, t } = useI18n()
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -66,37 +69,37 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Análises</SidebarGroupLabel>
+          <SidebarGroupLabel>{t('nav.analyses')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   isActive={screen === 'home'}
                   onClick={onHome}
-                  tooltip="Início"
+                  tooltip={t('nav.home')}
                 >
                   <House />
-                  <span>Início</span>
+                  <span>{t('nav.home')}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   isActive={screen === 'chat'}
                   onClick={onNew}
-                  tooltip="Nova análise"
+                  tooltip={t('nav.newAnalysis')}
                 >
                   <MessageSquarePlus />
-                  <span>Nova análise</span>
+                  <span>{t('nav.newAnalysis')}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   isActive={screen === 'profile'}
                   onClick={onProfile}
-                  tooltip="Perfil"
+                  tooltip={t('nav.profile')}
                 >
                   <UserRound />
-                  <span>Perfil</span>
+                  <span>{t('nav.profile')}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -104,7 +107,7 @@ export function AppSidebar({
         </SidebarGroup>
         {history.length > 0 ? (
           <SidebarGroup>
-            <SidebarGroupLabel>Recentes</SidebarGroupLabel>
+            <SidebarGroupLabel>{t('nav.recent')}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
                 {history.slice(0, 6).map((h) => (
@@ -125,14 +128,39 @@ export function AppSidebar({
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={onToggleTheme} tooltip="Alternar tema">
+            <SidebarMenuButton
+              tooltip={t('header.toggleLang')}
+              onClick={() =>
+                setLocale(locale === 'en-US' ? 'pt-BR' : 'en-US')
+              }
+            >
+              <span className="font-semibold text-xs tracking-wide">
+                {locale === 'en-US' ? 'EN' : 'PT'}
+              </span>
+              <span>
+                {locale === 'en-US' ? t('header.langEn') : t('header.langPt')}
+                {' · '}
+                {locale === 'en-US' ? t('header.langPt') : t('header.langEn')}
+              </span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onClick={onToggleTheme}
+              tooltip={t('nav.toggleTheme')}
+            >
               {theme === 'dark' ? <Sun /> : <Moon />}
-              <span>{theme === 'dark' ? 'Tema claro' : 'Tema escuro'}</span>
+              <span>
+                {theme === 'dark' ? t('nav.themeLight') : t('nav.themeDark')}
+              </span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           {profile ? (
             <SidebarMenuItem>
-              <SidebarMenuButton onClick={onProfile} tooltip="Trocar perfil">
+              <SidebarMenuButton
+                onClick={onProfile}
+                tooltip={t('nav.switchProfile')}
+              >
                 <UserRound />
                 <span className="truncate">
                   {profileLabel ?? profile}

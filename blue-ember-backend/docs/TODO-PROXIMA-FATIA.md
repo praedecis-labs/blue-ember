@@ -1,63 +1,63 @@
-# To-dos — próxima fatia do backend
+# To-dos — next backend slice
 
-**Objetivo:** deixar a API pronta para o dashboard React consumir sem gambiarra, com score protegido por testes.  
-**Fora desta fatia:** Postgres, worker Python, S3, `/ask`, auth real.
-
----
-
-## Prioridade alta
-
-- [x] **Contrato FE estável**
-  - Revisar DTOs de `ranking`, detalhe, `compare`, `gaps` e `export` no Swagger
-  - Alinhar nomes (`criteria`, `category`, pesos) com o que o frontend vai tipar
-  - Documentar query params obrigatórios/opcionais por rota
-
-- [x] **Seed / filtro fire-safety default**
-  - Default: omitir `featured` = só fire-safety (~19); `featured=false` = catálogo completo
-  - Rota dedicada: `GET /api/ranking/fire-safety` (sempre featured)
-  - Resposta inclui `featured: true|false` para o FE não adivinhar
-  - Aplicado em ranking, investigations e export
-
-- [x] **Testes automatizados do score**
-  - Cobrir 3–5 casos fixos (ex.: SAFFIRE-II Moon/ShipEngineer, SAME, FLEX)
-  - Garantir que mudanças em C1–C5 não passem silenciosas
-  - Rodar no CI local (`dotnet test`) antes do commit de feature
+**Goal:** make the API ready for the React dashboard to consume without hacks, with score protected by tests.  
+**Out of this slice:** Postgres, Python worker, S3, `/ask`, real auth.
 
 ---
 
-## Prioridade média
+## High priority
 
-- [x] **Cache GEODE com TTL / idade dos dados**
-  - Expor idade do cache em `/api/health` (`dataAgeSeconds`, `lastLoadedAt`, `dataSource`, `cacheStale`)
-  - Opcional: refresh automático leve se TTL expirar (`Data:CacheTtlMinutes` > 0 + worker)
+- [x] **Stable FE contract**
+  - Review DTOs for `ranking`, detail, `compare`, `gaps`, and `export` in Swagger
+  - Align names (`criteria`, `category`, weights) with what the frontend will type
+  - Document required/optional query params per route
 
-- [ ] **Validação de query ampliada**
-  - Ranges O2 / pressão inválidos → 400 claro
-  - `ids` do compare (quantidade, formato PSI-xx)
-  - Mensagens de erro consistentes para o FE
+- [x] **Seed / fire-safety default filter**
+  - Default: omit `featured` = fire-safety only (~19); `featured=false` = full catalog
+  - Dedicated route: `GET /api/ranking/fire-safety` (always featured)
+  - Response includes `featured: true|false` so FE does not guess
+  - Applied to ranking, investigations, and export
 
-- [ ] **Logs estruturados no refresh**
-  - Latência GEODE, count retornado, count após merge
-  - Falha vs sucesso distinguíveis no log
-
----
-
-## Depois (não começar agora)
-
-- [ ] Worker Python + ingestão S3 `nasa-psi`
-- [ ] PostgreSQL / pgvector atrás de `IInvestigationRepository`
-- [ ] Endpoint `/ask` (proxy IA)
-- [ ] Auth real (JWT/OAuth) — perfis mock continuam suficientes no hackathon
+- [x] **Automated score tests**
+  - Cover 3–5 fixed cases (e.g. SAFFIRE-II Moon/ShipEngineer, SAME, FLEX)
+  - Ensure C1–C5 changes do not slip through silently
+  - Run in local CI (`dotnet test`) before feature commit
 
 ---
 
-## Ordem sugerida no próximo commit
+## Medium priority
 
-1. Contrato FE + (se necessário) ajuste fino de DTOs  
-2. Fire-safety default / rota dedicada  
-3. Testes do `ScoreCalculator`  
-4. Validação + logs + idade do cache (se sobrar tempo)
+- [x] **GEODE cache with TTL / data age**
+  - Expose cache age on `/api/health` (`dataAgeSeconds`, `lastLoadedAt`, `dataSource`, `cacheStale`)
+  - Optional: light auto-refresh if TTL expires (`Data:CacheTtlMinutes` > 0 + worker)
+
+- [ ] **Expanded query validation**
+  - Invalid O2 / pressure ranges → clear 400
+  - `ids` for compare (count, PSI-xx format)
+  - Consistent error messages for FE
+
+- [ ] **Structured logs on refresh**
+  - GEODE latency, returned count, count after merge
+  - Failure vs success distinguishable in log
 
 ---
 
-*Referência do MVP atual: [RELATORIO-BACKEND-MVP.md](./RELATORIO-BACKEND-MVP.md)*
+## Later (do not start now)
+
+- [ ] Python worker + S3 `nasa-psi` ingestion
+- [ ] PostgreSQL / pgvector behind `IInvestigationRepository`
+- [ ] `/ask` endpoint (AI proxy)
+- [ ] Real auth (JWT/OAuth) — mock profiles remain sufficient for hackathon
+
+---
+
+## Suggested order for next commit
+
+1. FE contract + (if needed) fine DTO adjustments  
+2. Fire-safety default / dedicated route  
+3. `ScoreCalculator` tests  
+4. Validation + logs + cache age (if time remains)
+
+---
+
+*Current MVP reference: [RELATORIO-BACKEND-MVP.md](./RELATORIO-BACKEND-MVP.md)*

@@ -2,42 +2,45 @@
 
 NASA Space Apps 2026 — Flame in Freefall.
 
-## Estrutura (monorepo)
+Default UI language: **English (en-US)**. Toggle **EN | PT** in the chat header for Portuguese (pt-BR).
 
-| Pasta | Papel |
+## Structure (monorepo)
+
+| Folder | Role |
 | --- | --- |
-| `blue-ember-frontend/` | React + TypeScript + Vite (app canônico) |
+| `blue-ember-frontend/` | React + TypeScript + Vite (canonical app) |
 | `blue-ember-backend/` | ASP.NET Core 8 Minimal API (Vertical Slice) |
-| `blue-ember-backend/data/` | Cache NASA PSI (JSON) |
-| `blue-ember-backend/scripts/` | Utilitários de ingestão/teste (Python/Node) |
-| `blue-ember-backend/docs/` | Relatórios e documentação do backend |
+| `blue-ember-backend/data/` | NASA PSI cache (JSON) |
+| `blue-ember-backend/scripts/` | Ingestion/test utilities (Python/Node) |
+| `blue-ember-backend/docs/` | Backend reports and docs |
 
 ### Backend — Vertical Slice
 
-| Pasta | Papel |
+| Folder | Role |
 | --- | --- |
-| `Features/<Nome>/` | Endpoints da feature (Health, Investigations, Ranking, Gaps, Export, Nasa) |
-| `Domain/` | Score, perfis mock, ambientes, categorias |
-| `Infrastructure/` | Cliente GEODE + store JSON |
+| `Features/<Name>/` | Feature endpoints (Health, Investigations, Ranking, Gaps, Export, Nasa, Agent) |
+| `Domain/` | Score, mock profiles, environments, categories |
+| `Infrastructure/` | GEODE client + JSON store |
 | `Program.cs` | Composition root (DI, middleware, `Map*Endpoints`) |
 
 ### Frontend (`blue-ember-frontend/src/`) — layers
 
-| Pasta | Papel |
+| Folder | Role |
 | --- | --- |
-| `chat/` | App de chat (perfil, home, thread, painéis) |
-| `components/` | UI reutilizável (shadcn) |
-| `hooks/` | Hooks React |
-| `services/` | Client HTTP tipado da API |
-| `assets/` | Imagens e mídia estática |
-| `App.tsx` | Shell — monta `ChatApp` |
+| `chat/` | Chat app (profile, home, thread, panels) |
+| `i18n/` | Locale catalogs (`en-US` / `pt-BR`) and provider |
+| `components/` | Reusable UI (shadcn) |
+| `hooks/` | React hooks |
+| `services/` | Typed HTTP API client |
+| `assets/` | Static images and media |
+| `App.tsx` | Shell — mounts `ChatApp` inside `I18nProvider` |
 
-## Pré-requisitos
+## Prerequisites
 
 - Node.js 20+
 - .NET SDK 8
 
-## Rodar
+## Run
 
 ### Backend
 
@@ -52,6 +55,7 @@ dotnet run --launch-profile http
 - Investigations: `GET /api/investigations`, `GET /api/investigations/{id}`, `GET /api/investigations/compare?ids=`  
 - Ranking: `GET /api/ranking?profile=ShipEngineer&environment=Moon`  
 - Profiles / Environments / Gaps / Export: `/api/profiles`, `/api/environments`, `/api/gaps`, `/api/export`  
+- Agent: `POST /api/agent/ask` (optional Gemini key — see backend docs)  
 - NASA refresh: `POST /api/nasa/refresh`
 
 ### Frontend
@@ -63,5 +67,7 @@ npm run dev
 ```
 
 - App: http://localhost:3000  
-- CORS liberado para essa origem no backend  
-- Proxy Vite: `/api` → `http://localhost:5006`
+- CORS allowed for that origin on the backend  
+- Vite proxy: `/api` → `http://localhost:5006`
+
+> Archival HTML prototypes (`blue-ember-chat.html`, `docs/prototipos/…`) are Portuguese-era snapshots. The primary product UI is the React app with i18n.

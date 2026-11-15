@@ -1,3 +1,4 @@
+import { useT } from '@/i18n'
 import type { AiMsg } from './types'
 
 function psiHref(d: {
@@ -11,13 +12,14 @@ function psiHref(d: {
 }
 
 export function SourcesPanel({ msg }: { msg: AiMsg }) {
+  const t = useT()
   const { r, rankingStatus, rankingError } = msg
 
   if (rankingStatus === 'loading') {
     return (
       <div className="panel">
-        <b>Fontes</b>
-        <span className="hint">Carregando links oficiais…</span>
+        <b>{t('panels.sourcesTitle')}</b>
+        <span className="hint">{t('panels.loadingSources')}</span>
         <div className="skel-stack" aria-hidden>
           <div className="skel-line" />
           <div className="skel-line short" />
@@ -29,9 +31,9 @@ export function SourcesPanel({ msg }: { msg: AiMsg }) {
   if (rankingStatus === 'error') {
     return (
       <div className="panel">
-        <b>Fontes</b>
+        <b>{t('panels.sourcesTitle')}</b>
         <span className="hint" role="alert">
-          {rankingError ?? 'Não foi possível carregar as fontes.'}
+          {rankingError ?? t('panels.sourcesFail')}
         </span>
       </div>
     )
@@ -39,9 +41,9 @@ export function SourcesPanel({ msg }: { msg: AiMsg }) {
 
   return (
     <div className="panel">
-      <b>Fontes</b>
+      <b>{t('panels.sourcesTitle')}</b>
       {r.top.length === 0 ? (
-        <span className="why">Nenhuma investigação no ranking para citar.</span>
+        <span className="why">{t('panels.noSources')}</span>
       ) : (
         <ul>
           {r.top.map((d) => (
@@ -52,7 +54,7 @@ export function SourcesPanel({ msg }: { msg: AiMsg }) {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {d.id} no PSI
+                {t('panels.onPsi', { id: d.id })}
               </a>
               {d.doi ? (
                 <>
@@ -72,32 +74,30 @@ export function SourcesPanel({ msg }: { msg: AiMsg }) {
         </ul>
       )}
       <p className="why" style={{ marginTop: '0.75rem' }}>
-        Contexto local (síntese da UI, não IDs da API):
+        {t('panels.localContext')}
       </p>
       <ul>
         <li>
-          Atmosferas:{' '}
+          {t('panels.atmLabel')}{' '}
           <a
             href="https://ntrs.nasa.gov/api/citations/20220013669/downloads/Internal%20Layout%20of%20a%20Lunar%20Surface%20Habitat.pdf"
             target="_blank"
             rel="noopener noreferrer"
           >
-            habitat lunar da NASA (NTRS)
+            {t('panels.lunarHabitat')}
           </a>
         </li>
         <li>
-          Gravidade parcial:{' '}
+          {t('panels.partialGLabel')}{' '}
           <a
             href="https://www.nasa.gov/flammability-of-materials-on-the-moon-fm2/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            FM2, NASA
+            {t('panels.fm2Nasa')}
           </a>
         </li>
-        <li>
-          Pressão × gravidade: Thomsen e Olson, Proc. Combust. Inst. 37 (2019)
-        </li>
+        <li>{t('panels.pressureGrav')}</li>
       </ul>
     </div>
   )

@@ -1,42 +1,42 @@
-# 🔵🔥 Blue Ember — Relatório Técnico de Engenharia e Arquitetura de Métricas
-**Equipe StellarHub · NASA Space Apps Challenge · Novembro/2026**
+# 🔵🔥 Blue Ember — Engineering and Metrics Architecture Technical Report
+**StellarHub Team · NASA Space Apps Challenge · November 2026**
 
 ---
 
-## 1. Visão Executiva e Posicionamento
+## 1. Executive Vision and Positioning
 
-O **Blue Ember** é um sistema de suporte à decisão de segurança contra incêndios espaciais projetado para transformar o vasto repositório de dados brutos e dispersos da NASA (**Physical Sciences Informatics - PSI**, **NTRS**, **ACCLLP** e **NASA Spinoff**) em inteligência acionável para missões do Programa Artemis (Lua) e futuras expedições a Marte.
+**Blue Ember** is a space fire-safety decision-support system designed to transform NASA's vast repository of raw, scattered data (**Physical Sciences Informatics - PSI**, **NTRS**, **ACCLLP**, and **NASA Spinoff**) into actionable intelligence for Artemis program missions (Moon) and future Mars expeditions.
 
-O sistema resolve um gargalo crítico: a física do fogo na microgravidade e em atmosferas de exploração enriquecidas com oxigênio difere radicalmente da física terrestre. Ao padronizar experimentos heterogêneos sob uma **Ficha Normalizada**, o Blue Ember aplica algoritmos de avaliação e modelos de linguagem para entregar **respostas baseadas em evidências, com citação direta de experimentos (PSI-xx) e DOIs**.
+The system solves a critical bottleneck: fire physics in microgravity and oxygen-enriched exploration atmospheres differs radically from terrestrial physics. By standardizing heterogeneous experiments under a **Normalized Record**, Blue Ember applies scoring algorithms and language models to deliver **evidence-based answers with direct citation of experiments (PSI-xx) and DOIs**.
 
 ---
 
-## 2. Fluxo de Decisão em 4 Etapas
+## 2. 4-Step Decision Flow
 
 ```mermaid
 flowchart LR
-    subgraph ETAPA1["1. Usuário Escolhe (Input)"]
-        Q["Pergunta / Decisão de Projeto\n(Material + O₂ + Pressão + Fluxo)"]
-        AMB["Ambiente Operacional\n(ISS 0g, Lua 0.16g, Marte 0.38g)"]
-        PERF["Perfil de Decisão\n(Engenheiro, Pesquisador, Estudante)"]
+    subgraph ETAPA1["1. User Chooses (Input)"]
+        Q["Question / Design Decision\n(Material + O₂ + Pressure + Flow)"]
+        AMB["Operational Environment\n(ISS 0g, Moon 0.16g, Mars 0.38g)"]
+        PERF["Decision Profile\n(Engineer, Researcher, Student)"]
     end
 
-    subgraph ETAPA2["2. NASA Fornece (Dados Brutos)"]
-        PSI["Investigações PSI-xx\n(FLEX, Saffire, ACME, BASS)"]
-        TEST["Bancos de Testes & Sensores\n(CO, CO₂, HRR, MOC, propagação)"]
-        PUB["Publicações Científicas\n(NTRS, DOIs de artigos)"]
-        SPIN["Impacto na Terra\n(Spinoffs 9582, 9407, 9918)"]
+    subgraph ETAPA2["2. NASA Provides (Raw Data)"]
+        PSI["PSI-xx Investigations\n(FLEX, Saffire, ACME, BASS)"]
+        TEST["Test Banks & Sensors\n(CO, CO₂, HRR, MOC, spread)"]
+        PUB["Scientific Publications\n(NTRS, article DOIs)"]
+        SPIN["Terrestrial Impact\n(Spinoffs 9582, 9407, 9918)"]
     end
 
-    subgraph ETAPA3["3. Sistema Normaliza (Inovação Blue Ember)"]
-        FICHA["Ficha Normalizada Multidimensional\n• Faixa de O₂ (%)\n• Pressão Total (kPa)\n• Velocidade do Fluxo (cm/s)\n• Geometria & Regime de Queima"]
+    subgraph ETAPA3["3. System Normalizes (Blue Ember Innovation)"]
+        FICHA["Multidimensional Normalized Record\n• O₂ range (%)\n• Total Pressure (kPa)\n• Flow Velocity (cm/s)\n• Geometry & Burn Regime"]
     end
 
-    subgraph ETAPA4["4. Resposta com Evidência"]
-        R1["Ranking Crítico (Score 5 Critérios)"]
-        R2["Força da Evidência Empírica"]
-        R3["Mapeamento de Lacunas (Gaps)"]
-        R4["Insight Interpretativo da IA"]
+    subgraph ETAPA4["4. Evidence-Based Response"]
+        R1["Critical Ranking (5-Criteria Score)"]
+        R2["Empirical Evidence Strength"]
+        R3["Gap Mapping (Gaps)"]
+        R4["AI Interpretive Insight"]
     end
 
     ETAPA1 --> ETAPA2 --> ETAPA3 --> ETAPA4
@@ -44,152 +44,152 @@ flowchart LR
 
 ---
 
-## 3. Engenharia de Métricas: O Score de 5 Critérios
+## 3. Metrics Engineering: The 5-Criteria Score
 
-Para ranquear investigações e materiais frente a uma consulta do usuário, o motor calcula um **Índice de Criticidade / Risco ($S$)** normalizado entre 0 e 10, composto por 5 eixos ponderados:
+To rank investigations and materials against a user query, the engine computes a **Criticality / Risk Index ($S$)** normalized between 0 and 10, composed of 5 weighted axes:
 
 $$S = \sum_{i=1}^{5} w_i \cdot C_i$$
 
-### Especificação dos Critérios ($C_1$ a $C_5$)
+### Criterion Specification ($C_1$ to $C_5$)
 
-| Critério | Variável Base | Escala de Normalização | O que mede e Relevância |
+| Criterion | Base Variable | Normalization Scale | What it measures and relevance |
 |---|---|---|---|
-| **$C_1$: Proximidade Operacional (Environmental Similarity)** | $\Delta O_2, \Delta P, \Delta v$ | $0.0 \text{ a } 1.0$ (distância euclidiana inversa) | Quão próximo os dados empíricos do teste estão da condição solicitada para a cabine da missão. |
-| **$C_2$: Margem de Inflamabilidade (MOC Margin)** | $O_{2,\text{amb}} - \text{MOC}$ | $0.0 \text{ (seguro)} \text{ a } 1.0 \text{ (crítico)}$ | Proximidade do Limite Mínimo de Oxigênio. Se $O_2 \ge \text{MOC}$, o risco satura em 1.0. |
-| **$C_3$: Cinética de Propagação (Flame Spread)** | Taxa de avanço ($r_f$ em mm/s) | Sigmoide sobre $r_f$ ($0.0 \text{ a } 1.0$) | Velocidade com que o fogo se alastra sobre a superfície sólida, ditando a janela de reação da tripulação. |
-| **$C_4$: Severidade Térmica (HRR)** | Taxa de Liberação de Calor (kW) | Logarítmica sobre HRR | Potência térmica gerada; quantifica o perigo de ignição em cadeia de cabos e colapso de anteparas. |
-| **$C_5$: Toxicidade em Circuito Fechado (Off-gassing)** | Concentração de CO, HCN, HCl (ppm) | Proporção sobre limites de toxicidade do ECLSS | Risco de saturação dos depuradores de ar e envenenamento dos astronautas antes da evacuação. |
+| **$C_1$: Operational Proximity (Environmental Similarity)** | $\Delta O_2, \Delta P, \Delta v$ | $0.0 \text{ to } 1.0$ (inverse Euclidean distance) | How close empirical test data are to the requested mission cabin condition. |
+| **$C_2$: Flammability Margin (MOC Margin)** | $O_{2,\text{amb}} - \text{MOC}$ | $0.0 \text{ (safe)} \text{ to } 1.0 \text{ (critical)}$ | Proximity to Minimum Oxygen Limit. If $O_2 \ge \text{MOC}$, risk saturates at 1.0. |
+| **$C_3$: Propagation Kinetics (Flame Spread)** | Advance rate ($r_f$ in mm/s) | Sigmoid over $r_f$ ($0.0 \text{ to } 1.0$) | Speed at which fire spreads over solid surface, dictating crew reaction window. |
+| **$C_4$: Thermal Severity (HRR)** | Heat Release Rate (kW) | Logarithmic over HRR | Thermal power generated; quantifies cable chain ignition and bulkhead collapse hazard. |
+| **$C_5$: Closed-Loop Toxicity (Off-gassing)** | CO, HCN, HCl concentration (ppm) | Ratio over ECLSS toxicity limits | Risk of air scrubber saturation and astronaut poisoning before evacuation. |
 
 ---
 
-### Matriz de Modulação de Pesos ($w_i$) por Perfil
+### Weight Modulation Matrix ($w_i$) by Profile
 
-O usuário seleciona seu perfil na Etapa 1, adaptando automaticamente as prioridades do algoritmo de pontuação:
+The user selects their profile in Step 1, automatically adapting scoring algorithm priorities:
 
 ```mermaid
 xychart-beta
-    title "Distribuição de Pesos do Score por Perfil (%)"
-    x-axis ["C1: Proximidade", "C2: Margem MOC", "C3: Propagação", "C4: Calor (HRR)", "C5: Toxicidade"]
-    y-axis "Peso (%)" 0 --> 40
+    title "Score Weight Distribution by Profile (%)"
+    x-axis ["C1: Proximity", "C2: MOC Margin", "C3: Spread", "C4: Heat (HRR)", "C5: Toxicity"]
+    y-axis "Weight (%)" 0 --> 40
     bar [15, 25, 25, 20, 15]
     bar [35, 15, 15, 15, 20]
     bar [20, 20, 20, 20, 20]
 ```
 
-* 🔵 **Engenheiro de Voo / Missão ($w_{\text{Eng}}$):** Prioridade em **$C_2$ (Margem MOC)** e **$C_3$ (Propagação)**. O objetivo é aprovação/reprovação estrutural e contenção de danos ao veículo.
-* 🟢 **Pesquisador Científico ($w_{\text{Pesq}}$):** Prioridade em **$C_1$ (Proximidade dos dados)** e rigor empírico, com ênfase na identificação de lacunas.
-* 🟡 **Estudante / Divulgação ($w_{\text{Est}}$):** Pesos uniformemente distribuídos com foco educacional na física do fenômeno e lições históricas.
+* 🔵 **Flight / Mission Engineer ($w_{\text{Eng}}$):** Priority on **$C_2$ (MOC Margin)** and **$C_3$ (Spread)**. Goal is structural pass/fail and vehicle damage containment.
+* 🟢 **Scientific Researcher ($w_{\text{Pesq}}$):** Priority on **$C_1$ (Data proximity)** and empirical rigor, emphasizing gap identification.
+* 🟡 **Student / Outreach ($w_{\text{Est}}$):** Uniformly distributed weights with educational focus on phenomenon physics and historical lessons.
 
 ---
 
-## 4. O Diferencial Competitivo: Módulo de Lacunas (Data Gaps)
+## 4. Competitive Differentiator: Gaps Module (Data Gaps)
 
 > [!IMPORTANT]
-> **O Paradoxo da Gravidade Parcial (Lua 0.16g e Marte 0.38g)**
-> Quase todo o acervo do PSI é composto por testes em **0g orbital (ISS)** ou **1g terrestre (solo)**. 
+> **The Partial Gravity Paradox (Moon 0.16g and Mars 0.38g)**
+> Nearly the entire PSI archive consists of tests in **orbital 0g (ISS)** or **terrestrial 1g (ground)**. 
 > 
-> Na microgravidade (0g), a ausência de convecção abafa chamas fracas por sufocamento radiativo. Na Terra (1g), correntes convectivas fortes aceleram a remoção de calor. Em **gravidade parcial (0.16g lunar)**, entretanto, surge um regime intermediário de extremo perigo: há convecção suficiente para renovar o oxigênio, mas lenta o suficiente para não resfriar a zona de combustão.
+> In microgravity (0g), lack of convection smothers weak flames by radiative quenching. On Earth (1g), strong convective currents accelerate heat removal. In **partial gravity (0.16g lunar)**, however, an intermediate regime of extreme danger emerges: there is enough convection to renew oxygen, but slow enough not to cool the combustion zone.
 > 
-> Chamas na Lua podem queimar com maior velocidade e sob menores concentrações de $O_2$ do que previsto por modelos puros de 0g.
+> Flames on the Moon can burn faster and at lower $O_2$ concentrations than predicted by pure 0g models.
 
-O Blue Ember não esconde esse limite da ciência; ele **alerta ativamente o engenheiro**:
-1. Quantifica o nível de interpolação entre 0g e 1g.
-2. Identifica se o material já passou por queima em fluxo forçado correspondente à gravidade alvo.
-3. Emite a recomendação de ensaio necessário antes da validação final do componente.
+Blue Ember does not hide this scientific limit; it **actively alerts the engineer**:
+1. Quantifies interpolation level between 0g and 1g.
+2. Identifies whether the material has been burned in forced flow corresponding to target gravity.
+3. Issues the test recommendation needed before final component validation.
 
 ---
 
-## 5. Estrutura da Resposta com Evidência (Template de Saída)
+## 5. Evidence Response Structure (Output Template)
 
-Quando o usuário consulta o sistema, todos os fluxos confluem para uma visualização única e estruturada:
+When the user queries the system, all flows converge on a single structured view:
 
 ````carousel
 ```markdown
-### 🏆 1. Ranking de Investigações & Materiais
-- **1º Lugar: Saffire-II (PSI-142)** | Score: 8.7/10 (Risco Elevado)
-  - Material: PMMA (Plexiglas) 50mm sob fluxo forçado de 15 cm/s.
-  - Taxa de Propagação: 2.1 mm/s | MOC: 16.5% O₂.
-- **2º Lugar: BASS-II (PSI-25)** | Score: 5.4/10 (Risco Moderado)
-  - Material: Mistura Algodão/Fibra de Vidro (Nomex blend).
-  - Comportamento: Autoextinção rápida sob pressão hipobárica.
+### 🏆 1. Investigation & Material Ranking
+- **1st: Saffire-II (PSI-142)** | Score: 8.7/10 (High Risk)
+  - Material: PMMA (Plexiglas) 50mm under 15 cm/s forced flow.
+  - Spread Rate: 2.1 mm/s | MOC: 16.5% O₂.
+- **2nd: BASS-II (PSI-25)** | Score: 5.4/10 (Moderate Risk)
+  - Material: Cotton/Glass Fiber blend (Nomex blend).
+  - Behavior: Rapid self-extinction under hypobaric pressure.
 ```
 <!-- slide -->
 ```markdown
-### 📏 2. Força da Evidência Empírica
-- **Confiabilidade Global:** ALTA para microgravidade (0g), MODERADA para solo (1g).
-- **Volume de Dados Correlatos:** 22 pontos de teste documentados no PSI com O₂ entre 28% e 34%.
-- **Ambiente:** Testado em voo real a bordo do cargueiro não tripulado Cygnus (Saffire).
+### 📏 2. Empirical Evidence Strength
+- **Overall Reliability:** HIGH for microgravity (0g), MODERATE for ground (1g).
+- **Correlated Data Volume:** 22 documented PSI test points with O₂ between 28% and 34%.
+- **Environment:** Tested in actual flight aboard uncrewed Cygnus cargo vehicle (Saffire).
 ```
 <!-- slide -->
 ```markdown
-### 🕳️ 3. Mapeamento de Lacunas (Gaps)
-- ⚠️ **Alerta Gravitacional:** Sem dados empíricos no PSI para gravidade lunar (0.16g). Os valores apresentados são projeções numéricas validadas apenas em 0g.
-- ⚠️ **Toxicidade Incompleta:** Taxa de emissão de HCN para amostras envelhecidas por radiação não consta nos relatórios públicos do NTRS.
+### 🕳️ 3. Gap Mapping (Gaps)
+- ⚠️ **Gravity Alert:** No empirical PSI data for lunar gravity (0.16g). Values shown are numerical projections validated only at 0g.
+- ⚠️ **Incomplete Toxicity:** HCN emission rate for radiation-aged samples not in public NTRS reports.
 ```
 <!-- slide -->
 ```markdown
-### 💡 4. Parecer Técnico da IA (com Citação)
-"O uso de PMMA a 30% de O₂ em atmosfera lunar (56 kPa) excede a margem de segurança recomendada pela NASA-STD-6001. Experimentos da campanha Saffire demonstram aceleração superior a 80% na taxa de propagação de chama quando o O₂ é elevado de 21% para 30% sob fluxo de ar residual de ventilação. Recomenda-se substituição por polímero autoextinguível ou instalação de barreira retardante Nomex.
+### 💡 4. AI Technical Opinion (with Citation)
+"Use of PMMA at 30% O₂ in lunar atmosphere (56 kPa) exceeds the safety margin recommended by NASA-STD-6001. Saffire campaign experiments demonstrate over 80% acceleration in flame spread rate when O₂ is raised from 21% to 30% under residual ventilation air flow. Self-extinguishing polymer replacement or Nomex retardant barrier installation is recommended.
 
-Fontes Primárias:
+Primary Sources:
 - NASA PSI Investigation: PSI-142 (Saffire Project Archive)
-- Artigo Original: Urban, D. et al., 'Flame Spread in Low-Gravity Environments', DOI: 10.1016/j.proci.2018.06.198
-- Relatório Técnico NTRS: NASA/TM-2020-5008451"
+- Original Article: Urban, D. et al., 'Flame Spread in Low-Gravity Environments', DOI: 10.1016/j.proci.2018.06.198
+- NTRS Technical Report: NASA/TM-2020-5008451"
 ```
 ````
 
 ---
 
-## 6. Trilha de Contexto Histórico e Impacto Social (Spinoffs)
+## 6. Historical Context and Social Impact Trail (Spinoffs)
 
-O Blue Ember conecta a decisão técnica ao arco completo de inovação da NASA:
+Blue Ember connects technical decisions to NASA's full innovation arc:
 
 ```mermaid
 flowchart LR
-    subgraph PASSADO["Origem nas Tragédias"]
-        A1["Apollo 1 (1967)\nAtmosfera 100% O₂\nEscotilha presa\nNASA-STD-6001"]
-        A13["Apollo 13 (1970)\nFiação exposta em O₂\nCadeia oculta de falhas"]
-        MIR["Mir (1997)\nVela de O₂ em órbita\nChama em 0g real"]
+    subgraph PASSADO["Origin in Tragedies"]
+        A1["Apollo 1 (1967)\n100% O₂ atmosphere\nHatch jammed\nNASA-STD-6001"]
+        A13["Apollo 13 (1970)\nExposed wiring in O₂\nHidden failure chain"]
+        MIR["Mir (1997)\nO₂ candle in orbit\nReal 0g flame"]
     end
 
-    subgraph PRESENTE["Ciência Orbital"]
-        PSI_COR["Repositório PSI\nFLEX • Saffire • ACME\nBlue Ember Dashboard"]
+    subgraph PRESENTE["Orbital Science"]
+        PSI_COR["PSI Repository\nFLEX • Saffire • ACME\nBlue Ember Dashboard"]
     end
 
-    subgraph FUTURO["Retorno à Sociedade (Spinoffs)"]
-        SP1["🫁 Spinoff 9582\nTanques de Ar Leves\n(-13 lbs para Bombeiros)"]
-        SP2["🔔 Spinoff 9407\nDetector Incipiente\n(Partículas pré-chama)"]
-        SP3["👕 Spinoff 9918\nProject FIRES\n(Trajes térmicos avançados)"]
+    subgraph FUTURO["Return to Society (Spinoffs)"]
+        SP1["🫁 Spinoff 9582\nLightweight Air Tanks\n(-13 lbs for Firefighters)"]
+        SP2["🔔 Spinoff 9407\nIncipient Detector\n(Pre-flame particles)"]
+        SP3["👕 Spinoff 9918\nProject FIRES\n(Advanced thermal suits)"]
     end
 
-    PASSADO -->|"Exigiu a criação de"| PSI_COR
-    PSI_COR -->|"Transfere tecnologia para"| FUTURO
+    PASSADO -->|"Required creation of"| PSI_COR
+    PSI_COR -->|"Transfers technology to"| FUTURO
 ```
 
 ---
 
-## 7. Arquitetura de Implementação Recomendada (`blue-ember`)
+## 7. Recommended Implementation Architecture (`blue-ember`)
 
-Para materializar o projeto no diretório do workspace, propõe-se a seguinte estrutura limpa e modular:
+To materialize the project in the workspace directory, the following clean, modular structure is proposed:
 
 ```
 blue-ember/
 ├── data/
-│   ├── psi_investigations.json     # Metadados de FLEX, Saffire, ACME, BASS com DOIs
-│   ├── normalized_tests.json       # Fichas normalizadas com variáveis unificadas
-│   ├── spinoffs.json               # Dados dos Spinoffs 9582, 9407, 9918
-│   └── historical_lessons.json     # Apollo 1, 13 e Mir (ACCLLP)
+│   ├── psi_investigations.json     # FLEX, Saffire, ACME, BASS metadata with DOIs
+│   ├── normalized_tests.json       # Normalized records with unified variables
+│   ├── spinoffs.json               # Spinoffs 9582, 9407, 9918 data
+│   └── historical_lessons.json     # Apollo 1, 13 and Mir (ACCLLP)
 ├── src/
 │   ├── engine/
-│   │   ├── normalizer.ts           # Mapeador de variáveis heterogêneas
-│   │   ├── risk_score.ts           # Cálculo dos 5 critérios e ponderação por perfil
-│   │   └── gap_detector.ts         # Identificador de lacunas (gravidade parcial / dados faltantes)
+│   │   ├── normalizer.ts           # Heterogeneous variable mapper
+│   │   ├── risk_score.ts           # 5-criteria calculation and profile weighting
+│   │   └── gap_detector.ts         # Gap identifier (partial gravity / missing data)
 │   ├── components/
-│   │   ├── QueryConsole.tsx        # Seletores de Entrada (Pergunta, Ambiente, Perfil)
-│   │   ├── EvidenceCard.tsx        # Exibição do Ranking com Score 5-Critérios
-│   │   ├── GapBanner.tsx           # Alertas de lacunas em gravidade parcial
-│   │   ├── MetricsChart.tsx        # Gráficos de O₂ vs Propagação e Toxicidade
-│   │   └── SpinoffTimeline.tsx     # Conexão histórica e impacto terrestre
+│   │   ├── QueryConsole.tsx        # Input selectors (Question, Environment, Profile)
+│   │   ├── EvidenceCard.tsx        # Ranking display with 5-Criteria Score
+│   │   ├── GapBanner.tsx           # Partial-gravity gap alerts
+│   │   ├── MetricsChart.tsx        # O₂ vs Spread and Toxicity charts
+│   │   └── SpinoffTimeline.tsx     # Historical connection and terrestrial impact
 │   └── app/                        # Next.js / Vite React Dashboard
 └── README.md
 ```
@@ -197,5 +197,5 @@ blue-ember/
 ---
 
 > [!TIP]
-> **Síntese de Valor para a Banca Avaliadora:**
-> O Blue Ember não é apenas um "visualizador de dados do PSI". Ele é um **motor de engenharia preditiva**. Ele resolve o problema do excesso de dados criando uma camada de normalização inédita, alertando onde os dados da NASA terminam (as lacunas de gravidade parcial) e protegendo a vida dos futuros astronautas que caminharão na Lua e em Marte.
+> **Value synthesis for judges:**
+> Blue Ember is not merely a "PSI data viewer." It is a **predictive engineering engine**. It solves data overload by creating a novel normalization layer, alerting where NASA data ends (partial-gravity gaps), and protecting the lives of future astronauts who will walk on the Moon and Mars.

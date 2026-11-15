@@ -42,6 +42,13 @@ function gaps(partial: GapsResponse): GapsResponse {
   return partial
 }
 
+const enEvidence = (key: string) =>
+  ({
+    'evidence.weakFull': 'Weak evidence',
+    'evidence.moderateFull': 'Moderate evidence',
+    'evidence.strongFull': 'Strong evidence',
+  })[key] ?? key
+
 describe('evidenceFromRankingAndGaps', () => {
   it('marks Moon with warning, no near targets, and low score as weak', () => {
     const result = evidenceFromRankingAndGaps(
@@ -54,12 +61,13 @@ describe('evidenceFromRankingAndGaps', () => {
         coverageCells: [],
         featuredCount: 19,
       }),
+      enEvidence,
     )
     expect(result.partialG).toBe(true)
     expect(result.near).toBe(0)
     expect(result.featuredCount).toBe(19)
     expect(result.level[0]).toBe('weak')
-    expect(result.level[1]).toBe('Evidência fraca')
+    expect(result.level[1]).toBe('Weak evidence')
   })
 
   it('marks Iss without warning, near>0, and score≥5 as strong', () => {
@@ -73,11 +81,12 @@ describe('evidenceFromRankingAndGaps', () => {
         coverageCells: [],
         featuredCount: 19,
       }),
+      enEvidence,
     )
     expect(result.partialG).toBe(false)
     expect(result.near).toBe(2)
     expect(result.level[0]).toBe('strong')
-    expect(result.level[1]).toBe('Evidência forte')
+    expect(result.level[1]).toBe('Strong evidence')
   })
 
   it('treats whitespace-only partialGravityWarning as absent', () => {

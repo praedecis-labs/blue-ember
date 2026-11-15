@@ -1,5 +1,5 @@
+import { translatedExamples, useT } from '@/i18n'
 import type { EnvironmentDto } from '@/services/contracts'
-import { EXAMPLES, MAT } from '../data'
 import { environmentLabel } from '../env-defaults'
 import { fmt } from '../engine'
 import type { HistoryItem } from '../types'
@@ -19,23 +19,26 @@ export function AnalysesHome({
   onOpen,
   onExample,
 }: Props) {
+  const t = useT()
+  const examples = translatedExamples(t)
+
   return (
     <section id="screen-home" className="screen">
       <div className="home">
         <div className="home-head">
           <div>
-            <span className="step">Início</span>
-            <h1>Suas análises</h1>
-            <p className="why">Retome uma conversa ou comece uma nova.</p>
+            <span className="step">{t('home.step')}</span>
+            <h1>{t('home.title')}</h1>
+            <p className="why">{t('home.why')}</p>
           </div>
           <button type="button" onClick={onNew}>
-            + Nova análise
+            {t('home.newAnalysis')}
           </button>
         </div>
-        <h2>Últimas análises</h2>
+        <h2>{t('home.latest')}</h2>
         <div className="docs">
           {history.length === 0 ? (
-            <p className="why">Nenhuma análise ainda.</p>
+            <p className="why">{t('home.empty')}</p>
           ) : (
             history.map((h, i) => (
               <button
@@ -52,7 +55,7 @@ export function AnalysesHome({
                 <div className="mini">
                   {[
                     environmentLabel(h.q.env, environments),
-                    MAT[h.q.material],
+                    t(`material.${h.q.material}`),
                     `${fmt(h.q.o2)}% O₂`,
                     `${fmt(h.q.psi)} psi`,
                   ].map((c) => (
@@ -60,15 +63,15 @@ export function AnalysesHome({
                   ))}
                 </div>
                 <span className="top1">
-                  Mais relevante: <b>{h.top}</b>
+                  {t('home.mostRelevant')} <b>{h.top}</b>
                 </span>
               </button>
             ))
           )}
         </div>
-        <h2>Comece por um exemplo</h2>
+        <h2>{t('home.examplesTitle')}</h2>
         <div className="chips">
-          {EXAMPLES.map(([label, text]) => (
+          {examples.map(([label, text]) => (
             <button
               key={label}
               type="button"

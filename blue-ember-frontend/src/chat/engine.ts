@@ -17,8 +17,8 @@ export const f1 = (n: number) => n.toFixed(1).replace('.', ',')
 
 export const kpa = (psi: number) => psi * 6.895
 
-export const nowLabel = () =>
-  new Date().toLocaleString('pt-BR', {
+export const nowLabel = (locale = 'en-US') =>
+  new Date().toLocaleString(locale, {
     day: '2-digit',
     month: '2-digit',
     hour: '2-digit',
@@ -224,30 +224,46 @@ export function compute(q: QueryState, prof: ProfileId): ComputeResult {
   }
 }
 
+type Translate = (key: string, vars?: Record<string, string | number>) => string
+
+const defaultT: Translate = (key) => key
+
 export function buildVerdict(
   claim: ClaimId,
   level: EvidenceLevel,
+  t: Translate = defaultT,
 ): [EvidenceLevel, string] {
   if (claim === 'safe')
     return level === 'strong'
-      ? ['strong', 'Sustentada pelos testes']
-      : ['weak', 'Não dá para confirmar']
+      ? ['strong', t('verdict.sustained')]
+      : ['weak', t('verdict.unconfirmed')]
   if (claim === 'risky')
     return level === 'strong'
-      ? ['moderate', 'Plausível, com testes próximos']
-      : ['moderate', 'Plausível, mas sem teste direto']
-  return ['unknown', 'Sem afirmação clara']
+      ? ['moderate', t('verdict.plausibleNear')]
+      : ['moderate', t('verdict.plausibleNoDirect')]
+  return ['unknown', t('verdict.noClaim')]
 }
 
-export function summaryFor(q: QueryState, r: ComputeResult): string {
+export function summaryFor(
+  q: QueryState,
+  r: ComputeResult,
+  t: Translate = defaultT,
+): string {
   const best = r.top[0]
+  const material = t(`material.${q.material}`)
   const base = r.above
-    ? `A NASA testou ${MAT[q.material]} com no máximo ${fmt(r.maxO2)}% de O₂. Com ${fmt(q.o2)}%, ele tende a queimar com mais facilidade do que os testes mostram: trate o risco como maior.`
+    ? t('summary.above', {
+        material,
+        maxO2: fmt(r.maxO2),
+        o2: fmt(q.o2),
+      })
     : best
-      ? `Há testes da NASA em condições próximas da sua; o ${best.name} é o mais parecido.`
-      : `Buscando investigações da NASA para o ambiente selecionado…`
+      ? t('summary.near', { best: best.name })
+      : t('summary.searching')
   const extra = r.partialG
-    ? ` Na gravidade ${q.env === 'lua' ? 'da Lua' : 'de Marte'}, estudos indicam que alguns materiais queimam com menos oxigênio do que na Terra.`
+    ? t('summary.partialG', {
+        env: q.env === 'lua' ? t('summary.envMoon') : t('summary.envMars'),
+      })
     : ''
   return base + extra
 }

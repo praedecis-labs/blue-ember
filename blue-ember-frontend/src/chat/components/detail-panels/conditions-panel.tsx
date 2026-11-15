@@ -1,14 +1,8 @@
 import { useEffect, useMemo, useRef, type FormEvent } from 'react'
+import { useT } from '@/i18n'
 import type { EnvironmentDto } from '@/services/contracts'
 import { ENV_IDS } from '../../adapters'
-import {
-  DIR,
-  GAS,
-  GOAL,
-  GRAV,
-  MAT,
-  THICK,
-} from '../../data'
+import { GRAV } from '../../data'
 import {
   buildQueryDefaults,
   environmentLabel,
@@ -44,8 +38,8 @@ function buildAtmChips(
   }
   return [
     { env: 'iss', label: 'ISS', psi: 14.7, o2: 21, flow: 10 },
-    { env: 'lua', label: 'Habitat lunar', psi: 8.2, o2: 34, flow: 10 },
-    { env: 'lua', label: 'Habitat lunar', psi: 10.2, o2: 26.5, flow: 10 },
+    { env: 'lua', label: 'Lunar habitat', psi: 8.2, o2: 34, flow: 10 },
+    { env: 'lua', label: 'Lunar habitat', psi: 10.2, o2: 26.5, flow: 10 },
   ]
 }
 
@@ -58,6 +52,7 @@ export function ConditionsPanel({
   onApply: (q: QueryState) => void
   environments?: EnvironmentDto[] | null
 }) {
+  const t = useT()
   const { q, missing } = msg
   const formRef = useRef<HTMLFormElement>(null)
   const errRef = useRef<HTMLSpanElement>(null)
@@ -75,16 +70,25 @@ export function ConditionsPanel({
   const envLabel = environmentLabel(q.env, environments)
   const items: Array<[string | null, string]> = [
     ['env', envLabel],
-    [null, GRAV[q.env][0] + (GRAV[q.env][1] ? ' (estimado)' : '')],
-    ['material', MAT[q.material]],
+    [
+      null,
+      GRAV[q.env][0] + (GRAV[q.env][1] ? ` ${t('panels.estimated')}` : ''),
+    ],
+    ['material', t(`material.${q.material}`)],
     ['o2', `${fmt(q.o2)}% O₂`],
     ['psi', `${fmt(q.psi)} psi · ${fmt(kpa(q.psi), 0)} kPa`],
-    ['flow', q.flow === 0 ? 'ar parado' : `${fmt(q.flow)} cm/s`],
+    [
+      'flow',
+      q.flow === 0 ? t('cond.stillAir') : `${fmt(q.flow)} cm/s`,
+    ],
   ]
-  if (q.thick) items.push([null, THICK[q.thick]])
-  if (q.dir) items.push([null, DIR[q.dir]])
-  if (q.gas) items.push([null, GAS[q.gas]])
-  items.push([null, `objetivo: ${GOAL[q.goal]}`])
+  if (q.thick) items.push([null, t(`thick.${q.thick}`)])
+  if (q.dir) items.push([null, t(`dir.${q.dir}`)])
+  if (q.gas) items.push([null, t(`gas.${q.gas}`)])
+  items.push([
+    null,
+    t('goal.label', { goal: t(`goal.${q.goal}`) }),
+  ])
 
   function setAtm(chip: AtmChip) {
     const f = formRef.current
@@ -108,17 +112,17 @@ export function ConditionsPanel({
     const flowRaw = (f.elements.namedItem('flow') as HTMLInputElement).value
     const flow = Number(flowRaw)
     if (!o2 || o2 < 15 || o2 > 100) {
-      err.textContent = 'Oxigênio entre 15% e 100%.'
+      err.textContent = t('panels.errO2')
       err.hidden = false
       return
     }
     if (!psi || psi < 3 || psi > 15) {
-      err.textContent = 'Pressão entre 3 e 15 psi.'
+      err.textContent = t('panels.errPsi')
       err.hidden = false
       return
     }
     if (flowRaw === '' || flow < 0 || flow > 100) {
-      err.textContent = 'Fluxo entre 0 e 100 cm/s.'
+      err.textContent = t('panels.errFlow')
       err.hidden = false
       return
     }
@@ -141,21 +145,19 @@ export function ConditionsPanel({
 
   return (
     <div className="panel">
-      <b>Condições usadas</b>
+      <b>{t('panels.conditionsTitle')}</b>
       <div className="cond-list">
-        {items.map(([k, t], i) => (
+        {items.map(([k, label], i) => (
           <span
-            key={`${t}-${i}`}
+            key={`${label}-${i}`}
             className={k && missing.includes(k) ? 'missing' : undefined}
           >
-            {t}
+            {label}
           </span>
         ))}
       </div>
       {missing.length ? (
-        <span className="hint">
-          Em amarelo: não estava no texto; usei o valor padrão.
-        </span>
+        <span className="hint">{t('panels.missingHint')}</span>
       ) : null}
       <details>
         <summary
@@ -168,7 +170,7 @@ export function ConditionsPanel({
             listStyle: 'none',
           }}
         >
-          Ajustar condições
+          {t('panels.adjustConditions')}
         </summary>
         <form
           className="grid cond-form"
@@ -178,7 +180,7 @@ export function ConditionsPanel({
           noValidate
         >
           <div className="lbl full">
-            Atmosfera de referência (NASA)
+            {t('panels.atmRef')}
             <div className="chips">
               {chips.map((chip) => (
                 <button
@@ -193,7 +195,7 @@ export function ConditionsPanel({
             </div>
           </div>
           <label>
-            Ambiente
+            {t('panels.labelEnv')}
             <select name="env" defaultValue={q.env}>
               {ENV_IDS.map((env) => (
                 <option key={env} value={env}>
@@ -203,60 +205,60 @@ export function ConditionsPanel({
             </select>
           </label>
           <label>
-            Material
+            {t('panels.labelMaterial')}
             <select name="material" defaultValue={q.material}>
-              <option value="tecido">Tecido</option>
-              <option value="plastico">Plástico (acrílico)</option>
-              <option value="liquido">Combustível líquido</option>
+              <option value="tecido">{t('panels.matFabric')}</option>
+              <option value="plastico">{t('panels.matPlastic')}</option>
+              <option value="liquido">{t('panels.matLiquid')}</option>
             </select>
           </label>
           <label>
-            Oxigênio (%)
+            {t('panels.labelO2')}
             <input name="o2" type="number" min={15} max={100} step={0.5} defaultValue={q.o2} />
           </label>
           <label>
-            Pressão (psi)
+            {t('panels.labelPsi')}
             <input name="psi" type="number" min={3} max={15} step={0.1} defaultValue={q.psi} />
           </label>
           <label>
-            Fluxo de ar (cm/s)
+            {t('panels.labelFlow')}
             <input name="flow" type="number" min={0} max={100} step={1} defaultValue={q.flow} />
           </label>
           <label>
-            Objetivo
+            {t('panels.labelGoal')}
             <select name="goal" defaultValue={q.goal}>
-              <option value="prevenir">Prevenir</option>
-              <option value="detectar">Detectar cedo</option>
-              <option value="apagar">Apagar</option>
+              <option value="prevenir">{t('panels.goalPrevent')}</option>
+              <option value="detectar">{t('panels.goalDetect')}</option>
+              <option value="apagar">{t('panels.goalExtinguish')}</option>
             </select>
           </label>
           <label>
-            Espessura
+            {t('panels.labelThick')}
             <select name="thick" defaultValue={q.thick}>
-              <option value="">Não sei</option>
-              <option value="fina">Fina</option>
-              <option value="grossa">Grossa</option>
+              <option value="">{t('panels.unknownOpt')}</option>
+              <option value="fina">{t('panels.thickThin')}</option>
+              <option value="grossa">{t('panels.thickThick')}</option>
             </select>
           </label>
           <label>
-            Direção do ar
+            {t('panels.labelDir')}
             <select name="dir" defaultValue={q.dir}>
-              <option value="">Não sei</option>
-              <option value="favor">A favor da chama</option>
-              <option value="contra">Contra a chama</option>
+              <option value="">{t('panels.unknownOpt')}</option>
+              <option value="favor">{t('panels.dirFavor')}</option>
+              <option value="contra">{t('panels.dirContra')}</option>
             </select>
           </label>
           <label>
-            Gás para apagar
+            {t('panels.labelGas')}
             <select name="gas" defaultValue={q.gas}>
-              <option value="">Nenhum</option>
+              <option value="">{t('panels.noneOpt')}</option>
               <option value="co2">CO₂</option>
-              <option value="he">Hélio</option>
-              <option value="n2">Nitrogênio</option>
+              <option value="he">{t('gas.he')}</option>
+              <option value="n2">{t('gas.n2')}</option>
             </select>
           </label>
           <div className="full row">
-            <button type="submit">Refazer a análise</button>
+            <button type="submit">{t('panels.rerun')}</button>
             <span className="error" ref={errRef} hidden />
           </div>
         </form>
