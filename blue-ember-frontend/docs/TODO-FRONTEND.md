@@ -1,7 +1,7 @@
 # To-dos — Frontend Blue Ember (chat → API)
 
 **Objetivo:** o protótipo em `src/chat/` deixar de ser só mock local e consumir a API .NET com contrato estável, pronto para demo do hackathon.  
-**Estado atual:** UI/fluxo em React; **T1+T2+T3+T4** fechados (client HTTP + perfil/ambientes + ranking/evidência + gaps/fontes via API). Chat→params finos fica em T5.  
+**Estado atual:** UI/fluxo em React; **T1–T5** fechados (client HTTP + perfil/ambientes + ranking/evidência + gaps/fontes + chat→params via API). Próximo: T6 polish.  
 **Fora desta fatia (hackathon):** auth real, `/ask` no backend, pgvector, Planetary Computer.
 
 **Mapa de IDs (alinhar antes de integrar):**
@@ -145,14 +145,14 @@ Sugestão de donos (preencher):
 
 ### T5 — Chat: do texto aos params da API
 
-- [ ] Manter o **parser** local (útil no hackathon; BE não tem `/ask`)
-- [ ] Mapear hipótese parseada → `environment` + filtros relevantes (O₂/pressão quando a API aceitar)
-- [ ] Fluxo: mensagem → chama ranking + gaps → monta bolha AI com painéis
-- [ ] Follow-ups (“E se fosse na ISS?”) → nova chamada à API, não só re-score local
-- [ ] Formulário **Ajustar condições** → dispara novo ranking/gaps
-- [ ] Histórico (`localStorage`): guardar `profile`, `environment`, texto, top IDs da API
+- [x] Manter o **parser** local (útil no hackathon; BE não tem `/ask`)
+- [x] Mapear hipótese parseada → `environment` + filtros relevantes (`category` via goal; O₂/pressão só quando a API aceitar — hoje só em investigations)
+- [x] Fluxo: mensagem → chama ranking + gaps → monta bolha AI com painéis
+- [x] Follow-ups (“E se fosse na ISS?”) → nova chamada à API, não só re-score local
+- [x] Formulário **Ajustar condições** → dispara novo ranking/gaps
+- [x] Histórico (`localStorage`): guardar `profile`, `environment`, texto, top IDs da API
 
-**Done quando:** um exemplo do chip “Tecido seguro na Lua?” gera bolha alimentada pela API.
+**Done quando:** um exemplo do chip “Tecido seguro na Lua?” gera bolha alimentada pela API. ✅ (15/11/2026)
 
 ---
 
@@ -223,4 +223,4 @@ Se forem **3+ pessoas:** T1 sozinho → em seguida T2 ∥ T3 ∥ T4 → T5 integ
 
 ---
 
-*Atualizado 15/11/2026 — T1–T4 fechados (ranking, evidência, gaps e fontes via API). Próximo: T5 chat → params.*
+*Atualizado 15/11/2026 — T1–T5 fechados (chat → ranking/gaps com environment+category; histórico com topIds). Próximo: T6 polish.*

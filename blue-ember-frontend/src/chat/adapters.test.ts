@@ -2,6 +2,8 @@ import { describe, expect, it } from 'vitest'
 import {
   fromApiEnvironment,
   fromApiProfile,
+  rankingParamsFromQuery,
+  toApiCategory,
   toApiEnvironment,
   toApiProfile,
 } from './adapters'
@@ -23,5 +25,28 @@ describe('adapters', () => {
     expect(toApiEnvironment('lua')).toBe('Moon')
     expect(fromApiEnvironment('Mars')).toBe('marte')
     expect(fromApiEnvironment('iss')).toBe('iss')
+  })
+
+  it('maps goals to API category', () => {
+    expect(toApiCategory('prevenir')).toBe('prevencao')
+    expect(toApiCategory('detectar')).toBe('deteccao')
+    expect(toApiCategory('apagar')).toBe('supressao')
+  })
+
+  it('builds ranking params from profile and query', () => {
+    expect(
+      rankingParamsFromQuery('eng', { env: 'lua', goal: 'prevenir' }),
+    ).toEqual({
+      profile: 'ShipEngineer',
+      environment: 'Moon',
+      category: 'prevencao',
+    })
+    expect(
+      rankingParamsFromQuery('est', { env: 'iss', goal: 'apagar' }),
+    ).toEqual({
+      profile: 'Student',
+      environment: 'Iss',
+      category: 'supressao',
+    })
   })
 })

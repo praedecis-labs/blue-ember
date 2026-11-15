@@ -14,7 +14,7 @@ type Props = {
   onSend: () => void
   onFollowup: (text: string) => void
   onApplyConditions: (q: QueryState, fromMsgId: string) => void
-  onExampleFill: (text: string) => void
+  onExample: (text: string) => void
 }
 
 export function ChatScreen({
@@ -27,7 +27,7 @@ export function ChatScreen({
   onSend,
   onFollowup,
   onApplyConditions,
-  onExampleFill,
+  onExample,
 }: Props) {
   const threadRef = useRef<HTMLDivElement>(null)
   const empty = messages.length === 0
@@ -64,7 +64,7 @@ export function ChatScreen({
                     key={label}
                     type="button"
                     className="chip"
-                    onClick={() => onExampleFill(text)}
+                    onClick={() => onExample(text)}
                   >
                     {label}
                   </button>

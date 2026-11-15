@@ -74,4 +74,71 @@ describe('storage canonical persistence', () => {
       history: [],
     })
   })
+
+  it('round-trips history topIds', () => {
+    savePersisted({
+      profile: 'eng',
+      environment: 'lua',
+      history: [
+        {
+          id: 'h1',
+          when: '15/11, 03:00',
+          text: 'Tecido seguro na Lua?',
+          claim: 'safe',
+          q: {
+            env: 'lua',
+            material: 'tecido',
+            o2: 34,
+            psi: 8.2,
+            flow: 10,
+            thick: 'fina',
+            dir: '',
+            gas: '',
+            goal: 'prevenir',
+          },
+          level: ['moderate', 'Evidência moderada'],
+          top: 'Saffire-I',
+          topIds: ['inv-1', 'inv-2'],
+        },
+      ],
+    })
+    const loaded = loadPersisted()
+    expect(loaded.history).toHaveLength(1)
+    expect(loaded.history[0].top).toBe('Saffire-I')
+    expect(loaded.history[0].topIds).toEqual(['inv-1', 'inv-2'])
+  })
+
+  it('migrates legacy history items without topIds to empty array', () => {
+    store.set(
+      STATE_KEY,
+      JSON.stringify({
+        profile: 'ShipEngineer',
+        environment: 'Moon',
+        history: [
+          {
+            id: 'legacy',
+            when: '14/11, 12:00',
+            text: 'Acrílico em Marte',
+            claim: 'risky',
+            q: {
+              env: 'marte',
+              material: 'plastico',
+              o2: 26.5,
+              psi: 10.2,
+              flow: 5,
+              thick: 'grossa',
+              dir: 'favor',
+              gas: '',
+              goal: 'prevenir',
+            },
+            level: ['weak', 'Evidência fraca'],
+            top: 'BASS',
+          },
+        ],
+      }),
+    )
+    const loaded = loadPersisted()
+    expect(loaded.history).toHaveLength(1)
+    expect(loaded.history[0].topIds).toEqual([])
+  })
 })

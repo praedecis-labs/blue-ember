@@ -114,7 +114,7 @@ export function ChatApp() {
                   onSend={() => session.sendText(session.draft)}
                   onFollowup={(text) => session.sendText(text)}
                   onApplyConditions={session.applyConditions}
-                  onExampleFill={session.setDraft}
+                  onExample={session.startExample}
                 />
               ) : null}
             </div>

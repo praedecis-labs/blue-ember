@@ -4,7 +4,11 @@ import { getGaps } from '@/services/gaps'
 import { getInvestigation } from '@/services/investigations'
 import { getRankingFireSafety } from '@/services/ranking'
 import { messageFromUnknown } from '@/services/request-state'
-import { rankingItemToScored, toApiEnvironment, toApiProfile } from './adapters'
+import {
+  rankingItemToScored,
+  rankingParamsFromQuery,
+  toApiEnvironment,
+} from './adapters'
 import { EXTRA_KEYS, MAIN_KEYS, PROFILES } from './data'
 import { buildQueryDefaults } from './env-defaults'
 import { evidenceFromRankingAndGaps } from './evidence-from-api'
@@ -169,18 +173,15 @@ export function useChatSession(options: ChatSessionOptions = {}) {
   function hydrateAiRanking(
     msgId: string,
     prof: ProfileId,
-    env: EnvId,
+    query: Pick<QueryState, 'env' | 'goal'>,
     opts: HydrateOpts = {},
   ) {
-    const profileApi = toApiProfile(prof)
-    const environmentApi = toApiEnvironment(env)
+    const rankingParams = rankingParamsFromQuery(prof, query)
+    const environmentApi = toApiEnvironment(query.env)
     void (async () => {
       try {
         const [ranking, gaps] = await Promise.all([
-          getRankingFireSafety({
-            profile: profileApi,
-            environment: environmentApi,
-          }),
+          getRankingFireSafety(rankingParams),
           getGaps({ environment: environmentApi }),
         ])
         const stillThere = snapRef.current.messages.some(
@@ -192,6 +193,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
         const gapUi = gapsFromApi(gaps)
         const topBase = ranking.items.slice(0, 3).map(rankingItemToScored)
         const top = await enrichTopWithDetails(topBase)
+        const topIds = top.map((t) => t.id)
         const weights = scoreWeightsToCrit(ranking.weights)
         const verdict =
           opts.shouldVerdict
@@ -227,6 +229,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
             ...snap.current,
             level: evidence.level,
             top: top[0]?.name ?? '',
+            topIds,
           }
           setCurrent(nextCurrent)
           setHistory((prev) => {
@@ -318,7 +321,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
         syncSnap({ messages: next })
         return next
       })
-      hydrateAiRanking(ai.id, pendingProfile, snap.q.env)
+      hydrateAiRanking(ai.id, pendingProfile, snap.q)
       return
     }
     if (snap.q) {
@@ -355,7 +358,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
       current: h,
       messages: msgs,
     })
-    hydrateAiRanking(ai.id, prof, h.q.env)
+    hydrateAiRanking(ai.id, prof, h.q)
     setScreen('chat')
   }
 
@@ -447,6 +450,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
         q: { ...base },
         level: aiMsg.r.level,
         top: '',
+        topIds: [],
       }
       upsertHistory(nextCurrent)
     } else if (snap.current) {
@@ -455,6 +459,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
         q: { ...base },
         level: aiMsg.r.level,
         top: '',
+        topIds: [],
       }
       upsertHistory(nextCurrent)
     }
@@ -467,7 +472,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
       messages: nextMessages,
       profile: activeProfile,
     })
-    hydrateAiRanking(aiMsg.id, activeProfile, base.env, {
+    hydrateAiRanking(aiMsg.id, activeProfile, base, {
       claimForVerdict,
       shouldVerdict,
     })
@@ -492,11 +497,16 @@ export function useChatSession(options: ChatSessionOptions = {}) {
     const nextMissing = baselineMissing.filter(
       (k) => !changed.includes(k as keyof QueryState),
     )
-    const lead = changed.length
+    const apiAffecting = changed.some((k) => k === 'env' || k === 'goal')
+    let lead = changed.length
       ? `Refiz com as condições ajustadas: ${changed
           .map((k) => condLabel(k, nq[k]))
           .join(', ')}.`
       : 'Refiz com as mesmas condições.'
+    if (changed.length && !apiAffecting) {
+      lead +=
+        ' O score da API usa ambiente e categoria; O₂/pressão/fluxo ficam na síntese da UI.'
+    }
     const aiMsg = makeAi(lead, nq, nextMissing, prof, null)
     const nextMessages = [...snap.messages, aiMsg]
 
@@ -512,6 +522,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
         q: { ...nq },
         level: aiMsg.r.level,
         top: '',
+        topIds: [],
       }
       upsertHistory(nextCurrent)
     }
@@ -522,7 +533,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
       current: nextCurrent,
       messages: nextMessages,
     })
-    hydrateAiRanking(aiMsg.id, prof, nq.env)
+    hydrateAiRanking(aiMsg.id, prof, nq)
   }
 
   function startExample(text: string) {

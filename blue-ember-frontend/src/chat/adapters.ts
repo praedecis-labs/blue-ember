@@ -3,9 +3,17 @@ import type {
   ApiProfileId,
   EnvironmentDto,
   RankingItemDto,
+  RankingQueryParams,
   ScoreCriteriaDto,
 } from '@/services/contracts'
-import type { CritKey, EnvId, ProfileId, ScoredInvestigation } from './types'
+import type {
+  CritKey,
+  EnvId,
+  GoalId,
+  ProfileId,
+  QueryState,
+  ScoredInvestigation,
+} from './types'
 
 /** Inverse of engine `kpa` (psi * 6.895). */
 export function kpaToPsi(kpa: number): number {
@@ -80,6 +88,29 @@ export function fromApiEnvironment(id: string): EnvId | null {
   if (id in API_TO_ENV) return API_TO_ENV[id as ApiEnvironmentId]
   if (isEnvId(id)) return id
   return null
+}
+
+const GOAL_TO_CATEGORY: Record<GoalId, string> = {
+  prevenir: 'prevencao',
+  detectar: 'deteccao',
+  apagar: 'supressao',
+}
+
+/** Map UI goal to ranking/export `category` query param. */
+export function toApiCategory(goal: GoalId): string {
+  return GOAL_TO_CATEGORY[goal]
+}
+
+/** Build ranking query params from profile + parsed QueryState. */
+export function rankingParamsFromQuery(
+  profile: ProfileId,
+  q: Pick<QueryState, 'env' | 'goal'>,
+): Pick<RankingQueryParams, 'profile' | 'environment' | 'category'> {
+  return {
+    profile: toApiProfile(profile),
+    environment: toApiEnvironment(q.env),
+    category: toApiCategory(q.goal),
+  }
 }
 
 /** Map API C1–C5 criteria onto UI CritKey vals (0–1). */

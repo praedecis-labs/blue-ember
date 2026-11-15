@@ -70,6 +70,9 @@ function sanitizeHistoryItem(raw: unknown, index: number): HistoryItem | null {
   ) {
     return null
   }
+  const topIds = Array.isArray(h.topIds)
+    ? h.topIds.filter((id): id is string => typeof id === 'string' && id.trim() !== '')
+    : []
   const when =
     typeof h.when === 'string' && h.when.trim()
       ? h.when
@@ -86,6 +89,7 @@ function sanitizeHistoryItem(raw: unknown, index: number): HistoryItem | null {
     q: h.q,
     level: [levelId as EvidenceLevel, levelLabel],
     top: h.top,
+    topIds,
   }
 }
 

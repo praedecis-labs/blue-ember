@@ -84,7 +84,10 @@ export type HistoryItem = {
   claim: ClaimId
   q: QueryState
   level: [EvidenceLevel, string]
+  /** Display label of the top investigation (acronym/name). */
   top: string
+  /** Canonical investigation ids from the last API ranking (top N). */
+  topIds: string[]
 }
 
 export type ChatMessage =
