@@ -21,7 +21,7 @@ Chat React (perfil → home → thread + painéis)
         ├── GET  /api/ranking/fire-safety
         ├── GET  /api/gaps
         ├── GET  /api/export?format=csv|json
-        └── POST /api/agent/ask  (prosa Gemini opcional)
+        └── POST /api/agent/ask  (prosa NVIDIA opcional)
         ▼
 ASP.NET Core 8 Minimal API
         │
@@ -34,7 +34,7 @@ NASA PSI GEODE  ←── POST /api/nasa/refresh opcional (merge preserva métri
 
 1. **Boot:** a API carrega `data/normalized_investigations.json` na memória. Se vazio, faz fallback no GEODE.
 2. **Perfil:** o usuário escolhe um perfil mock; os pesos vêm de `GET /api/profiles`.
-3. **Hipótese:** o chat interpreta ambiente/objetivo (e pode chamar o agent Gemini). Ranking e gaps vêm sempre da API.
+3. **Hipótese:** o chat interpreta ambiente/objetivo (e pode chamar o agent NVIDIA). Ranking e gaps vêm sempre da API.
 4. **Painéis:** investigações (C1–C5), força da evidência, gaps (aviso de gravidade parcial na Lua), fontes (PSI / DOI).
 5. **Export:** CSV ou JSON para o perfil + ambiente atuais.
 6. **Frescor:** `GET /api/health` expõe a idade do cache (`dataAgeSeconds`, `lastLoadedAt`, `dataSource`, `cacheStale`). Auto-refresh opcional se `Data:CacheTtlMinutes` > 0.
@@ -91,7 +91,7 @@ Vertical Slice: cada feature dona seus endpoints; regras compartilhadas no Domai
 | GET | `/api/gaps` | Cobertura O₂×pressão + avisos |
 | GET | `/api/export` | `format=json\|csv` |
 | POST | `/api/nasa/refresh` | Puxa GEODE + merge |
-| POST | `/api/agent/ask` | Gemini opcional (ver `docs/AGENT-GEMINI.md`) |
+| POST | `/api/agent/ask` | NVIDIA opcional (ver `docs/AGENT-NVIDIA.md`) |
 
 Porta: **http://localhost:5006** · Swagger (dev): `/swagger`
 
@@ -128,7 +128,7 @@ Persistimos os IDs canônicos da API no `localStorage`. O mapeamento fica em `sr
 
 - Node.js 20+
 - .NET SDK 8
-- (Opcional) chave Gemini para prosa do agent — seção `Gemini` no `appsettings` / user secrets do backend; ver `blue-ember-backend/docs/AGENT-GEMINI.md`
+- (Opcional) chave NVIDIA para prosa do agent — seção `Nvidia` no `appsettings` / user secrets do backend; ver `blue-ember-backend/docs/AGENT-NVIDIA.md`
 
 ---
 
@@ -198,10 +198,10 @@ Defina `CacheTtlMinutes` > 0 para ligar o refresh automático do GEODE quando os
 | --- | --- |
 | [`blue-ember-backend/docs/RELATORIO-BACKEND-MVP.md`](blue-ember-backend/docs/RELATORIO-BACKEND-MVP.md) | Relatório do MVP backend + contratos HTTP |
 | [`blue-ember-backend/docs/TODO-PROXIMA-FATIA.md`](blue-ember-backend/docs/TODO-PROXIMA-FATIA.md) | Próxima fatia do backend |
-| [`blue-ember-backend/docs/AGENT-GEMINI.md`](blue-ember-backend/docs/AGENT-GEMINI.md) | Setup do agent |
+| [`blue-ember-backend/docs/AGENT-NVIDIA.md`](blue-ember-backend/docs/AGENT-NVIDIA.md) | Setup do agent |
 | [`blue-ember-frontend/docs/TODO-FRONTEND.md`](blue-ember-frontend/docs/TODO-FRONTEND.md) | Tracks T1–T7 do frontend |
 | [`blue-ember-frontend/README.md`](blue-ember-frontend/README.md) | Notas de execução só do frontend |
 
 ---
 
-*Atualizado em 15/11/2026 — reflete integração API + chat (T1–T6), idade/TTL do cache e agent Gemini opcional.*
+*Atualizado em 15/11/2026 — reflete integração API + chat (T1–T6), idade/TTL do cache e agent NVIDIA opcional.*

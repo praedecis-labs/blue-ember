@@ -10,41 +10,66 @@ public static class AgentEndpoints
         app.MapPost("/api/agent/ask", async (
                 [FromBody] AgentAskRequest? body,
                 AgentProviderResolver providers,
+                ILoggerFactory loggerFactory,
                 CancellationToken ct) =>
             {
+                var logger = loggerFactory.CreateLogger("Agent");
                 if (body is null || string.IsNullOrWhiteSpace(body.Message))
                     return Results.BadRequest(new ErrorResponse("message is required."));
 
                 if (body.Message.Trim().Length < 4)
                     return Results.BadRequest(new ErrorResponse("message is too short."));
 
-                var agent = providers.Current;
-
-                if (!agent.IsConfigured)
+                var agents = providers.Ordered.Where(a => a.IsConfigured).ToList();
+                if (agents.Count == 0)
                 {
                     return Results.Json(
                         new ErrorResponse(
-                            $"{agent.DisplayName} agent is not configured. Check the provider's API key in configuration."),
+                            $"{providers.Current.DisplayName} agent is not configured. Check the provider's API key in configuration."),
                         statusCode: StatusCodes.Status503ServiceUnavailable);
                 }
 
-                try
+                AgentAskResponse? response = null;
+                IAgentProvider? lastTried = null;
+                Exception? lastError = null;
+                foreach (var agent in agents)
                 {
-                    var response = await agent.AskAsync(body, ct);
+                    lastTried = agent;
+                    try
+                    {
+                        response = await agent.AskAsync(body, ct);
+                        break;
+                    }
+                    catch (OperationCanceledException) when (ct.IsCancellationRequested)
+                    {
+                        throw;
+                    }
+                    catch (Exception ex)
+                    {
+                        logger.LogWarning(
+                            ex,
+                            "Agent provider {Provider} failed; trying next fallback",
+                            agent.DisplayName);
+                        lastError = ex;
+                    }
+                }
+
+                if (response is not null)
                     return Results.Ok(response);
-                }
-                catch (OperationCanceledException) when (!ct.IsCancellationRequested)
+
+                var failedAgent = lastTried ?? agents[^1];
+                return lastError switch
                 {
-                    return Results.Json(
-                        new ErrorResponse($"{agent.DisplayName} request timed out."),
-                        statusCode: StatusCodes.Status504GatewayTimeout);
-                }
-                catch (InvalidOperationException ex)
-                {
-                    return Results.Json(
+                    OperationCanceledException => Results.Json(
+                        new ErrorResponse($"{failedAgent.DisplayName} request timed out."),
+                        statusCode: StatusCodes.Status504GatewayTimeout),
+                    InvalidOperationException ex => Results.Json(
                         new ErrorResponse(ex.Message),
-                        statusCode: StatusCodes.Status502BadGateway);
-                }
+                        statusCode: StatusCodes.Status502BadGateway),
+                    _ => Results.Json(
+                        new ErrorResponse(lastError?.Message ?? "Agent request failed."),
+                        statusCode: StatusCodes.Status502BadGateway),
+                };
             })
             .WithName("AgentAsk")
             .WithTags("Agent")

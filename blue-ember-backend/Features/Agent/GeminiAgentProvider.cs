@@ -5,6 +5,10 @@ using Microsoft.Extensions.Options;
 
 namespace BlueEmber.Api.Features.Agent;
 
+/// <summary>
+/// Provider Google Gemini API (generateContent), usado como fallback.
+/// Modelo default: gemma-4-31b-it.
+/// </summary>
 public sealed class GeminiAgentProvider(
     IHttpClientFactory httpClientFactory,
     IOptions<GeminiOptions> options,
@@ -36,7 +40,7 @@ public sealed class GeminiAgentProvider(
 
         var contents = BuildContents(request);
         var client = httpClientFactory.CreateClient("gemini");
-        var model = string.IsNullOrWhiteSpace(opts.Model) ? "gemini-3.1-flash-lite" : opts.Model;
+        var model = string.IsNullOrWhiteSpace(opts.Model) ? "gemma-4-31b-it" : opts.Model;
         var url =
             $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={opts.ApiKey}";
 
@@ -101,7 +105,7 @@ public sealed class GeminiAgentProvider(
             if (modelContent is null || parts is null || parts.Count == 0)
                 throw new InvalidOperationException("Gemini returned an empty candidate.");
 
-            // Echo model content verbatim (preserves thoughtSignature for Gemini 3 tools).
+            // Echo model content verbatim (preserves thoughtSignature for tool calling).
             var echoed = modelContent.DeepClone()!.AsObject();
             echoed["role"] = "model";
             contents.Add(echoed);
@@ -122,6 +126,8 @@ public sealed class GeminiAgentProvider(
                 var texts = new List<string>();
                 foreach (var partNode in parts)
                 {
+                    // Gemma 4 emite partes de raciocínio com "thought": true — ignorar.
+                    if (partNode?["thought"]?.GetValue<bool>() == true) continue;
                     var text = partNode?["text"]?.GetValue<string>();
                     if (!string.IsNullOrWhiteSpace(text))
                         texts.Add(text.Trim());

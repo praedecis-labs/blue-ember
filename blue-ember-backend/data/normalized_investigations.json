@@ -43,7 +43,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-119",
-      "doi": "10.25923/nasa.psi-119"
+      "doi": ""
     },
     {
       "id": "PSI-17",
@@ -81,7 +81,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-17",
-      "doi": "10.25923/nasa.psi-17"
+      "doi": ""
     },
     {
       "id": "PSI-16",
@@ -119,7 +119,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-16",
-      "doi": "10.25923/nasa.psi-16"
+      "doi": ""
     },
     {
       "id": "PSI-142",
@@ -157,7 +157,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-142",
-      "doi": "https://doi.org/10.1016/j.combustflame.2016.01.008"
+      "doi": "10.1016/j.combustflame.2016.01.008"
     },
     {
       "id": "PSI-182",
@@ -195,7 +195,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-182",
-      "doi": "10.25923/nasa.psi-182"
+      "doi": ""
     },
     {
       "id": "PSI-148",
@@ -233,7 +233,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-148",
-      "doi": "10.25923/nasa.psi-148"
+      "doi": ""
     },
     {
       "id": "PSI-177",
@@ -271,7 +271,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-177",
-      "doi": "10.25923/nasa.psi-177"
+      "doi": ""
     },
     {
       "id": "PSI-62",
@@ -309,7 +309,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-62",
-      "doi": "10.25923/nasa.psi-62"
+      "doi": ""
     },
     {
       "id": "PSI-60",
@@ -347,7 +347,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-60",
-      "doi": "10.25923/nasa.psi-60"
+      "doi": ""
     },
     {
       "id": "PSI-34",
@@ -385,7 +385,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-34",
-      "doi": "10.25923/nasa.psi-34"
+      "doi": ""
     },
     {
       "id": "PSI-184",
@@ -423,7 +423,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-184",
-      "doi": "10.25923/nasa.psi-184"
+      "doi": ""
     },
     {
       "id": "PSI-67",
@@ -461,7 +461,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-67",
-      "doi": "10.25923/nasa.psi-67"
+      "doi": ""
     },
     {
       "id": "PSI-185",
@@ -499,7 +499,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-185",
-      "doi": "10.25923/nasa.psi-185"
+      "doi": ""
     },
     {
       "id": "PSI-138",
@@ -537,7 +537,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-138",
-      "doi": "10.25923/nasa.psi-138"
+      "doi": ""
     },
     {
       "id": "PSI-26",
@@ -575,7 +575,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-26",
-      "doi": "10.25923/nasa.psi-26"
+      "doi": ""
     },
     {
       "id": "PSI-189",
@@ -613,7 +613,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-189",
-      "doi": "10.25923/nasa.psi-189"
+      "doi": ""
     },
     {
       "id": "PSI-137",
@@ -651,7 +651,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-137",
-      "doi": "10.25923/nasa.psi-137"
+      "doi": ""
     },
     {
       "id": "PSI-174",
@@ -689,7 +689,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-174",
-      "doi": "10.25923/nasa.psi-174"
+      "doi": ""
     },
     {
       "id": "PSI-35",
@@ -727,7 +727,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-35",
-      "doi": "10.25923/nasa.psi-35"
+      "doi": ""
     },
     {
       "id": "PSI-106",
@@ -765,7 +765,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-106",
-      "doi": "10.25923/nasa.psi-106"
+      "doi": ""
     },
     {
       "id": "PSI-98",
@@ -803,7 +803,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-98",
-      "doi": "10.25923/nasa.psi-98"
+      "doi": ""
     },
     {
       "id": "PSI-74",
@@ -841,7 +841,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-74",
-      "doi": "10.25923/nasa.psi-74"
+      "doi": ""
     },
     {
       "id": "PSI-117",
@@ -879,7 +879,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-117",
-      "doi": "10.25923/nasa.psi-117"
+      "doi": ""
     },
     {
       "id": "PSI-42",
@@ -917,7 +917,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-42",
-      "doi": "10.25923/nasa.psi-42"
+      "doi": ""
     },
     {
       "id": "PSI-50",
@@ -955,7 +955,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-50",
-      "doi": "10.25923/nasa.psi-50"
+      "doi": ""
     },
     {
       "id": "PSI-37",
@@ -993,7 +993,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-37",
-      "doi": "10.25923/nasa.psi-37"
+      "doi": ""
     },
     {
       "id": "PSI-181",
@@ -1031,7 +1031,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-181",
-      "doi": "10.25923/nasa.psi-181"
+      "doi": ""
     },
     {
       "id": "PSI-90",
@@ -1069,7 +1069,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-90",
-      "doi": "10.25923/nasa.psi-90"
+      "doi": ""
     },
     {
       "id": "PSI-43",
@@ -1107,7 +1107,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-43",
-      "doi": "10.25923/nasa.psi-43"
+      "doi": ""
     },
     {
       "id": "PSI-76",
@@ -1145,7 +1145,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-76",
-      "doi": "10.25923/nasa.psi-76"
+      "doi": ""
     },
     {
       "id": "PSI-31",
@@ -1183,7 +1183,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-31",
-      "doi": "10.25923/nasa.psi-31"
+      "doi": ""
     },
     {
       "id": "PSI-115",
@@ -1221,7 +1221,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-115",
-      "doi": "10.25923/nasa.psi-115"
+      "doi": ""
     },
     {
       "id": "PSI-27",
@@ -1259,7 +1259,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-27",
-      "doi": "10.25923/nasa.psi-27"
+      "doi": ""
     },
     {
       "id": "PSI-66",
@@ -1297,7 +1297,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-66",
-      "doi": "10.25923/nasa.psi-66"
+      "doi": ""
     },
     {
       "id": "PSI-105",
@@ -1335,7 +1335,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-105",
-      "doi": "10.25923/nasa.psi-105"
+      "doi": ""
     },
     {
       "id": "PSI-28",
@@ -1373,7 +1373,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-28",
-      "doi": "10.25923/nasa.psi-28"
+      "doi": ""
     },
     {
       "id": "PSI-30",
@@ -1411,7 +1411,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-30",
-      "doi": "10.25923/nasa.psi-30"
+      "doi": ""
     },
     {
       "id": "PSI-96",
@@ -1449,7 +1449,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-96",
-      "doi": "10.25923/nasa.psi-96"
+      "doi": ""
     },
     {
       "id": "PSI-47",
@@ -1487,7 +1487,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-47",
-      "doi": "10.25923/nasa.psi-47"
+      "doi": ""
     },
     {
       "id": "PSI-100",
@@ -1525,7 +1525,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-100",
-      "doi": "10.25923/nasa.psi-100"
+      "doi": ""
     },
     {
       "id": "PSI-39",
@@ -1563,7 +1563,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-39",
-      "doi": "10.25923/nasa.psi-39"
+      "doi": ""
     },
     {
       "id": "PSI-102",
@@ -1601,7 +1601,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-102",
-      "doi": "10.25923/nasa.psi-102"
+      "doi": ""
     },
     {
       "id": "PSI-89",
@@ -1639,7 +1639,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-89",
-      "doi": "10.25923/nasa.psi-89"
+      "doi": ""
     },
     {
       "id": "PSI-13",
@@ -1677,7 +1677,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-13",
-      "doi": "10.25923/nasa.psi-13"
+      "doi": ""
     },
     {
       "id": "PSI-18",
@@ -1715,7 +1715,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-18",
-      "doi": "10.25923/nasa.psi-18"
+      "doi": ""
     },
     {
       "id": "PSI-88",
@@ -1753,7 +1753,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-88",
-      "doi": "10.25923/nasa.psi-88"
+      "doi": ""
     },
     {
       "id": "PSI-24",
@@ -1791,7 +1791,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-24",
-      "doi": "10.25923/nasa.psi-24"
+      "doi": ""
     },
     {
       "id": "PSI-75",
@@ -1829,7 +1829,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-75",
-      "doi": "10.25923/nasa.psi-75"
+      "doi": ""
     },
     {
       "id": "PSI-32",
@@ -1867,7 +1867,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-32",
-      "doi": "10.25923/nasa.psi-32"
+      "doi": ""
     },
     {
       "id": "PSI-33",
@@ -1905,7 +1905,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-33",
-      "doi": "10.25923/nasa.psi-33"
+      "doi": ""
     },
     {
       "id": "PSI-41",
@@ -1943,7 +1943,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-41",
-      "doi": "10.25923/nasa.psi-41"
+      "doi": ""
     },
     {
       "id": "PSI-159",
@@ -1981,7 +1981,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-159",
-      "doi": "10.25923/nasa.psi-159"
+      "doi": ""
     },
     {
       "id": "PSI-36",
@@ -2019,7 +2019,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-36",
-      "doi": "10.25923/nasa.psi-36"
+      "doi": ""
     },
     {
       "id": "PSI-109",
@@ -2057,7 +2057,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-109",
-      "doi": "10.25923/nasa.psi-109"
+      "doi": ""
     },
     {
       "id": "PSI-101",
@@ -2095,7 +2095,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-101",
-      "doi": "10.25923/nasa.psi-101"
+      "doi": ""
     },
     {
       "id": "PSI-93",
@@ -2133,7 +2133,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-93",
-      "doi": "10.25923/nasa.psi-93"
+      "doi": ""
     },
     {
       "id": "PSI-7",
@@ -2171,7 +2171,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-7",
-      "doi": "10.25923/nasa.psi-7"
+      "doi": ""
     },
     {
       "id": "PSI-25",
@@ -2209,7 +2209,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-25",
-      "doi": "10.25923/nasa.psi-25"
+      "doi": ""
     },
     {
       "id": "PSI-94",
@@ -2247,7 +2247,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-94",
-      "doi": "10.25923/nasa.psi-94"
+      "doi": ""
     },
     {
       "id": "PSI-58",
@@ -2285,7 +2285,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-58",
-      "doi": "10.25923/nasa.psi-58"
+      "doi": ""
     },
     {
       "id": "PSI-6",
@@ -2323,7 +2323,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-6",
-      "doi": "10.25923/nasa.psi-6"
+      "doi": ""
     },
     {
       "id": "PSI-45",
@@ -2361,7 +2361,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-45",
-      "doi": "10.25923/nasa.psi-45"
+      "doi": ""
     },
     {
       "id": "PSI-15",
@@ -2399,7 +2399,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-15",
-      "doi": "10.25923/nasa.psi-15"
+      "doi": ""
     },
     {
       "id": "PSI-77",
@@ -2437,7 +2437,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-77",
-      "doi": "10.25923/nasa.psi-77"
+      "doi": ""
     },
     {
       "id": "PSI-52",
@@ -2475,7 +2475,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-52",
-      "doi": "10.25923/nasa.psi-52"
+      "doi": ""
     },
     {
       "id": "PSI-103",
@@ -2513,7 +2513,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-103",
-      "doi": "10.25923/nasa.psi-103"
+      "doi": ""
     },
     {
       "id": "PSI-99",
@@ -2551,7 +2551,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-99",
-      "doi": "10.25923/nasa.psi-99"
+      "doi": ""
     },
     {
       "id": "PSI-40",
@@ -2589,7 +2589,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-40",
-      "doi": "10.25923/nasa.psi-40"
+      "doi": ""
     },
     {
       "id": "PSI-179",
@@ -2627,7 +2627,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-179",
-      "doi": "10.25923/nasa.psi-179"
+      "doi": ""
     },
     {
       "id": "PSI-91",
@@ -2665,7 +2665,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-91",
-      "doi": "10.25923/nasa.psi-91"
+      "doi": ""
     },
     {
       "id": "PSI-22",
@@ -2703,7 +2703,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-22",
-      "doi": "10.25923/nasa.psi-22"
+      "doi": ""
     },
     {
       "id": "PSI-3",
@@ -2741,7 +2741,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-3",
-      "doi": "10.25923/nasa.psi-3"
+      "doi": ""
     },
     {
       "id": "PSI-110",
@@ -2779,7 +2779,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-110",
-      "doi": "10.25923/nasa.psi-110"
+      "doi": ""
     },
     {
       "id": "PSI-160",
@@ -2817,7 +2817,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-160",
-      "doi": "10.25923/nasa.psi-160"
+      "doi": ""
     },
     {
       "id": "PSI-59",
@@ -2855,7 +2855,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-59",
-      "doi": "10.25923/nasa.psi-59"
+      "doi": ""
     },
     {
       "id": "PSI-187",
@@ -2893,7 +2893,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-187",
-      "doi": "10.25923/nasa.psi-187"
+      "doi": ""
     },
     {
       "id": "PSI-108",
@@ -2931,7 +2931,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-108",
-      "doi": "10.25923/nasa.psi-108"
+      "doi": ""
     },
     {
       "id": "PSI-178",
@@ -2969,7 +2969,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-178",
-      "doi": "https://doi.org/10.1007/s12217-018-9631-8"
+      "doi": "10.1007/s12217-018-9631-8"
     },
     {
       "id": "PSI-107",
@@ -3007,7 +3007,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-107",
-      "doi": "10.25923/nasa.psi-107"
+      "doi": ""
     },
     {
       "id": "PSI-12",
@@ -3045,7 +3045,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-12",
-      "doi": "10.25923/nasa.psi-12"
+      "doi": ""
     },
     {
       "id": "PSI-191",
@@ -3083,7 +3083,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-191",
-      "doi": "10.25923/nasa.psi-191"
+      "doi": ""
     },
     {
       "id": "PSI-153",
@@ -3121,7 +3121,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-153",
-      "doi": "10.25923/nasa.psi-153"
+      "doi": ""
     },
     {
       "id": "PSI-113",
@@ -3159,7 +3159,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-113",
-      "doi": "10.25923/nasa.psi-113"
+      "doi": ""
     },
     {
       "id": "PSI-21",
@@ -3197,7 +3197,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-21",
-      "doi": "10.25923/nasa.psi-21"
+      "doi": ""
     },
     {
       "id": "PSI-20",
@@ -3235,7 +3235,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-20",
-      "doi": "10.25923/nasa.psi-20"
+      "doi": ""
     },
     {
       "id": "PSI-38",
@@ -3273,7 +3273,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-38",
-      "doi": "10.25923/nasa.psi-38"
+      "doi": ""
     },
     {
       "id": "PSI-78",
@@ -3311,7 +3311,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-78",
-      "doi": "10.25923/nasa.psi-78"
+      "doi": ""
     },
     {
       "id": "PSI-167",
@@ -3349,7 +3349,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-167",
-      "doi": "10.25923/nasa.psi-167"
+      "doi": ""
     },
     {
       "id": "PSI-169",
@@ -3387,7 +3387,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-169",
-      "doi": "10.25923/nasa.psi-169"
+      "doi": ""
     },
     {
       "id": "PSI-70",
@@ -3425,7 +3425,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-70",
-      "doi": "10.25923/nasa.psi-70"
+      "doi": ""
     },
     {
       "id": "PSI-86",
@@ -3463,7 +3463,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-86",
-      "doi": "10.25923/nasa.psi-86"
+      "doi": ""
     },
     {
       "id": "PSI-84",
@@ -3501,7 +3501,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-84",
-      "doi": "10.25923/nasa.psi-84"
+      "doi": ""
     },
     {
       "id": "PSI-44",
@@ -3539,7 +3539,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-44",
-      "doi": "10.25923/nasa.psi-44"
+      "doi": ""
     },
     {
       "id": "PSI-83",
@@ -3577,7 +3577,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-83",
-      "doi": "10.25923/nasa.psi-83"
+      "doi": ""
     },
     {
       "id": "PSI-29",
@@ -3615,7 +3615,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-29",
-      "doi": "10.25923/nasa.psi-29"
+      "doi": ""
     },
     {
       "id": "PSI-79",
@@ -3653,7 +3653,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-79",
-      "doi": "10.25923/nasa.psi-79"
+      "doi": ""
     },
     {
       "id": "PSI-186",
@@ -3691,7 +3691,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-186",
-      "doi": "10.25923/nasa.psi-186"
+      "doi": ""
     },
     {
       "id": "PSI-168",
@@ -3729,7 +3729,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-168",
-      "doi": "10.25923/nasa.psi-168"
+      "doi": ""
     },
     {
       "id": "PSI-165",
@@ -3767,7 +3767,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-165",
-      "doi": "10.25923/nasa.psi-165"
+      "doi": ""
     },
     {
       "id": "PSI-114",
@@ -3805,7 +3805,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-114",
-      "doi": "10.25923/nasa.psi-114"
+      "doi": ""
     },
     {
       "id": "PSI-82",
@@ -3843,7 +3843,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-82",
-      "doi": "10.25923/nasa.psi-82"
+      "doi": ""
     },
     {
       "id": "PSI-111",
@@ -3881,7 +3881,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-111",
-      "doi": "10.25923/nasa.psi-111"
+      "doi": ""
     },
     {
       "id": "PSI-95",
@@ -3919,7 +3919,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-95",
-      "doi": "10.25923/nasa.psi-95"
+      "doi": ""
     },
     {
       "id": "PSI-80",
@@ -3957,7 +3957,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-80",
-      "doi": "10.25923/nasa.psi-80"
+      "doi": ""
     },
     {
       "id": "PSI-49",
@@ -3995,7 +3995,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-49",
-      "doi": "10.25923/nasa.psi-49"
+      "doi": ""
     },
     {
       "id": "PSI-57",
@@ -4033,7 +4033,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-57",
-      "doi": "10.25923/nasa.psi-57"
+      "doi": ""
     },
     {
       "id": "PSI-87",
@@ -4071,7 +4071,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-87",
-      "doi": "10.25923/nasa.psi-87"
+      "doi": ""
     },
     {
       "id": "PSI-166",
@@ -4109,7 +4109,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-166",
-      "doi": "10.25923/nasa.psi-166"
+      "doi": ""
     },
     {
       "id": "PSI-85",
@@ -4147,7 +4147,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-85",
-      "doi": "10.25923/nasa.psi-85"
+      "doi": ""
     },
     {
       "id": "PSI-1",
@@ -4185,7 +4185,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-1",
-      "doi": "10.25923/nasa.psi-1"
+      "doi": ""
     },
     {
       "id": "PSI-23",
@@ -4223,7 +4223,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-23",
-      "doi": "10.25923/nasa.psi-23"
+      "doi": ""
     },
     {
       "id": "PSI-5",
@@ -4261,7 +4261,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-5",
-      "doi": "10.25923/nasa.psi-5"
+      "doi": ""
     },
     {
       "id": "PSI-97",
@@ -4299,7 +4299,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-97",
-      "doi": "10.25923/nasa.psi-97"
+      "doi": ""
     },
     {
       "id": "PSI-190",
@@ -4337,7 +4337,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-190",
-      "doi": "10.25923/nasa.psi-190"
+      "doi": ""
     },
     {
       "id": "PSI-64",
@@ -4375,7 +4375,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-64",
-      "doi": "10.25923/nasa.psi-64"
+      "doi": ""
     },
     {
       "id": "PSI-19",
@@ -4413,7 +4413,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-19",
-      "doi": "10.25923/nasa.psi-19"
+      "doi": ""
     },
     {
       "id": "PSI-51",
@@ -4451,7 +4451,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-51",
-      "doi": "10.25923/nasa.psi-51"
+      "doi": ""
     },
     {
       "id": "PSI-10",
@@ -4489,7 +4489,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-10",
-      "doi": "10.25923/nasa.psi-10"
+      "doi": ""
     },
     {
       "id": "PSI-81",
@@ -4527,7 +4527,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-81",
-      "doi": "10.25923/nasa.psi-81"
+      "doi": ""
     },
     {
       "id": "PSI-8",
@@ -4565,7 +4565,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-8",
-      "doi": "10.25923/nasa.psi-8"
+      "doi": ""
     },
     {
       "id": "PSI-9",
@@ -4603,7 +4603,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-9",
-      "doi": "10.25923/nasa.psi-9"
+      "doi": ""
     },
     {
       "id": "PSI-69",
@@ -4641,7 +4641,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-69",
-      "doi": "10.25923/nasa.psi-69"
+      "doi": ""
     },
     {
       "id": "PSI-71",
@@ -4679,7 +4679,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-71",
-      "doi": "https://doi.org/10.1016/0273-1177(91)90263-J"
+      "doi": "10.1016/0273-1177(91)90263-J"
     },
     {
       "id": "PSI-48",
@@ -4717,7 +4717,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-48",
-      "doi": "10.25923/nasa.psi-48"
+      "doi": ""
     },
     {
       "id": "PSI-125",
@@ -4755,7 +4755,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-125",
-      "doi": "10.25923/nasa.psi-125"
+      "doi": ""
     },
     {
       "id": "PSI-72",
@@ -4793,7 +4793,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-72",
-      "doi": "10.25923/nasa.psi-72"
+      "doi": ""
     },
     {
       "id": "PSI-2",
@@ -4831,7 +4831,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-2",
-      "doi": "10.25923/nasa.psi-2"
+      "doi": ""
     },
     {
       "id": "PSI-112",
@@ -4869,7 +4869,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-112",
-      "doi": "10.25923/nasa.psi-112"
+      "doi": ""
     },
     {
       "id": "PSI-73",
@@ -4907,7 +4907,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-73",
-      "doi": "10.25923/nasa.psi-73"
+      "doi": ""
     },
     {
       "id": "PSI-68",
@@ -4945,7 +4945,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-68",
-      "doi": "10.25923/nasa.psi-68"
+      "doi": ""
     },
     {
       "id": "PSI-188",
@@ -4983,7 +4983,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-188",
-      "doi": "10.25923/nasa.psi-188"
+      "doi": ""
     },
     {
       "id": "PSI-46",
@@ -5021,7 +5021,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-46",
-      "doi": "10.25923/nasa.psi-46"
+      "doi": ""
     },
     {
       "id": "PSI-4",
@@ -5059,7 +5059,7 @@
       ],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-4",
-      "doi": "10.25923/nasa.psi-4"
+      "doi": ""
     }
   ]
 }
