@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { ToastProvider } from '@/components/ui/toast-provider'
+import { toApiCategory, toApiEnvironment, toApiProfile } from './adapters'
 import { AnalysesHome } from './components/AnalysesHome'
 import { AppSidebar } from './components/AppSidebar'
 import { ChatHeader } from './components/ChatHeader'
@@ -16,6 +17,7 @@ import type { ThemeId } from './types'
 import { useApiHealth } from './use-api-health'
 import { useChatSession } from './use-chat-session'
 import { useEnvironments } from './use-environments'
+import { useExportRanking } from './use-export-ranking'
 import { useProfiles } from './use-profiles'
 import './ChatApp.css'
 
@@ -29,6 +31,19 @@ export function ChatApp() {
   const environments =
     environmentsState.status === 'ok' ? environmentsState.data : null
   const session = useChatSession({ environments })
+
+  const exportProfile = session.profile
+    ? toApiProfile(session.profile)
+    : null
+  const exportEnvironment = toApiEnvironment(
+    session.q?.env ?? session.environment,
+  )
+  const exportCategory = session.q ? toApiCategory(session.q.goal) : null
+  const exporter = useExportRanking({
+    profile: exportProfile,
+    environment: exportEnvironment,
+    category: exportCategory,
+  })
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -72,6 +87,15 @@ export function ChatApp() {
                 profileLabel={profileLabel}
                 theme={theme}
                 apiHealth={health}
+                environmentsError={
+                  environmentsState.status === 'error'
+                    ? environmentsState.message
+                    : null
+                }
+                canExport={exporter.canExport}
+                exportBusy={exporter.busy}
+                onExportCsv={exporter.exportCsv}
+                onExportJson={exporter.exportJson}
                 onHome={session.goHome}
                 onNew={() =>
                   session.profile

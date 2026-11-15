@@ -109,8 +109,8 @@ export function ChatScreen({
           </div>
         </div>
         <p className="hint composer-note">
-          Nomes, PSI, DOIs, faixas de teste e atmosferas são reais; notas,
-          critérios e textos da IA são fictícios.
+          Score e PSI/DOI vêm da API; textos de síntese e veredicto são locais
+          na UI.
         </p>
       </div>
     </section>

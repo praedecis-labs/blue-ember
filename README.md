@@ -25,14 +25,12 @@ NASA Space Apps 2026 — Flame in Freefall.
 
 | Pasta | Papel |
 | --- | --- |
-| `pages/` | Telas |
-| `components/` | UI reutilizável |
+| `chat/` | App de chat (perfil, home, thread, painéis) |
+| `components/` | UI reutilizável (shadcn) |
 | `hooks/` | Hooks React |
-| `services/` | Chamadas HTTP / API |
-| `types/` | Tipos compartilhados |
-| `utils/` | Helpers |
+| `services/` | Client HTTP tipado da API |
 | `assets/` | Imagens e mídia estática |
-| `App.tsx` | Shell da aplicação |
+| `App.tsx` | Shell — monta `ChatApp` |
 
 ## Pré-requisitos
 

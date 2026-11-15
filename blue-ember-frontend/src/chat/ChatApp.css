@@ -274,6 +274,16 @@
     border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 500; }
   .chat-app header .theme-btn:hover { background: rgba(255,255,255,.24) !important; }
 
+  .chat-app header .export-actions { display: inline-flex; gap: 6px; align-items: center; }
+  .chat-app header .export-btn {
+    background: rgba(255,255,255,.14) !important; color: var(--white) !important;
+    box-shadow: none !important; transform: none !important;
+    border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 500;
+  }
+  .chat-app header .export-btn:hover:not(:disabled) { background: rgba(255,255,255,.24) !important; }
+  .chat-app header .export-btn:disabled { opacity: .45; cursor: not-allowed; }
+  .chat-app .tag-warn { background: #FFD6CC; color: #8B0A03; max-width: 280px; overflow: hidden; text-overflow: ellipsis; }
+
   /* ===== Tema escuro ===== */
   .chat-app[data-theme="dark"] {
     color-scheme: dark;

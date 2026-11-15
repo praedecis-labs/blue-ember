@@ -243,10 +243,12 @@ export function useChatSession(options: ChatSessionOptions = {}) {
           (m) => m.kind === 'ai' && m.id === msgId,
         )
         if (!stillThere) return
+        const message = messageFromUnknown(err)
+        setError(message)
         patchAiMessage(msgId, (msg) => ({
           ...msg,
           rankingStatus: 'error',
-          rankingError: messageFromUnknown(err),
+          rankingError: message,
         }))
       }
     })()
@@ -564,6 +566,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
     pendingProfile,
     setPendingProfile,
     environment,
+    q,
     history,
     messages,
     draft,

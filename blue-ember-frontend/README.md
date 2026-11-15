@@ -1,32 +1,55 @@
-# React + TypeScript + Vite
+# Blue Ember — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Chat React (Vite + TypeScript) que consome a API .NET do Blue Ember.
 
-Currently, two official plugins are available:
+## Pré-requisitos
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Node.js 20+
+- Backend rodando em `http://localhost:5006` (ver monorepo)
 
-## React Compiler
+## Subir FE + BE juntos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 1. Backend (`:5006`)
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+cd ../blue-ember-backend
+dotnet run --launch-profile http
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+- API: http://localhost:5006  
+- Swagger (dev): http://localhost:5006/swagger  
+- Health: `GET /api/health`
+
+### 2. Frontend (`:3000`)
+
+```bash
+npm install
+npm run dev
+```
+
+- App: http://localhost:3000  
+- Proxy Vite: `/api` → `http://localhost:5006` (ver `vite.config.ts`)
+
+## Scripts
+
+| Comando | Uso |
+| --- | --- |
+| `npm run dev` | Dev server na porta 3000 |
+| `npm test` | Vitest |
+| `npm run build` | Typecheck + build |
+| `npm run lint` | Oxlint |
+
+## Smoke checklist (demo)
+
+| # | Ação | Esperado |
+| --- | --- | --- |
+| 1 | BE `:5006` + FE `:3000` | Health ok no header |
+| 2 | Escolher Engenheiro | Pesos = API ShipEngineer |
+| 3 | Chip “Tecido seguro na Lua?” | Bolha com top PSI reais |
+| 4 | Abrir Investigações | Barras C1–C5 da API |
+| 5 | Abrir Gaps (Moon) | Warning gravidade parcial |
+| 6 | Trocar para ISS no form | Ranking/gaps mudam |
+| 7 | Export CSV | Download 200 |
+| 8 | API off | Mensagem clara, sem tela branca |
+
+Lista completa: [`docs/TODO-FRONTEND.md`](docs/TODO-FRONTEND.md).

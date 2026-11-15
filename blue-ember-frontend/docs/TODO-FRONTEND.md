@@ -1,7 +1,7 @@
 # To-dos — Frontend Blue Ember (chat → API)
 
 **Objetivo:** o protótipo em `src/chat/` deixar de ser só mock local e consumir a API .NET com contrato estável, pronto para demo do hackathon.  
-**Estado atual:** UI/fluxo em React; **T1–T5** fechados (client HTTP + perfil/ambientes + ranking/evidência + gaps/fontes + chat→params via API). Próximo: T6 polish.  
+**Estado atual:** UI/fluxo em React; **T1–T6** fechados (API no chat + export/polish da demo). Próximo opcional: T7 telas além do chat.  
 **Fora desta fatia (hackathon):** auth real, `/ask` no backend, pgvector, Planetary Computer.
 
 **Mapa de IDs (alinhar antes de integrar):**
@@ -158,14 +158,14 @@ Sugestão de donos (preencher):
 
 ### T6 — Demo polish e limpeza
 
-- [ ] **Export**: botão que chama `GET /api/export?format=csv|json` com profile/environment atuais
-- [ ] Tag do header: trocar “DADOS FICTÍCIOS” por algo como “Score via API · síntese local” quando T3 ok
-- [ ] Remover ou arquivar `pages/HomePage*` se não for mais usada
-- [ ] Tratar 400 da API (ranges inválidos) no composer / form
-- [ ] `README` do frontend: como subir FE+BE juntos, ports 3000/5006
-- [ ] Smoke manual checklist (abaixo)
+- [x] **Export**: botão que chama `GET /api/export?format=csv|json` com profile/environment atuais
+- [x] Tag do header: trocar “DADOS FICTÍCIOS” por algo como “Score via API · síntese local” quando T3 ok
+- [x] Remover ou arquivar `pages/HomePage*` se não for mais usada — N/A (`App` → `ChatApp`; home = `AnalysesHome`; `ShadcnDemo` não montado)
+- [x] Tratar 400 da API (ranges inválidos) no composer / form
+- [x] `README` do frontend: como subir FE+BE juntos, ports 3000/5006
+- [x] Smoke manual checklist (abaixo)
 
-**Done quando:** demo de 5 minutos roda sem abrir Swagger.
+**Done quando:** demo de 5 minutos roda sem abrir Swagger. ✅ (15/11/2026)
 
 ---
 
@@ -223,4 +223,4 @@ Se forem **3+ pessoas:** T1 sozinho → em seguida T2 ∥ T3 ∥ T4 → T5 integ
 
 ---
 
-*Atualizado 15/11/2026 — T1–T5 fechados (chat → ranking/gaps com environment+category; histórico com topIds). Próximo: T6 polish.*
+*Atualizado 15/11/2026 — T1–T6 fechados (export CSV/JSON no header, tags honestas, erros no composer, README FE+BE). Próximo opcional: T7.*

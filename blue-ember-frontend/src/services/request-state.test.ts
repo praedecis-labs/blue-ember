@@ -9,7 +9,19 @@ describe('messageFromUnknown', () => {
     ).toBe('Invalid environment.')
   })
 
+  it('appends missing fields from ErrorResponse', () => {
+    expect(
+      messageFromUnknown(
+        new ApiError(400, {
+          error: 'Invalid query.',
+          missing: ['profile', 'environment'],
+        }),
+      ),
+    ).toBe('Invalid query. (faltando: profile, environment)')
+  })
+
   it('falls back for generic Error', () => {
     expect(messageFromUnknown(new Error('boom'))).toBe('boom')
   })
 })
+
