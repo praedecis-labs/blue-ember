@@ -1,4 +1,5 @@
 import { useT } from '@/i18n'
+import { psiUrl } from '../../domain/psi-url'
 import { SHOW_DOI, type AiMsg } from './types'
 
 function psiHref(d: {
@@ -6,8 +7,7 @@ function psiHref(d: {
   nasaPsiUrl?: string | null
 }): string {
   return (
-    d.nasaPsiUrl ||
-    `https://psi.nasa.gov/physci/repo/data/investigations/${d.id}`
+    psiUrl(d)
   )
 }
 
@@ -90,7 +90,7 @@ export function SourcesPanel({ msg }: { msg: AiMsg }) {
         <li>
           {t('panels.partialGLabel')}{' '}
           <a
-            href="https://www.nasa.gov/flammability-of-materials-on-the-moon-fm2/"
+            href="https://www.nasa.gov/glenn/glenn-expertise-space-exploration/physical-sciences-program/combustion-science/flammability-of-materials-on-the-moon-fm2/"
             target="_blank"
             rel="noopener noreferrer"
           >
