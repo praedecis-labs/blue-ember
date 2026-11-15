@@ -1,6 +1,14 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { getRankingFireSafety } from './ranking'
 import type { RankingResponse } from '../shared/contracts'
+import { requestJson } from '../shared/http'
+
+// O cliente HTTP agora usa axios (não fetch): simulamos requestJson e mantemos buildQuery real.
+vi.mock('../shared/http', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../shared/http')>()
+  return { ...actual, requestJson: vi.fn() }
+})
+const requestJsonMock = vi.mocked(requestJson)
 
 const sampleRanking: RankingResponse = {
   profile: 'ShipEngineer',
@@ -36,25 +44,19 @@ const sampleRanking: RankingResponse = {
 
 describe('getRankingFireSafety', () => {
   afterEach(() => {
-    vi.unstubAllGlobals()
-    vi.restoreAllMocks()
+    requestJsonMock.mockReset()
   })
 
   it('calls fire-safety endpoint with profile and environment', async () => {
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
-      json: async () => sampleRanking,
-    })
-    vi.stubGlobal('fetch', fetchMock)
+    requestJsonMock.mockResolvedValue(sampleRanking)
 
     const result = await getRankingFireSafety({
       profile: 'ShipEngineer',
       environment: 'Moon',
     })
 
-    expect(fetchMock).toHaveBeenCalledWith(
+    expect(requestJsonMock).toHaveBeenCalledWith(
       '/api/ranking/fire-safety?profile=ShipEngineer&environment=Moon',
-      undefined,
     )
     expect(result.profile).toBe('ShipEngineer')
     expect(result.items[0]?.investigation.acronym).toBe('SAFFIRE-II')
@@ -72,17 +74,7 @@ describe('getRankingFireSafety', () => {
       profile: 'Student',
       weights: { w1: 0.2, w2: 0.2, w3: 0.2, w4: 0.2, w5: 0.2 },
     }
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => engineer,
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => student,
-      })
-    vi.stubGlobal('fetch', fetchMock)
+    requestJsonMock.mockResolvedValueOnce(engineer).mockResolvedValueOnce(student)
 
     const a = await getRankingFireSafety({
       profile: 'ShipEngineer',
