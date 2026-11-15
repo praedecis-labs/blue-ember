@@ -312,6 +312,15 @@ export function useChatSession(options: ChatSessionOptions = {}) {
       ? buildQueryDefaults(seedEnv, environmentsRef.current)
       : { ...snap.q! }
 
+    // Mudou de ambiente (ex.: Lua → ISS) sem dizer as condições: usa as do ambiente novo,
+    // em vez de carregar a pressão/O₂/fluxo da pergunta anterior.
+    if (!first && p.env && p.env !== snap.q!.env) {
+      const envDefaults = buildQueryDefaults(p.env, environmentsRef.current)
+      for (const k of ['psi', 'o2', 'flow'] as const) {
+        if (p[k] === null || p[k] === undefined) base[k] = envDefaults[k]
+      }
+    }
+
     const changed: Array<keyof QueryState> = []
     for (const [k] of MAIN_KEYS) {
       const val = p[k as keyof typeof p]
