@@ -242,11 +242,11 @@ export function buildVerdict(
 export function summaryFor(q: QueryState, r: ComputeResult): string {
   const best = r.top[0]
   const base = r.above
-    ? `A NASA testou ${MAT[q.material]} com no máximo ${fmt(r.maxO2)}% de O₂. Com ${fmt(q.o2)}%, ele tende a queimar com mais facilidade do que os testes mostram: trate o risco como maior.`
+    ? `Nas investigações da NASA consultadas, o maior O₂ testado foi ${fmt(r.maxO2)}%${r.maxO2Source ? ` (${r.maxO2Source})` : ''}. Com ${fmt(q.o2)}%, o material tende a queimar com mais facilidade do que os testes mostram: trate o risco como maior.`
     : best
-      ? `Há testes da NASA em condições próximas da sua; o ${best.name} é o mais parecido.`
+      ? `Há testes da NASA em condições próximas da sua; o ${best.name} é o mais parecido${best.o2[1] ? ` (O₂ testado: ${fmt(best.o2[0])}–${fmt(best.o2[1])}%)` : ''}.`
       : `Buscando investigações da NASA para o ambiente selecionado…`
-  const extra = r.partialG
+  const extra = r.partialG && q.env !== 'iss'
     ? ` Na gravidade ${q.env === 'lua' ? 'da Lua' : 'de Marte'}, estudos indicam que alguns materiais queimam com menos oxigênio do que na Terra.`
     : ''
   return base + extra
