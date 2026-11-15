@@ -111,11 +111,7 @@ export type ChatMessage =
       rankingStatus: RequestStatus
       rankingError: string | null
       weights: CritWeights | null
-<<<<<<< HEAD:blue-ember-frontend/src/chat/types.ts
       /** True when `lead` came from agent prose (skip template summary). */
-=======
-      /** True when `lead` came from Gemini agent prose (skip templte summary). */
->>>>>>> origin/main:blue-ember-frontend/src/chat/domain/types.ts
       agentReply?: boolean
       offTopic?: boolean
       dashboard?: DashboardSpec | null

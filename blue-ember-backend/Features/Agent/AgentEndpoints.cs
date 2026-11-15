@@ -20,20 +20,14 @@ public static class AgentEndpoints
                 if (body.Message.Trim().Length < 4)
                     return Results.BadRequest(new ErrorResponse("message is too short."));
 
-<<<<<<< HEAD
-                var agents = providers.Ordered.Where(a => a.IsConfigured).ToList();
-                if (agents.Count == 0)
-=======
                 if (!OnTopicHypothesis.IsOnTopic(body.Message))
                 {
                     return Results.BadRequest(new ErrorResponse(
                         "Message is outside Blue Ember scope (fire safety / space habitats)."));
                 }
 
-                var agent = providers.Current;
-
-                if (!agent.IsConfigured)
->>>>>>> origin/main
+                var agents = providers.Ordered.Where(a => a.IsConfigured).ToList();
+                if (agents.Count == 0)
                 {
                     return Results.Json(
                         new ErrorResponse(

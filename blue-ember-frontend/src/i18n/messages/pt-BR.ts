@@ -16,9 +16,9 @@ export const ptBR: MessageTree = {
     apiLoading: 'API…',
     apiOnline: 'API online',
     apiOffline: 'API offline',
-    scoreTag: 'Dados do PSI da NASA via API',
+    scoreTag: 'Score via API · síntese local',
     environmentsError: 'Ambientes: {{error}}',
-    exportCsv: 'Exportar CSV',
+    exportCsv: 'Export CSV',
     exportJson: 'JSON',
     light: 'Claro',
     dark: 'Escuro',
@@ -72,10 +72,8 @@ export const ptBR: MessageTree = {
     hintKeys: 'Enter envia · Shift+Enter quebra a linha',
     send: 'Enviar',
     composerNote:
-      'Notas, investigações e cobertura vêm dos dados do PSI da NASA pela nossa API. As respostas são escritas pelo Gemini, ou por modelos locais quando a IA está fora do ar.',
+      'Score e PSI/DOI vêm da API; textos de síntese e veredicto são locais na UI.',
     writeHypothesis: 'Escreva sua hipótese ou pergunta.',
-    offTopicHypothesis:
-      'Só consigo ajudar com segurança contra incêndio em habitats espaciais. Pergunte sobre materiais, O₂, pressão, detecção de fumaça ou cenários ISS/Lua/Marte.',
     profileSwitched:
       'Perfil trocado para {{name}}. Reordenei as investigações com os novos pesos.',
     reorderForProfile: 'Reordene o ranking para o perfil {{name}}.',
@@ -83,15 +81,9 @@ export const ptBR: MessageTree = {
     rerunSame: 'Refaça a análise com as mesmas condições.',
   },
   bubble: {
-<<<<<<< HEAD
     thinking: 'Pensando…',
     thinkingPanels: 'Carregando painéis…',
     thinkingRanking: 'Pensando e consultando ranking…',
-=======
-    thinking: 'Pensando com o agente de IA…',
-    thinkingPanels: 'O agente respondeu · carregando ranking e lacunas da NASA…',
-    thinkingRanking: 'Pensando com o agente de IA e consultando ranking…',
->>>>>>> origin/main
     loadingRanking: 'Carregando ranking da API…',
     rankingFail: 'Falha ao carregar o ranking.',
     mostRelevant: 'Mais relevante:',
@@ -99,12 +91,7 @@ export const ptBR: MessageTree = {
     agentLabel:
       'Resposta do agente · tools ranking/gaps · abra as fontes nos detalhes',
     localLabel:
-      'Resposta por modelos locais · notas da API · fontes nos detalhes abaixo',
-    offTopicLabel: 'Checagem de escopo · ranking não executado',
-    agentOffline:
-      'Agente de IA offline (sem API key). Mostrando só ranking e gaps da NASA.',
-    agentFallback:
-      'O agente de IA não concluiu (limite de taxa ou erro do provedor). Mostrando só ranking e gaps da NASA — tente de novo em alguns segundos.',
+      'Score via API · síntese local nos textos · abra as fontes nos detalhes',
     yourHypothesis: 'Sua hipótese:',
     conditions: 'Condições usadas',
     defaultCount: '{{n}} padrão',
@@ -115,26 +102,13 @@ export const ptBR: MessageTree = {
     followIss: 'E se fosse na ISS?',
     followLunar: 'E no habitat lunar?',
     followStill: 'E com ar parado?',
-    followVent: 'E com ventilação de 20 cm/s?',
+    followVent: 'E com 20 cm/s?',
     followMaterial: 'E com {{material}}?',
     fabric: 'tecido',
-    followIssPrompt: 'E se fosse na ISS a 14,7 psi e 21% de O₂?',
-    followLunarPrompt: 'E no habitat lunar a 8,2 psi e 34% de O₂?',
-    followStillPrompt: 'E com ar parado?',
-    followVentPrompt: 'E com ventilação de 20 cm/s?',
-    followFabricPrompt: 'E se o material for tecido?',
-    followAcrylicPrompt: 'E se o material for plástico acrílico?',
     acrylic: 'acrílico',
     dashboardChip:
       'Montar dashboard interpretativo desta hipótese com periculosidade relativa e legendas.',
     dashboardChipLabel: 'Montar dashboard desta hipótese',
-  },
-  gapsApi: {
-    noneNear:
-      'Nenhuma investigação em destaque perto do alvo (O₂ {{o2}}% ±5%, {{kpa}} kPa ±15 kPa).',
-    noCoverage: 'Sem cobertura em O₂ {{o2}}% × {{kpa}} kPa',
-    partialGWarning:
-      'O PSI quase não tem dados de gravidade parcial (Lua ~0,16 g / Marte ~0,38 g). A maior parte dos ensaios é em 0 g ou 1 g; interpolar entre esses regimes pode subestimar o risco.',
   },
   dashboard: {
     label: 'Dashboard',
@@ -148,20 +122,20 @@ export const ptBR: MessageTree = {
     legendHazard:
       'Legendas: score mais alto = maior criticidade relativa no ranking da API. Pill vermelha = alta; amarela = média; verde = mais baixa na lista.',
     legendDefault:
-      'Legendas: os níveis e selos refletem os dados da API para este pedido; detalhes técnicos ficam nos botões abaixo.',
+      'Legendas: os níveis e pills refletem os dados da API para este pedido; detalhes técnicos ficam nos botões abaixo.',
   },
   panels: {
     loadingGaps: 'Carregando lacunas da API…',
     gapsFail: 'Não foi possível carregar as lacunas.',
-    loadingEvidence: 'Calculando a evidência a partir do ranking e das lacunas da API…',
+    loadingEvidence: 'Derivando evidência do ranking e gaps da API…',
     evidenceFail: 'Não foi possível carregar a evidência.',
     loadingInv: 'Carregando ranking da API…',
     invFail: 'Não foi possível carregar o ranking.',
-    noInv: 'Nenhuma investigação em destaque para este perfil e ambiente.',
+    noInv: 'Nenhuma investigação featured para este perfil e ambiente.',
     nasaInv: 'Investigações da NASA',
     profileWeights: 'Pesos do perfil {{name}}',
     invHint:
-      'Ordenadas pelo ranking de segurança contra incêndio da API (C₁–C₅ com os pesos do perfil).',
+      'Ordenadas pelo ranking fire-safety da API (C₁–C₅ com pesos do perfil).',
     relevance: 'relevância {{n}}',
     loadingSources: 'Carregando links oficiais…',
     sourcesFail: 'Não foi possível carregar as fontes.',
@@ -187,7 +161,7 @@ export const ptBR: MessageTree = {
     awaitingInv: 'aguardando investigações',
     sourcesTitle: 'Fontes',
     onPsi: '{{id}} no PSI',
-    localContext: 'Referências de contexto (não vêm da API):',
+    localContext: 'Contexto local (síntese da UI, não IDs da API):',
     atmLabel: 'Atmosferas:',
     lunarHabitat: 'habitat lunar da NASA (NTRS)',
     partialGLabel: 'Gravidade parcial:',
@@ -244,11 +218,6 @@ export const ptBR: MessageTree = {
     spread: 'C3 Propagação',
     hrr: 'C4 Calor (HRR)',
     tox: 'C5 Toxicidade',
-  },
-  grav: {
-    lua: '0,16 g (Lua)',
-    marte: '0,38 g (Marte)',
-    iss: 'Microgravidade (~0 g)',
   },
   env: {
     lua: 'Lua',
