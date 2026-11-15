@@ -275,11 +275,17 @@ export const enUS = {
     plausibleNoDirect: 'Plausible, but no direct test',
     noClaim: 'No clear claim',
     loading: 'Loading evidence…',
+    riskHigher: 'Higher risk than the tests show',
+    testsMatch: 'There are NASA tests in these conditions',
+    testsSimilar: 'There are similar tests, with differences',
+    fewTests: 'Few tests match your case',
+    hypKicker: 'Your hypothesis · {{level}}',
   },
   summary: {
     above:
-      'NASA tested {{material}} up to {{maxO2}}% O₂. At {{o2}}%, it tends to burn more readily than tests show: treat the risk as higher.',
-    near: 'There are NASA tests in conditions close to yours; {{best}} is the closest match.',
+      'Across the NASA investigations consulted, the highest O₂ tested was {{maxO2}}%{{source}}. At {{o2}}%, the material tends to burn more readily than tests show: treat the risk as higher.',
+    near: 'There are NASA tests in conditions close to yours; {{best}} is the closest match{{o2Range}}.',
+    o2Range: ' (O₂ tested: {{lo}}–{{hi}}%)',
     searching: 'Looking up NASA investigations for the selected environment…',
     partialG:
       ' In {{env}} gravity, studies suggest some materials burn with less oxygen than on Earth.',

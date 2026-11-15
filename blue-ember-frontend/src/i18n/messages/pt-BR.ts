@@ -279,11 +279,17 @@ export const ptBR: MessageTree = {
     plausibleNoDirect: 'Plausível, mas sem teste direto',
     noClaim: 'Sem afirmação clara',
     loading: 'Carregando evidência…',
+    riskHigher: 'Risco maior do que os testes mostram',
+    testsMatch: 'Há testes da NASA nessas condições',
+    testsSimilar: 'Há testes parecidos, com diferenças',
+    fewTests: 'Poucos testes parecidos com o seu caso',
+    hypKicker: 'Sua hipótese · {{level}}',
   },
   summary: {
     above:
-      'A NASA testou {{material}} com no máximo {{maxO2}}% de O₂. Com {{o2}}%, ele tende a queimar com mais facilidade do que os testes mostram: trate o risco como maior.',
-    near: 'Há testes da NASA em condições próximas da sua; o {{best}} é o mais parecido.',
+      'Nas investigações da NASA consultadas, o maior O₂ testado foi {{maxO2}}%{{source}}. Com {{o2}}%, o material tende a queimar com mais facilidade do que os testes mostram: trate o risco como maior.',
+    near: 'Há testes da NASA em condições próximas da sua; o {{best}} é o mais parecido{{o2Range}}.',
+    o2Range: ' (O₂ testado: {{lo}}–{{hi}}%)',
     searching: 'Buscando investigações da NASA para o ambiente selecionado…',
     partialG:
       ' Na gravidade {{env}}, estudos indicam que alguns materiais queimam com menos oxigênio do que na Terra.',

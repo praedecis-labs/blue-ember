@@ -250,20 +250,25 @@ export function summaryFor(
   t: Translate = defaultT,
 ): string {
   const best = r.top[0]
-  const material = t(`material.${q.material}`)
+  const source = r.maxO2Source ? ` (${r.maxO2Source})` : ''
+  const o2Range =
+    best?.o2[1]
+      ? t('summary.o2Range', { lo: fmt(best.o2[0]), hi: fmt(best.o2[1]) })
+      : ''
   const base = r.above
     ? t('summary.above', {
-        material,
         maxO2: fmt(r.maxO2),
+        source,
         o2: fmt(q.o2),
       })
     : best
-      ? t('summary.near', { best: best.name })
+      ? t('summary.near', { best: best.name, o2Range })
       : t('summary.searching')
-  const extra = r.partialG
-    ? t('summary.partialG', {
-        env: q.env === 'lua' ? t('summary.envMoon') : t('summary.envMars'),
-      })
-    : ''
+  const extra =
+    r.partialG && q.env !== 'iss'
+      ? t('summary.partialG', {
+          env: q.env === 'lua' ? t('summary.envMoon') : t('summary.envMars'),
+        })
+      : ''
   return base + extra
 }

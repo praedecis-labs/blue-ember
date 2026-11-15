@@ -26,7 +26,6 @@ import { evidenceFromRankingAndGaps } from './evidence-from-api'
 import { gapsFromApi } from './gaps-from-api'
 import {
   buildVerdict,
-  localGaps,
   nowLabel,
   parseHypothesis,
 } from './engine'
@@ -70,16 +69,19 @@ let msgSeq = 0
 const nextId = (prefix: string) => `${prefix}-${++msgSeq}`
 
 function emptyComputeResult(
-  q: QueryState,
+  _q: QueryState,
   loadingLabel: string,
 ) {
-  const { maxO2, above } = localGaps(q)
+  // O₂ máximo só vem da API (ranking); até ela responder, nada de número local
+  const maxO2 = 0
+  const above = false
   return {
     top: [],
     level: ['unknown', loadingLabel] as [EvidenceLevel, string],
     gaps: [] as string[],
     near: 0,
     maxO2,
+    maxO2Source: '',
     above,
     partialG: false,
     partialGravityWarning: '',
@@ -227,6 +229,17 @@ export function useChatSession(options: ChatSessionOptions = {}) {
     )
     if (!stillThereAfterDetails) return
 
+    // Maior O₂ testado entre as investigações que a API devolveu
+    let maxO2 = 0
+    let maxO2Source = ''
+    for (const it of ranking.items) {
+      const hi = Math.max(0, ...(it.investigation.o2Range ?? []))
+      if (hi > maxO2) {
+        maxO2 = hi
+        maxO2Source = it.investigation.acronym
+      }
+    }
+
     patchAiMessage(msgId, (msg) => ({
       ...msg,
       lead: extra?.lead !== undefined ? extra.lead : msg.lead,
@@ -248,6 +261,9 @@ export function useChatSession(options: ChatSessionOptions = {}) {
         partialGravityWarning: gapUi.partialGravityWarning,
         gaps: gapUi.gaps,
         featuredCount: evidence.featuredCount,
+        maxO2,
+        maxO2Source,
+        above: maxO2 > 0 && msg.q.o2 > maxO2,
       },
     }))
 

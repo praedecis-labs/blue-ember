@@ -74,6 +74,8 @@ export type ComputeResult = {
   gaps: string[]
   near: number
   maxO2: number
+  /** Sigla da investigação (da API) com o maior O₂ testado. */
+  maxO2Source?: string
   above: boolean
   partialG: boolean
   /** Trimmed partial-gravity warning from gaps API (GapsPanel callout). */

@@ -29,6 +29,22 @@ export function AiBubble({
     setOpenPanel((cur) => (cur === panel ? null : panel))
   }
 
+  // Veredito único no topo: a hipótese (quando houver) + a força da evidência numa linha só
+  const hyp = msg.verdict && msg.verdict[0] !== 'unknown' ? msg.verdict : null
+  const verdictTone = hyp ? hyp[0] : r.above ? 'weak' : r.level[0]
+  const verdictTitle = hyp
+    ? hyp[1]
+    : r.above
+      ? t('verdict.riskHigher')
+      : r.level[0] === 'strong'
+        ? t('verdict.testsMatch')
+        : r.level[0] === 'moderate'
+          ? t('verdict.testsSimilar')
+          : t('verdict.fewTests')
+  const verdictKicker = hyp
+    ? t('verdict.hypKicker', { level: r.level[1].toLowerCase() })
+    : r.level[1]
+
   const invCountLabel =
     rankingStatus === 'loading'
       ? '…'
@@ -46,15 +62,12 @@ export function AiBubble({
           <img className="avatar" src={LOGO_SRC} alt="" />
           Blue Ember
         </span>
-        <span className={`pill ${r.level[0]}`}>{r.level[1]}</span>
       </div>
       {msg.lead ? <span className="why">{msg.lead}</span> : null}
-      {msg.verdict ? (
-        <div className="verdict">
-          <b>{t('bubble.yourHypothesis')}</b>
-          <span className={`pill ${msg.verdict[0]}`}>{msg.verdict[1]}</span>
-        </div>
-      ) : null}
+      <div className={`verdict-big ${verdictTone}`} role="status">
+        <span className="kicker">{verdictKicker}</span>
+        <span className="title">{verdictTitle}</span>
+      </div>
       {!msg.agentReply && rankingStatus !== 'loading' ? (
         <p className="summary">{summaryFor(q, r, t)}</p>
       ) : null}
