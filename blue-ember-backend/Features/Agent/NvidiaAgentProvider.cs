@@ -6,18 +6,24 @@ using Microsoft.Extensions.Options;
 namespace BlueEmber.Api.Features.Agent;
 
 /// <summary>
+<<<<<<< HEAD:blue-ember-backend/Features/Agent/NvidiaAgentProvider.cs
+/// Provider NVIDIA NIM (API compatível com OpenAI chat.completions).
+/// Endpoint: https://integrate.api.nvidia.com/v1
+/// Modelo default: nvidia/nemotron-3.5-super-vl-120b-a12b.
+=======
 /// Provider Groq (API compatível com OpenAI chat.completions).
 /// Modelo default: openai/gpt-oss-20b.
+>>>>>>> origin/main:blue-ember-backend/Features/Agent/GroqAgentProvider.cs
 /// </summary>
-public sealed class GroqAgentProvider(
+public sealed class NvidiaAgentProvider(
     IHttpClientFactory httpClientFactory,
-    IOptions<GroqOptions> options,
+    IOptions<NvidiaOptions> options,
     IServiceScopeFactory scopeFactory,
-    ILogger<GroqAgentProvider> logger) : IAgentProvider
+    ILogger<NvidiaAgentProvider> logger) : IAgentProvider
 {
-    public string ProviderKey => "groq";
+    public string ProviderKey => "nvidia";
 
-    public string DisplayName => "Groq";
+    public string DisplayName => "NVIDIA";
 
     private static readonly JsonSerializerOptions JsonOpts = new()
     {
@@ -33,14 +39,19 @@ public sealed class GroqAgentProvider(
     {
         var opts = options.Value;
         if (string.IsNullOrWhiteSpace(opts.ApiKey))
-            throw new InvalidOperationException("Groq API key is not configured.");
+            throw new InvalidOperationException("NVIDIA API key is not configured.");
 
         using var scope = scopeFactory.CreateScope();
         var tools = scope.ServiceProvider.GetRequiredService<AgentTools>();
 
         var messages = BuildMessages(request);
+<<<<<<< HEAD:blue-ember-backend/Features/Agent/NvidiaAgentProvider.cs
+        var client = httpClientFactory.CreateClient("nvidia");
+        var model = string.IsNullOrWhiteSpace(opts.Model) ? "nvidia/nemotron-3.5-super-vl-120b-a12b" : opts.Model;
+=======
         var client = httpClientFactory.CreateClient("groq");
         var model = string.IsNullOrWhiteSpace(opts.Model) ? "openai/gpt-oss-20b" : opts.Model;
+>>>>>>> origin/main:blue-ember-backend/Features/Agent/GroqAgentProvider.cs
         var url = $"{opts.BaseUrl.TrimEnd('/')}/chat/completions";
 
         var toolSpecs = JsonSerializer.SerializeToNode(
@@ -82,14 +93,17 @@ public sealed class GroqAgentProvider(
             }
             catch (JsonException ex)
             {
-                logger.LogError(ex, "Failed to parse Groq response");
-                throw new InvalidOperationException("Invalid response from Groq.");
+                logger.LogError(ex, "Failed to parse NVIDIA response");
+                throw new InvalidOperationException("Invalid response from NVIDIA.");
             }
 
             var apiError = root?["error"];
             if (apiError is not null)
             {
                 var msg = apiError["message"]?.GetValue<string>()
+<<<<<<< HEAD:blue-ember-backend/Features/Agent/NvidiaAgentProvider.cs
+                          ?? "NVIDIA API error";
+=======
                           ?? "Groq API error";
                 // Malformed tool JSON / transient provider errors mid-loop: keep tools already run.
                 if (round > 0 && IsRecoverableProviderError(msg, (int)httpResponse.StatusCode))
@@ -101,10 +115,15 @@ public sealed class GroqAgentProvider(
                     break;
                 }
 
+>>>>>>> origin/main:blue-ember-backend/Features/Agent/GroqAgentProvider.cs
                 throw new InvalidOperationException(msg);
             }
 
             if (!httpResponse.IsSuccessStatusCode)
+<<<<<<< HEAD:blue-ember-backend/Features/Agent/NvidiaAgentProvider.cs
+                throw new InvalidOperationException(
+                    $"NVIDIA HTTP {(int)httpResponse.StatusCode}: {Trim(body, 400)}");
+=======
             {
                 var msg = $"Groq HTTP {(int)httpResponse.StatusCode}: {Trim(body, 400)}";
                 if (round > 0 && IsRecoverableProviderError(msg, (int)httpResponse.StatusCode))
@@ -118,10 +137,11 @@ public sealed class GroqAgentProvider(
 
                 throw new InvalidOperationException(msg);
             }
+>>>>>>> origin/main:blue-ember-backend/Features/Agent/GroqAgentProvider.cs
 
             var message = root?["choices"]?[0]?["message"] as JsonObject;
             if (message is null)
-                throw new InvalidOperationException("Groq returned an empty choice.");
+                throw new InvalidOperationException("NVIDIA returned an empty choice.");
 
             var toolCalls = message["tool_calls"] as JsonArray;
             if (toolCalls is null || toolCalls.Count == 0)

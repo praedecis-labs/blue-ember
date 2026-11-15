@@ -26,8 +26,8 @@ builder.Services.AddCors(options =>
 builder.Services.Configure<NasaPsiOptions>(builder.Configuration.GetSection(NasaPsiOptions.SectionName));
 builder.Services.Configure<DataOptions>(builder.Configuration.GetSection(DataOptions.SectionName));
 builder.Services.Configure<AgentOptions>(builder.Configuration.GetSection(AgentOptions.SectionName));
+builder.Services.Configure<NvidiaOptions>(builder.Configuration.GetSection(NvidiaOptions.SectionName));
 builder.Services.Configure<GeminiOptions>(builder.Configuration.GetSection(GeminiOptions.SectionName));
-builder.Services.Configure<GroqOptions>(builder.Configuration.GetSection(GroqOptions.SectionName));
 builder.Services.Configure<JevOptions>(builder.Configuration.GetSection(JevOptions.SectionName));
 
 builder.Services.AddHttpClient<JevClient>((sp, client) =>
@@ -47,9 +47,9 @@ builder.Services.AddHttpClient<NasaPsiClient>((sp, client) =>
     client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
 });
 
-builder.Services.AddHttpClient("groq", (sp, client) =>
+builder.Services.AddHttpClient("nvidia", (sp, client) =>
 {
-    var opts = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<GroqOptions>>().Value;
+    var opts = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<NvidiaOptions>>().Value;
     client.BaseAddress = new Uri(opts.BaseUrl);
     client.Timeout = TimeSpan.FromSeconds(opts.TimeoutSeconds);
     client.DefaultRequestHeaders.Accept.ParseAdd("application/json");
@@ -71,10 +71,10 @@ builder.Services.AddScoped<JevValidationService>();
 builder.Services.AddSingleton<GapsQueryService>();
 builder.Services.AddSingleton<InvestigationQueryService>();
 builder.Services.AddScoped<AgentTools>();
+builder.Services.AddSingleton<NvidiaAgentProvider>();
+builder.Services.AddSingleton<IAgentProvider>(sp => sp.GetRequiredService<NvidiaAgentProvider>());
 builder.Services.AddSingleton<GeminiAgentProvider>();
 builder.Services.AddSingleton<IAgentProvider>(sp => sp.GetRequiredService<GeminiAgentProvider>());
-builder.Services.AddSingleton<GroqAgentProvider>();
-builder.Services.AddSingleton<IAgentProvider>(sp => sp.GetRequiredService<GroqAgentProvider>());
 builder.Services.AddSingleton<AgentProviderResolver>();
 builder.Services.AddScoped<NasaRefreshService>();
 builder.Services.AddHostedService<InvestigationCacheRefreshWorker>();

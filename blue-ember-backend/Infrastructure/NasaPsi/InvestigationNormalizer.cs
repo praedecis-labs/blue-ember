@@ -39,9 +39,13 @@ public static class InvestigationNormalizer
             }
         }
 
-        var doi = hwLink.Contains("doi.org", StringComparison.OrdinalIgnoreCase)
-            ? hwLink
-            : $"10.25923/nasa.{accession.ToLowerInvariant()}";
+        // Só registra DOI quando o hardware link aponta para doi.org de verdade;
+        // nunca fabricar um DOI a partir do accession (gerava links 404).
+        var doi = "";
+        var doiPrefix = "doi.org/";
+        var doiIdx = hwLink.IndexOf(doiPrefix, StringComparison.OrdinalIgnoreCase);
+        if (doiIdx >= 0)
+            doi = hwLink[(doiIdx + doiPrefix.Length)..].TrimEnd('/');
 
         var investigation = new Investigation
         {

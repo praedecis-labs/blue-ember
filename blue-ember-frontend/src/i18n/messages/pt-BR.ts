@@ -83,9 +83,15 @@ export const ptBR: MessageTree = {
     rerunSame: 'Refaça a análise com as mesmas condições.',
   },
   bubble: {
+<<<<<<< HEAD
+    thinking: 'Pensando…',
+    thinkingPanels: 'Carregando painéis…',
+    thinkingRanking: 'Pensando e consultando ranking…',
+=======
     thinking: 'Pensando com o agente de IA…',
     thinkingPanels: 'O agente respondeu · carregando ranking e lacunas da NASA…',
     thinkingRanking: 'Pensando com o agente de IA e consultando ranking…',
+>>>>>>> origin/main
     loadingRanking: 'Carregando ranking da API…',
     rankingFail: 'Falha ao carregar o ranking.',
     mostRelevant: 'Mais relevante:',

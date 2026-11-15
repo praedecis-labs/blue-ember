@@ -3,7 +3,7 @@
 **Goal:** the prototype in `src/chat/` stops being local mock only and consumes the .NET API with a stable contract, ready for hackathon demo.  
 **Current state:** UI/flow in React; **T1–T6** done (API in chat + demo export/polish). Next optional: T7 screens beyond chat.  
 **Out of this slice (hackathon):** real auth, pgvector, Planetary Computer.  
-**Agent:** `POST /api/agent/ask` (Gemini + tools) — see `blue-ember-backend/docs/AGENT-GEMINI.md`; chat uses agent prose with fallback to templates.
+**Agent:** `POST /api/agent/ask` (NVIDIA → Gemini fallback + tools) — see `blue-ember-backend/docs/AGENT-NVIDIA.md`; chat uses agent prose with fallback to templates.
 
 **ID map (align before integrating):**
 

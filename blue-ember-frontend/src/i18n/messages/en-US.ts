@@ -80,15 +80,25 @@ export const enUS = {
     rerunSame: 'Rerun the analysis with the same conditions.',
   },
   bubble: {
+<<<<<<< HEAD
+    thinking: 'Thinking…',
+    thinkingPanels: 'Loading panels…',
+    thinkingRanking: 'Thinking and loading ranking…',
+=======
     thinking: 'Thinking with the AI agent…',
     thinkingPanels: 'AI agent answered · loading NASA ranking and gaps…',
     thinkingRanking: 'Thinking with the AI agent and loading ranking…',
+>>>>>>> origin/main
     loadingRanking: 'Loading ranking from the API…',
     rankingFail: 'Failed to load ranking.',
     mostRelevant: 'Most relevant:',
     noneTop: 'No investigation at the top of the ranking.',
     agentLabel:
+<<<<<<< HEAD
+      'Agent reply · ranking/gaps tools · open sources in details',
+=======
       'AI agent reply · ranking/gaps tools · open sources in details',
+>>>>>>> origin/main
     localLabel:
       'Answer from local templates · scores from the API · sources in the details below',
     offTopicLabel: 'Scope check · no ranking run',

@@ -4,7 +4,7 @@ namespace BlueEmber.Api.Features.Agent;
 
 /// <summary>
 /// Declaração de tool neutra (JSON Schema subset). O formato serializado é
-/// compatível com function calling do Gemini; outros provedores podem
+/// compatível com function calling estilo OpenAI; outros provedores podem
 /// traduzir estes specs para o próprio schema.
 /// </summary>
 public sealed class AgentToolDeclaration

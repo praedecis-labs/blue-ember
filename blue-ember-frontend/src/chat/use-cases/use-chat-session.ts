@@ -153,7 +153,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
       weights: null,
       agentReply: false,
       dashboard: null,
-      // Etapa real inicial: a pergunta foi para o Gemini
+      // Etapa real inicial: a pergunta foi para o agente (LLM)
       loadingPhase: 'agent',
       coverageCells: null,
       missionTargets: null,
