@@ -71,6 +71,8 @@ export const enUS = {
     composerNote:
       'Scores, investigations and coverage come from NASA PSI data via our API. Answers are written by Gemini, or by local templates when the AI is offline.',
     writeHypothesis: 'Write your hypothesis or question.',
+    offTopicHypothesis:
+      'I can only help with fire safety in space habitats. Ask about materials, O₂, pressure, smoke detection, or ISS/Moon/Mars scenarios.',
     profileSwitched:
       'Profile switched to {{name}}. Reordered investigations with the new weights.',
     reorderForProfile: 'Reorder the ranking for the {{name}} profile.',
@@ -89,6 +91,7 @@ export const enUS = {
       'Answer by Gemini, based on the API ranking and gaps · sources in the details below',
     localLabel:
       'Answer from local templates · scores from the API · sources in the details below',
+    offTopicLabel: 'Scope check · no ranking run',
     yourHypothesis: 'Your hypothesis:',
     conditions: 'Conditions used',
     defaultCount: '{{n}} default',

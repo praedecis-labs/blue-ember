@@ -111,11 +111,10 @@ export type ChatMessage =
       rankingStatus: RequestStatus
       rankingError: string | null
       weights: CritWeights | null
-      /** True when `lead` came from Gemini agent prose (skip template summary). */
+      /** True when `lead` came from Gemini agent prose (skip templte summary). */
       agentReply?: boolean
-      /** Dynamic dashboard composed by the agent (typed widget catalog). */
+      offTopic?: boolean
       dashboard?: DashboardSpec | null
-      /** Raw gaps grid for heatmap widgets. */
       coverageCells?: CoverageCellDto[] | null
       missionTargets?: MissionTargetsDto | null
       /** Etapa real do carregamento: esperando o Gemini, o ranking (sem IA) ou os painéis. */

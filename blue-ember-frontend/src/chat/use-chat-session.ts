@@ -20,6 +20,7 @@ import type {
   QueryState,
   ScreenId,
 } from './types'
+import { isOnTopicHypothesis } from './on-topic'
 import {
   useChatHydration,
   type SessionSnap,
@@ -266,6 +267,35 @@ export function useChatSession(options: ChatSessionOptions = {}) {
     const text = raw.trim()
     if (text.length < 4) {
       setError(t('chat.writeHypothesis'))
+      return
+    }
+    if (!isOnTopicHypothesis(text)) {
+      setError(null)
+      setDraft('')
+      const base =
+        snap.q ?? buildQueryDefaults(environment, environmentsRef.current)
+      const userMsg: ChatMessage = {
+        kind: 'user',
+        id: `${reactId}-${nextId('u')}`,
+        text,
+      }
+      const aiMsg = makeAi(
+        t('chat.offTopicHypothesis'),
+        base,
+        [],
+        activeProfile,
+        null,
+      )
+      aiMsg.offTopic = true
+      aiMsg.rankingStatus = 'idle'
+      aiMsg.agentReply = true
+      const nextMessages = [...snap.messages, userMsg, aiMsg]
+      setMessages(nextMessages)
+      setScreen('chat')
+      syncSnap({
+        messages: nextMessages,
+        profile: activeProfile,
+      })
       return
     }
     setError(null)

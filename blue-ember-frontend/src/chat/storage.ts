@@ -9,6 +9,7 @@ import {
   toApiEnvironment,
   toApiProfile,
 } from './adapters'
+import { isOnTopicHypothesis } from './on-topic'
 import type {
   ClaimId,
   EnvId,
@@ -64,6 +65,7 @@ function sanitizeHistoryItem(raw: unknown, index: number): HistoryItem | null {
   if (!raw || typeof raw !== 'object') return null
   const h = raw as Record<string, unknown>
   if (typeof h.text !== 'string' || !h.text.trim()) return null
+  if (!isOnTopicHypothesis(h.text)) return null
   if (!isQueryState(h.q)) return null
   if (!isClaim(h.claim)) return null
   if (typeof h.top !== 'string') return null

@@ -62,6 +62,21 @@ export function AiBubble({
   const altMaterial =
     q.material === 'plastico' ? t('bubble.fabric') : t('bubble.acrylic')
 
+  if (msg.offTopic) {
+    return (
+      <div className="msg-ai" id={msg.id}>
+        <div className="head">
+          <span className="by">
+            <img className="avatar" src={LOGO_SRC} alt="" />
+            Blue Ember
+          </span>
+        </div>
+        {msg.lead ? <span className="why">{msg.lead}</span> : null}
+        <span className="ai-label">{t('bubble.offTopicLabel')}</span>
+      </div>
+    )
+  }
+
   return (
     <div className="msg-ai" id={msg.id}>
       <div className="head">

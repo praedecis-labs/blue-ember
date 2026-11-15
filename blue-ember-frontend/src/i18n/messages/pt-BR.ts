@@ -74,6 +74,8 @@ export const ptBR: MessageTree = {
     composerNote:
       'Notas, investigações e cobertura vêm dos dados do PSI da NASA pela nossa API. As respostas são escritas pelo Gemini, ou por modelos locais quando a IA está fora do ar.',
     writeHypothesis: 'Escreva sua hipótese ou pergunta.',
+    offTopicHypothesis:
+      'Só consigo ajudar com segurança contra incêndio em habitats espaciais. Pergunte sobre materiais, O₂, pressão, detecção de fumaça ou cenários ISS/Lua/Marte.',
     profileSwitched:
       'Perfil trocado para {{name}}. Reordenei as investigações com os novos pesos.',
     reorderForProfile: 'Reordene o ranking para o perfil {{name}}.',
@@ -92,6 +94,7 @@ export const ptBR: MessageTree = {
       'Resposta do Gemini, com base no ranking e nas lacunas da API · fontes nos detalhes abaixo',
     localLabel:
       'Resposta por modelos locais · notas da API · fontes nos detalhes abaixo',
+    offTopicLabel: 'Checagem de escopo · ranking não executado',
     yourHypothesis: 'Sua hipótese:',
     conditions: 'Condições usadas',
     defaultCount: '{{n}} padrão',
