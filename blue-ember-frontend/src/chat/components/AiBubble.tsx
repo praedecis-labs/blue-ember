@@ -23,7 +23,14 @@ export function AiBubble({
   const t = useT()
   const [openPanel, setOpenPanel] = useState<PanelId | null>(null)
   const { q, r, missing, rankingStatus, rankingError } = msg
-  const best = r.top[0]
+
+  // Texto do carregamento = etapa real em andamento (não é ilustrativo)
+  const loadingText =
+    msg.loadingPhase === 'ranking'
+      ? t('bubble.loadingRanking')
+      : msg.loadingPhase === 'panels' || msg.agentReply
+        ? t('bubble.thinkingPanels')
+        : t('bubble.thinking')
 
   function toggle(panel: PanelId) {
     setOpenPanel((cur) => (cur === panel ? null : panel))
@@ -63,38 +70,114 @@ export function AiBubble({
           Blue Ember
         </span>
       </div>
-      {msg.lead ? <span className="why">{msg.lead}</span> : null}
-      <div className={`verdict-big ${verdictTone}`} role="status">
-        <span className="kicker">{verdictKicker}</span>
-        <span className="title">{verdictTitle}</span>
-      </div>
-      {!msg.agentReply && rankingStatus !== 'loading' ? (
-        <p className="summary">{summaryFor(q, r, t)}</p>
-      ) : null}
       {rankingStatus === 'loading' ? (
-        <span className="best">
-          {msg.agentReply
-            ? t('bubble.thinkingPanels')
-            : t('bubble.thinkingRanking')}
-        </span>
-      ) : rankingStatus === 'error' ? (
-        <span className="best" role="alert">
-          {rankingError ?? t('bubble.rankingFail')}
-        </span>
-      ) : best ? (
-        <span className="best">
-          {t('bubble.mostRelevant')} <b>{best.name}</b> ({best.id}) ·{' '}
-          {t('panels.scoreNote', { n: f1(best.nota) })} · {best.where}
-        </span>
+        // Carregando: um bloco só, sem veredito nem números antes da resposta chegar
+        <div className="answer-loading" role="status" aria-live="polite">
+          <span className="kicker">
+            <span className="spinner" aria-hidden />
+            <span key={loadingText} className="step-text">
+              {loadingText}
+            </span>
+          </span>
+          <div className="skel-stack" aria-hidden>
+            <div className="skel-line title" />
+            <div className="skel-line" />
+            <div className="skel-line short" />
+          </div>
+        </div>
       ) : (
-        <span className="best">{t('bubble.noneTop')}</span>
+        <>
+          {/* 1. Veredito compacto primeiro: dá o contexto sem roubar a cena */}
+          {rankingStatus === 'ok' ? (
+            <div className={`verdict-big ${verdictTone}`} role="status">
+              <span className="kicker">{verdictKicker}</span>
+              <span className="title">{verdictTitle}</span>
+            </div>
+          ) : null}
+          {/* 2. A resposta: texto da IA ou, sem IA, o resumo local.
+              Esconde o "pensando…" provisório se ele sobrar no modo sem IA */}
+          {msg.agentReply && msg.lead ? (
+            <p className="summary">{msg.lead}</p>
+          ) : (
+            <>
+              {msg.lead && msg.lead !== t('bubble.thinking') ? (
+                <span className="why">{msg.lead}</span>
+              ) : null}
+              {rankingStatus === 'ok' ? (
+                <p className="summary">{summaryFor(q, r, t)}</p>
+              ) : null}
+            </>
+          )}
+          {/* 3. As investigações da NASA à vista, não só dentro do painel */}
+          {rankingStatus === 'error' ? (
+            <span className="best" role="alert">
+              {rankingError ?? t('bubble.rankingFail')}
+            </span>
+          ) : r.top.length ? (
+            <div className="top-inv">
+              <span className="top-inv-label">{t('bubble.investigations')}</span>
+              <ol>
+                {r.top.slice(0, 3).map((d, i) => (
+                  <li key={d.id}>
+                    <button
+                      type="button"
+                      className="top-inv-row"
+                      aria-expanded={openPanel === 'inv'}
+                      onClick={() => toggle('inv')}
+                    >
+                      <span className="rank">{i + 1}</span>
+                      <span className="name">
+                        <b>{d.name}</b>
+                        <small>
+                          {d.id}
+                          {d.where ? ` · ${d.where}` : ''}
+                        </small>
+                      </span>
+                      <span className="score">
+                        {t('panels.scoreNote', { n: f1(d.nota) })}
+                      </span>
+                    </button>
+                    {/* Link direto para a página oficial da investigação no PSI da NASA */}
+                    <a
+                      className="top-inv-link"
+                      href={
+                        d.nasaPsiUrl ||
+                        `https://psi.nasa.gov/physci/repo/data/investigations/${d.id}`
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={t('panels.onPsi', { id: d.id })}
+                      title={t('panels.onPsi', { id: d.id })}
+                    >
+                      <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden>
+                        <path
+                          d="M6 3h7v7M13 3 4 12"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ) : (
+            <span className="best">{t('bubble.noneTop')}</span>
+          )}
+          <span className="ai-label">
+            {msg.agentReply ? t('bubble.agentLabel') : t('bubble.localLabel')}
+          </span>
+          {msg.dashboard && rankingStatus === 'ok' ? (
+            <HypothesisDashboard spec={msg.dashboard} top={r.top} />
+          ) : null}
+        </>
       )}
-      <span className="ai-label">
-        {msg.agentReply ? t('bubble.agentLabel') : t('bubble.localLabel')}
-      </span>
-      {msg.dashboard && rankingStatus === 'ok' ? (
-        <HypothesisDashboard spec={msg.dashboard} top={r.top} />
-      ) : null}
+      {/* Painéis e perguntas de continuação só depois que a resposta chega */}
+      {rankingStatus !== 'loading' ? (
+        <>
       <div className="details" role="group" aria-label={t('panels.detailsAria')}>
         <button
           type="button"
@@ -193,6 +276,8 @@ export function AiBubble({
           {t('bubble.dashboardChipLabel')}
         </button>
       </div>
+        </>
+      ) : null}
     </div>
   )
 }
