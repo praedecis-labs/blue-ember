@@ -1,0 +1,97 @@
+export type ProfileId = 'eng' | 'pesq' | 'est'
+export type EnvId = 'lua' | 'marte' | 'iss'
+export type MaterialId = 'tecido' | 'plastico' | 'liquido'
+export type GoalId = 'prevenir' | 'detectar' | 'apagar'
+export type ThickId = 'fina' | 'grossa' | ''
+export type DirId = 'favor' | 'contra' | ''
+export type GasId = 'co2' | 'he' | 'n2' | ''
+export type ClaimId = 'safe' | 'risky' | null
+export type EvidenceLevel = 'strong' | 'moderate' | 'weak' | 'unknown'
+export type ScreenId = 'profile' | 'home' | 'chat'
+export type ThemeId = 'light' | 'dark'
+export type PanelId = 'cond' | 'inv' | 'ev' | 'gaps' | 'src'
+export type CritKey = 'prox' | 'moc' | 'spread' | 'hrr' | 'tox'
+
+export type QueryState = {
+  env: EnvId
+  material: MaterialId
+  o2: number
+  psi: number
+  flow: number
+  thick: ThickId
+  dir: DirId
+  gas: GasId
+  goal: GoalId
+}
+
+export type ParseResult = {
+  env: EnvId | null
+  material: MaterialId | null
+  o2: number | null
+  psi: number | null
+  flow: number | null
+  thick: ThickId | null
+  dir: DirId | null
+  gas: GasId | null
+  goal: GoalId | null
+  claim: ClaimId
+}
+
+export type Investigation = {
+  id: string
+  name: string
+  what: string
+  materials: MaterialId[]
+  o2: [number, number]
+  flow: [number, number]
+  thick: Array<'fina' | 'grossa'>
+  gases: Array<'co2' | 'he' | 'n2'>
+  goal: GoalId
+  where: string
+  doi: string | null
+  c: { moc: number | null; spread: number | null; hrr: number | null; tox: number | null }
+}
+
+export type ScoredInvestigation = Investigation & {
+  vals: Record<CritKey, number | null>
+  nota: number
+  have: number
+}
+
+export type ComputeResult = {
+  top: ScoredInvestigation[]
+  level: [EvidenceLevel, string]
+  gaps: string[]
+  near: number
+  maxO2: number
+  above: boolean
+  partialG: boolean
+}
+
+export type HistoryItem = {
+  id: string
+  when: string
+  text: string
+  claim: ClaimId
+  q: QueryState
+  level: [EvidenceLevel, string]
+  top: string
+}
+
+export type ChatMessage =
+  | { kind: 'user'; id: string; text: string }
+  | {
+      kind: 'ai'
+      id: string
+      lead: string
+      q: QueryState
+      missing: string[]
+      r: ComputeResult
+      prof: ProfileId
+      verdict: [EvidenceLevel, string] | null
+    }
+
+export type PersistedState = {
+  profile: ProfileId | null
+  history: HistoryItem[]
+}

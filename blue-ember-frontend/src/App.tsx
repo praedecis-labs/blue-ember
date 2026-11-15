@@ -1,7 +1,7 @@
-import { HomePage } from '@/pages/HomePage'
+import { ChatApp } from '@/chat/ChatApp'
 
 function App() {
-  return <HomePage />
+  return <ChatApp />
 }
 
 export default App
