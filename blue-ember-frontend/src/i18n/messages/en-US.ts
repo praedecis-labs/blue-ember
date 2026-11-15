@@ -1,5 +1,6 @@
 export const enUS = {
   nav: {
+    language: 'Language',
     home: 'Home',
     newAnalysis: 'New analysis',
     profile: 'Profile',
@@ -11,6 +12,11 @@ export const enUS = {
     switchProfile: 'Switch profile',
   },
   header: {
+    profileLabel: 'Profile:',
+    profileHint: 'Change who is asking (changes the ranking weights)',
+    export: 'Export',
+    exportMenuCsv: 'CSV (spreadsheet)',
+    exportMenuJson: 'JSON (data)',
     apiLoading: 'API…',
     apiOnline: 'API online',
     apiOffline: 'API offline',

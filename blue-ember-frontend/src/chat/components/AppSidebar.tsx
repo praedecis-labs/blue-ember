@@ -1,4 +1,4 @@
-import { House, MessageSquarePlus, Moon, Sun } from 'lucide-react'
+import { House, Languages, Moon, Plus, Sun } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -57,9 +57,19 @@ export function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{t('nav.analyses')}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
+              {/* Ação principal no topo, como o "Novo chat" do Gemini/ChatGPT */}
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={onNew}
+                  tooltip={t('nav.newAnalysis')}
+                  className="sidebar-new bg-[#E7F434] font-semibold text-[#151622] hover:bg-[#F0FA6A] hover:text-[#151622] active:bg-[#E7F434] active:text-[#151622]"
+                >
+                  <Plus />
+                  <span>{t('nav.newAnalysis')}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   isActive={screen === 'home'}
@@ -68,16 +78,6 @@ export function AppSidebar({
                 >
                   <House />
                   <span>{t('nav.home')}</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  isActive={screen === 'chat'}
-                  onClick={onNew}
-                  tooltip={t('nav.newAnalysis')}
-                >
-                  <MessageSquarePlus />
-                  <span>{t('nav.newAnalysis')}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -108,17 +108,17 @@ export function AppSidebar({
           <SidebarMenuItem>
             <SidebarMenuButton
               tooltip={t('header.toggleLang')}
+              aria-label={t('header.toggleLang')}
               onClick={() =>
                 setLocale(locale === 'en-US' ? 'pt-BR' : 'en-US')
               }
             >
-              <span className="font-semibold text-xs tracking-wide">
-                {locale === 'en-US' ? 'EN' : 'PT'}
-              </span>
-              <span>
-                {locale === 'en-US' ? t('header.langEn') : t('header.langPt')}
-                {' · '}
-                {locale === 'en-US' ? t('header.langPt') : t('header.langEn')}
+              <Languages />
+              <span>{t('nav.language')}</span>
+              {/* EN | PT, com o idioma atual destacado */}
+              <span className="ml-auto inline-flex gap-0.5 rounded-md bg-white/10 p-0.5 text-[11px] font-semibold tracking-wide">
+                <span className={locale === 'en-US' ? 'rounded bg-white/25 px-1.5 text-white' : 'px-1.5 opacity-70'}>EN</span>
+                <span className={locale === 'pt-BR' ? 'rounded bg-white/25 px-1.5 text-white' : 'px-1.5 opacity-70'}>PT</span>
               </span>
             </SidebarMenuButton>
           </SidebarMenuItem>
