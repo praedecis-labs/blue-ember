@@ -1,5 +1,21 @@
+import axios from 'axios'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { ApiError, buildQuery, requestJson } from './http'
+
+vi.mock('axios', () => ({
+  default: {
+    request: vi.fn(),
+  },
+  isAxiosError: (error: unknown) =>
+    Boolean(
+      error &&
+        typeof error === 'object' &&
+        'isAxiosError' in error &&
+        (error as { isAxiosError?: boolean }).isAxiosError,
+    ),
+}))
+
+const mockedRequest = vi.mocked(axios.request)
 
 describe('buildQuery', () => {
   it('returns empty string when params missing or empty', () => {
@@ -23,33 +39,34 @@ describe('buildQuery', () => {
 
 describe('requestJson', () => {
   afterEach(() => {
-    vi.unstubAllGlobals()
-    vi.restoreAllMocks()
+    vi.clearAllMocks()
   })
 
   it('returns parsed JSON on success', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: true,
-        json: async () => ({ status: 'ok', service: 'BlueEmber.Api' }),
-      }),
-    )
+    mockedRequest.mockResolvedValue({
+      data: { status: 'ok', service: 'BlueEmber.Api' },
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {},
+    })
 
     const data = await requestJson<{ status: string }>('/api/health')
     expect(data.status).toBe('ok')
-    expect(fetch).toHaveBeenCalledWith('/api/health', undefined)
+    expect(mockedRequest).toHaveBeenCalledWith({
+      url: '/api/health',
+    })
   })
 
   it('throws ApiError with ErrorResponse body on 400', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({
-        ok: false,
+    const axiosError = {
+      isAxiosError: true,
+      response: {
         status: 400,
-        json: async () => ({ error: 'Invalid profile.', missing: ['profile'] }),
-      }),
-    )
+        data: { error: 'Invalid profile.', missing: ['profile'] },
+      },
+    }
+    mockedRequest.mockRejectedValue(axiosError)
 
     const err = await requestJson('/api/ranking').catch((e: unknown) => e)
     expect(err).toBeInstanceOf(ApiError)

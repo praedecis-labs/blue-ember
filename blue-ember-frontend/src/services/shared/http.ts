@@ -1,3 +1,4 @@
+import axios, { type AxiosRequestConfig, isAxiosError } from 'axios'
 import type { ErrorResponse } from './contracts'
 
 export class ApiError extends Error {
@@ -15,7 +16,6 @@ export class ApiError extends Error {
 
 export type QueryValue = string | number | boolean | undefined | null
 
-/** Build `?a=1&b=2` from a params object; omits null/undefined. */
 export function buildQuery(params?: Record<string, QueryValue>): string {
   if (!params) return ''
   const search = new URLSearchParams()
@@ -27,37 +27,61 @@ export function buildQuery(params?: Record<string, QueryValue>): string {
   return qs ? `?${qs}` : ''
 }
 
-async function parseErrorBody(response: Response): Promise<ErrorResponse | null> {
-  try {
-    const data: unknown = await response.json()
-    if (
-      data !== null &&
-      typeof data === 'object' &&
-      'error' in data &&
-      typeof (data as ErrorResponse).error === 'string'
-    ) {
-      return data as ErrorResponse
-    }
-  } catch {
-    // non-JSON body
+function asErrorBody(data: unknown): ErrorResponse | null {
+  if (
+    data !== null &&
+    typeof data === 'object' &&
+    'error' in data &&
+    typeof (data as ErrorResponse).error === 'string'
+  ) {
+    return data as ErrorResponse
   }
   return null
 }
 
-export async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(path, init)
-  if (!response.ok) {
-    const body = await parseErrorBody(response)
-    throw new ApiError(response.status, body)
+function toAxiosConfig(init?: RequestInit): AxiosRequestConfig {
+  if (!init) return {}
+  const headers =
+    init.headers instanceof Headers
+      ? Object.fromEntries(init.headers.entries())
+      : (init.headers as AxiosRequestConfig['headers'])
+
+  return {
+    method: init.method,
+    headers,
+    data: init.body,
+    signal: init.signal ?? undefined,
   }
-  return response.json() as Promise<T>
+}
+
+function throwApiError(error: unknown): never {
+  if (isAxiosError(error) && error.response) {
+    throw new ApiError(error.response.status, asErrorBody(error.response.data))
+  }
+  throw error
+}
+
+export async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
+  try {
+    const { data } = await axios.request<T>({
+      url: path,
+      ...toAxiosConfig(init),
+    })
+    return data
+  } catch (error) {
+    throwApiError(error)
+  }
 }
 
 export async function requestBlob(path: string, init?: RequestInit): Promise<Blob> {
-  const response = await fetch(path, init)
-  if (!response.ok) {
-    const body = await parseErrorBody(response)
-    throw new ApiError(response.status, body)
+  try {
+    const { data } = await axios.request<Blob>({
+      url: path,
+      responseType: 'blob',
+      ...toAxiosConfig(init),
+    })
+    return data
+  } catch (error) {
+    throwApiError(error)
   }
-  return response.blob()
 }
