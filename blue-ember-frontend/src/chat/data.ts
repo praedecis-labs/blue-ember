@@ -223,4 +223,4 @@ export const MAIN_KEYS: Array<[keyof QueryState, string]> = [
 
 export const EXTRA_KEYS = ['thick', 'dir', 'gas', 'goal'] as const
 
-export const LOGO_SRC = '/stellarhub-logo.png'
+export const LOGO_SRC = '/chama-traco-unico-escuro.svg'

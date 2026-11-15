@@ -1,5 +1,5 @@
 import type { HealthStatus } from '@/services/health'
-import { LOGO_SRC, PROFILES } from '../data'
+import { PROFILES } from '../data'
 import type { ProfileId, ScreenId, ThemeId } from '../types'
 
 type Props = {
@@ -32,19 +32,6 @@ export function ChatHeader({
 
   return (
     <header>
-      <span className="brand">
-        <img
-          className="logo"
-          src={LOGO_SRC}
-          alt="StellarHub"
-          width={44}
-          height={44}
-        />
-        <span className="brand-text">
-          <b>Blue Ember</b>
-          <small>by StellarHub</small>
-        </span>
-      </span>
       <nav>
         <button
           type="button"

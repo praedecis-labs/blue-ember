@@ -1,0 +1,334 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e8]:
+          - button "The NASA Space Apps Challenge is happening now! 🎉" [ref=e10]
+          - paragraph [ref=e14]:
+            - text: Have a question? Join us on
+            - link "Space Apps Connect" [ref=e15] [cursor=pointer]:
+              - /url: https://github.com/nasa/spaceapps
+            - text: .
+        - generic [ref=e20]:
+          - link [ref=e23] [cursor=pointer]:
+            - /url: /
+            - img "Space Apps Logo 2026 color" [ref=e24]
+          - navigation [ref=e26]:
+            - button [ref=e27] [cursor=pointer]
+      - generic [ref=e29]:
+        - generic [ref=e39]:
+          - heading "The 2026 NASA Space Apps Challenge is happening now!" [level=2] [ref=e40]
+          - paragraph [ref=e41]: There's still time to register for the largest annual global hackathon on November 14-15.
+          - paragraph [ref=e42]:
+            - link "REGISTER NOW!" [ref=e43] [cursor=pointer]:
+              - /url: https://www.spaceappschallenge.org/2026/
+        - generic [ref=e47]:
+          - generic [ref=e51]:
+            - generic [ref=e52]:
+              - img "NASA Logo" [ref=e54]
+              - heading "In partnership with" [level=2] [ref=e55]
+            - generic [ref=e59]:
+              - link [ref=e64] [cursor=pointer]:
+                - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                - img "The logo for the Angola National Space Programme Management Office are the letters GGPEN in blue with a satellite circling it." [ref=e68]
+              - link [ref=e73] [cursor=pointer]:
+                - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                - img "CONAE logo2.original" [ref=e77]
+              - generic [ref=e81]:
+                - link "Bahrain_Space_Agency_Logo2.original":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "Bahrain_Space_Agency_Logo2.original"
+              - generic [ref=e85]:
+                - link "Brazilian Space Agency logo":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "Brazilian Space Agency logo"
+              - generic [ref=e89]:
+                - link "CSA vertical logo":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "CSA vertical logo"
+              - generic [ref=e93]:
+                - link "esa_2026_logo_large.original":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "esa_2026_logo_large.original"
+              - generic [ref=e97]:
+                - link "Indian Space Research Organization":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "Indian Space Research Organization"
+              - generic [ref=e101]:
+                - link "Italian Space Agency":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "Italian Space Agency"
+              - generic [ref=e105]:
+                - link "JAXA_logo_square":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "JAXA_logo_square"
+              - generic [ref=e109]:
+                - link "KASA logo":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "KASA logo"
+              - generic [ref=e113]:
+                - link "NASRDA logo_transparent":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "NASRDA logo_transparent"
+              - generic [ref=e117]:
+                - link "Paraguay Space Agency square":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "Paraguay Space Agency square"
+              - generic [ref=e121]:
+                - link "The logo for the Senegalese Space Studies Agency features a shooting star above a black‑and‑white Earth, with the star’s green, yellow, and red striped tail streaking across a blue sky.":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "The logo for the Senegalese Space Studies Agency features a shooting star above a black‑and‑white Earth, with the star’s green, yellow, and red striped tail streaking across a blue sky."
+              - generic [ref=e125]:
+                - link "Spain Space Agency logo square":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "Spain Space Agency logo square"
+              - generic [ref=e129]:
+                - link "Turkish Space Agency logo square":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "Turkish Space Agency logo square"
+              - generic [ref=e133]:
+                - link "MBRSC LOGO":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "MBRSC LOGO"
+              - generic [ref=e137]:
+                - link "UKSA logo square":
+                  - /url: https://www.spaceappschallenge.org/2026/space-agency-partners/
+                  - generic:
+                    - generic:
+                      - generic:
+                        - img "UKSA logo square"
+          - generic [ref=e140]:
+            - img "rose-pattern" [ref=e142]
+            - generic [ref=e144]:
+              - generic [ref=e148]:
+                - heading "JOIN NASA SPACE APPS CHALLENGE NOVEMBER 14-15, 2026" [level=2] [ref=e149]
+                - paragraph [ref=e150]: The NASA Space Apps Challenge offers opportunities for anyone with an interest in space and science to address real-world challenges through our annual hackathon and global community. All ages, skill levels, and professional backgrounds are welcome. At NASA Space Apps, there's always space for one more!
+              - generic [ref=e155]:
+                - generic [ref=e157]:
+                  - img "Two women wearing NASA Space Apps Albuquerque shirts smile facing the camera in a lobby area." [ref=e159]
+                  - img "Three men are sitting at a long table with laptops while two men standing behind them looking at the screens and smiling during a NASA Space Apps Challenge Local Event." [ref=e161]
+                - generic [ref=e163]:
+                  - heading "Real-World Challenges" [level=3] [ref=e164]
+                  - paragraph [ref=e165]: The annual NASA Space Apps Challenge provides the opportunity to engage directly with NASA’s data, along with Space Agency Partner data. During the two-day hackathon, teams use this data to address challenges written by NASA Subject Matter Experts, featuring topics including storytelling, software development, astrophysics, space exploration, agriculture, and more.
+              - blockquote [ref=e170]:
+                - generic [ref=e171]: “I believe it is paramount to give the next generation of scientists, engineers, designers, and more from across the world a chance to contribute to NASA’s overall mission. The NASA Space Apps Challenge provides this opportunity by giving people – from all backgrounds and walks of life – a way to engage directly with NASA scientists and open data,” said Dr. Nicky Fox, Associate Administrator for NASA’s Science Mission Directorate.
+              - generic [ref=e176]:
+                - generic [ref=e178]:
+                  - img "Six people are gathered around a laptop on a desk looking at the screen during a NASA Space Apps Challenge Local Event." [ref=e180]
+                  - img "Six people are sitting in chairs around a rectangular table holding a conversation at a NASA Space Apps Challenge event." [ref=e182]
+                - generic [ref=e184]:
+                  - heading "Meet like-minded individuals" [level=3] [ref=e185]
+                  - paragraph [ref=e186]: When you participate in NASA Space Apps, you join a community that shares a desire to propel humanity forward through scientific and technological innovation.
+              - blockquote [ref=e191]:
+                - generic [ref=e192]: “The NASA Space Apps Challenge changed my perspective on NASA’s data. I realized there are so many different datasets, and we can use them to make solutions that matter here on Earth or even in space.” - Space Apps Participant
+          - generic [ref=e194]:
+            - generic [ref=e196]:
+              - heading "2025 NASA Space Apps Challenge Global Winners" [level=2] [ref=e197]
+              - paragraph [ref=e199]: Each year, thousands of teams submit projects that demonstrate collaboration, creativity, and address challenges we face on Earth and in space using NASA data. These projects undergo multiple rounds of judging to determine the 10 Global Winners, representing the most innovative projects submitted by participants.
+            - generic [ref=e201]:
+              - generic [ref=e202]:
+                - link [ref=e205] [cursor=pointer]:
+                  - /url: /2025/find-a-team/spacegenes/
+                  - generic [ref=e206]:
+                    - heading [level=3] [ref=e207]:
+                      - img "Award - Best Use of Science" [ref=e208]
+                      - text: Best Use of Science
+                    - img "spacegenes-blue-2025globalwinner" [ref=e209]
+                    - heading "SpaceGenes+" [level=2] [ref=e210]
+                    - paragraph [ref=e211]: "Local Event: Berlin, GermanyChallenge: Build a Space Biology Knowledge Engine"
+                - link [ref=e214] [cursor=pointer]:
+                  - /url: /2025/find-a-team/resonant-exoplanets/
+                  - generic [ref=e215]:
+                    - heading [level=3] [ref=e216]:
+                      - img "Award - Best Use of Data" [ref=e217]
+                      - text: Best Use of Data
+                    - img "Resonant Exoplanets-2025globalwinner" [ref=e218]
+                    - heading "Resonant Exoplanets" [level=2] [ref=e219]
+                    - paragraph [ref=e220]: "Local Event: Mountain View, CAChallenge: A World Away: Hunting for Exoplanets with AI"
+                - link [ref=e223] [cursor=pointer]:
+                  - /url: /2025/find-a-team/zumorroda-x/
+                  - generic [ref=e224]:
+                    - heading [level=3] [ref=e225]:
+                      - img "Award - Art & Technology" [ref=e226]
+                      - text: Art & Technology
+                    - img "zumorrodax-2025globalwinner" [ref=e227]
+                    - heading "Zumorroda-X" [level=2] [ref=e228]
+                    - paragraph [ref=e229]: "Local Event: Cairo, EgyptChallenge: NASA Farm Navigators: Using NASA Data Exploration in Agriculture"
+                - link [ref=e232] [cursor=pointer]:
+                  - /url: /2025/find-a-team/twisters/
+                  - generic [ref=e233]:
+                    - heading [level=3] [ref=e234]:
+                      - img "Award - Best Use of Technology" [ref=e235]
+                      - text: Best Use of Technology
+                    - img "twisters-2025globalwinner" [ref=e236]
+                    - heading "Twisters" [level=2] [ref=e237]
+                    - paragraph [ref=e238]: "Local Event: Monterrey, MexicoChallenge: Will It Rain On My Parade?"
+                - link [ref=e241] [cursor=pointer]:
+                  - /url: /2025/find-a-team/astro-sweepers-we-catch-what-space-leaves-behind/
+                  - generic [ref=e242]:
+                    - heading [level=3] [ref=e243]:
+                      - img "Award - Galactic Impact" [ref=e244]
+                      - text: Galactic Impact
+                    - img "astrosweepers-blue-2025globalwinner" [ref=e245]
+                    - heading "Astro Sweepers - We Catch What Space Leaves Behind" [level=2] [ref=e246]
+                    - paragraph [ref=e247]: "Local Event: Universal EventChallenge: Commercializing Low Earth Orbit (LEO)"
+                - link [ref=e250] [cursor=pointer]:
+                  - /url: /2025/find-a-team/pureflow2/
+                  - generic [ref=e251]:
+                    - heading [level=3] [ref=e252]:
+                      - img "Award - Best Mission Concept" [ref=e253]
+                      - text: Best Mission Concept
+                    - img "pureflow-2025globalwinner" [ref=e254]
+                    - heading "PureFlow" [level=2] [ref=e255]
+                    - paragraph [ref=e256]: "Local Event: Aracaju, BrazilChallenge: Your Home in Space: The Habitat Layout Creator"
+                - link [ref=e259] [cursor=pointer]:
+                  - /url: /2025/find-a-team/photonic-force/
+                  - generic [ref=e260]:
+                    - heading [level=3] [ref=e261]:
+                      - img "Award - Most Inspirational" [ref=e262]
+                      - text: Most Inspirational
+                    - img "Photonics Odyssey-2025globalwinner" [ref=e263]
+                    - heading "Photonics Odyssey" [level=2] [ref=e264]
+                    - paragraph [ref=e265]: "Local Event: Chennai, IndiaChallenge: Commercializing Low Earth Orbit (LEO)"
+                - link [ref=e268] [cursor=pointer]:
+                  - /url: /2025/find-a-team/hercode-space/
+                  - generic [ref=e269]:
+                    - heading [level=3] [ref=e270]:
+                      - img "Award - Best Use of Storytelling" [ref=e271]
+                      - text: Best Use of Storytelling
+                    - img "hercode space-2025globalwinner" [ref=e272]
+                    - heading "HerCode Space" [level=2] [ref=e273]
+                    - paragraph [ref=e274]: "Local Event: Universal EventChallenge: Stellar Stories: Space Weather Through the Eyes of Earthlings"
+                - link [ref=e277] [cursor=pointer]:
+                  - /url: /2025/find-a-team/gaialeo/
+                  - generic [ref=e278]:
+                    - heading [level=3] [ref=e279]:
+                      - img "Award - Global Connection" [ref=e280]
+                      - text: Global Connection
+                    - img "gaialeo-2025globalwinner" [ref=e281]
+                    - heading "Gaia+LEO" [level=2] [ref=e282]
+                    - paragraph [ref=e283]: "Local Event: Seattle, WAChallenge: Commercializing Low Earth Orbit (LEO)"
+                - link [ref=e286] [cursor=pointer]:
+                  - /url: /2025/find-a-team/watana-project/
+                  - generic [ref=e287]:
+                    - heading [level=3] [ref=e288]:
+                      - img "Award - Local Impact" [ref=e289]
+                      - text: Local Impact
+                    - img "quenaris-2025globalwinner" [ref=e290]
+                    - heading "QUEÑARIS" [level=2] [ref=e291]
+                    - paragraph [ref=e292]: "Local Event: Arequipa, PeruChallenge: BloomWatch: An Earth Observation Application for Global Flowering Phenology"
+              - generic [ref=e293]:
+                - button "Previous" [disabled]
+                - generic [ref=e294]: 1/4
+                - generic [ref=e295]:
+                  - generic [ref=e296] [cursor=pointer]
+                  - generic [ref=e297] [cursor=pointer]
+                  - generic [ref=e298] [cursor=pointer]
+                  - generic [ref=e299] [cursor=pointer]
+                - button "Next" [ref=e300] [cursor=pointer]
+          - generic [ref=e305]:
+            - img "binary" [ref=e307]
+            - generic [ref=e313]:
+              - heading "NASA SPACE APPS BY THE NUMBERS" [level=2] [ref=e314]
+              - paragraph [ref=e316]:
+                - text: Statistics are cumulative over the entire history of the NASA Space Apps Challenge.
+                - link "Click here" [ref=e317] [cursor=pointer]:
+                  - /url: https://www.spaceappschallenge.org/about/results-and-metrics/
+                - text: to see event-specific results and metrics.
+              - generic [ref=e318]:
+                - generic [ref=e319]:
+                  - heading "487k+" [level=3] [ref=e320]
+                  - heading "Registrations" [level=4] [ref=e321]
+                - generic [ref=e322]:
+                  - heading "3,400+" [level=3] [ref=e323]
+                  - heading "Local Events" [level=4] [ref=e324]
+                - generic [ref=e325]:
+                  - heading "190+" [level=3] [ref=e326]
+                  - heading "Countries / Territories" [level=4] [ref=e327]
+                - generic [ref=e328]:
+                  - heading "17" [level=3] [ref=e329]
+                  - heading "Space Agency Partners" [level=4] [ref=e330]
+      - generic [ref=e333]:
+        - paragraph [ref=e341]:
+          - text: NASA Space Apps is funded by NASA's
+          - link "Science Mission Directorate" [ref=e342] [cursor=pointer]:
+            - /url: https://science.nasa.gov/
+          - text: through a contract with
+          - link "Booz Allen Hamilton" [ref=e343] [cursor=pointer]:
+            - /url: https://www.boozallen.com/
+          - text: ","
+          - link "Mindgrub" [ref=e347] [cursor=pointer]:
+            - /url: https://www.mindgrub.com/
+          - text: ", and"
+          - link "SecondMuse" [ref=e351] [cursor=pointer]:
+            - /url: https://www.secondmuse.com/
+          - text: .Copyright ©2026 NASA |
+          - link "Privacy Policy" [ref=e355] [cursor=pointer]:
+            - /url: https://www.nasa.gov/about/highlights/HP_Privacy.html
+          - text: "|"
+          - link "Legal" [ref=e356] [cursor=pointer]:
+            - /url: https://www.spaceappschallenge.org/legal/
+          - text: "|"
+          - link "Contact" [ref=e357] [cursor=pointer]:
+            - /url: https://www.spaceappschallenge.org/contact-us/
+          - text: "|"
+          - link "Resources" [ref=e358] [cursor=pointer]:
+            - /url: https://www.spaceappschallenge.org/resources/
+        - generic [ref=e360]:
+          - 'heading "Connect with #SpaceApps" [level=2] [ref=e361]'
+          - list [ref=e362]:
+            - listitem [ref=e363]:
+              - link [ref=e364] [cursor=pointer]:
+                - /url: https://www.facebook.com/spaceappschallenge
+            - listitem [ref=e367]:
+              - link [ref=e368] [cursor=pointer]:
+                - /url: https://www.twitter.com/spaceapps
+            - listitem [ref=e371]:
+              - link [ref=e372] [cursor=pointer]:
+                - /url: https://www.instagram.com/nasa_spaceapps
+            - listitem [ref=e375]:
+              - link [ref=e376] [cursor=pointer]:
+                - /url: https://www.youtube.com/nasaspaceappschallenge
+  - alert [ref=e379]

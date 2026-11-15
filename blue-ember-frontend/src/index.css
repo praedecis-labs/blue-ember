@@ -1,3 +1,131 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *, [data-theme='dark'] *));
+
+:root {
+  --radius: 0.625rem;
+  --background: #f1f2f6;
+  --foreground: #1b1b1b;
+  --card: #ffffff;
+  --card-foreground: #1b1b1b;
+  --popover: #ffffff;
+  --popover-foreground: #1b1b1b;
+  --primary: #0050d8;
+  --primary-foreground: #ffffff;
+  --secondary: #eceef4;
+  --secondary-foreground: #0050d8;
+  --muted: #eceef4;
+  --muted-foreground: #4a4d5e;
+  --accent: #e7f434;
+  --accent-foreground: #000000;
+  --destructive: #e52207;
+  --border: #dfe1e2;
+  --input: #eceef4;
+  --ring: #0050d8;
+  --sidebar: #1b2b85;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #0050d8;
+  --sidebar-accent: rgba(255, 255, 255, 0.15);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.25);
+  --sidebar-ring: #ffffff;
+
+  /* Tokens NASA Space Apps Challenge */
+  --space-neonyellow: #e7f434;
+  --space-nasared: #e52207;
+  --space-electricblue: #1b2b85;
+  --space-deepblue: #151622;
+  --space-nearblack: #1b1b1b;
+  --space-white: #ffffff;
+  --space-paleyellow: #fafaad;
+  --space-blueyonder: #2491ff;
+  --space-gray: #eeeeee;
+}
+
+.dark,
+[data-theme='dark'] {
+  --background: #0d0f1e;
+  --foreground: #e9ebf5;
+  --card: #171a2e;
+  --card-foreground: #e9ebf5;
+  --popover: #171a2e;
+  --popover-foreground: #e9ebf5;
+  --primary: #5aa2ff;
+  --primary-foreground: #0d0f1e;
+  --secondary: #232741;
+  --secondary-foreground: #e9ebf5;
+  --muted: #232741;
+  --muted-foreground: #b3b8ce;
+  --accent: #1b2547;
+  --accent-foreground: #e9ebf5;
+  --destructive: #ff9a8f;
+  --border: #2a2f4c;
+  --input: #232741;
+  --ring: #5aa2ff;
+  --sidebar: #1b2b85;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #1b2b85;
+  --sidebar-accent: rgba(255, 255, 255, 0.15);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.25);
+  --sidebar-ring: #ffffff;
+
+  /* Tokens NASA Space Apps Challenge (dark) */
+  --space-neonyellow: #e7f434;
+  --space-nasared: #ff9a8f;
+  --space-electricblue: #5aa2ff;
+  --space-deepblue: #171a2e;
+  --space-nearblack: #0d0f1e;
+  --space-white: #ffffff;
+  --space-paleyellow: #fafaad;
+  --space-blueyonder: #5aa2ff;
+  --space-gray: #232741;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-space-neonyellow: var(--space-neonyellow);
+  --color-space-nasared: var(--space-nasared);
+  --color-space-electricblue: var(--space-electricblue);
+  --color-space-deepblue: var(--space-deepblue);
+  --color-space-nearblack: var(--space-nearblack);
+  --color-space-white: var(--space-white);
+  --color-space-paleyellow: var(--space-paleyellow);
+  --color-space-blueyonder: var(--space-blueyonder);
+  --color-space-gray: var(--space-gray);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
 *,
 *::before,
 *::after {
@@ -9,6 +137,8 @@ body,
 #root {
   margin: 0;
   min-height: 100svh;
+  background: var(--background);
+  color: var(--foreground);
 }
 
 body {
@@ -23,4 +153,65 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Animações shadcn/ui */
+@keyframes accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+@keyframes accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+@keyframes enter {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes leave {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.95); }
+}
+@keyframes slide-in-from-right {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+@keyframes slide-out-to-right {
+  from { transform: translateX(0); }
+  to { transform: translateX(100%); }
+}
+@keyframes slide-in-from-top {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+@keyframes slide-out-to-top {
+  from { transform: translateY(0); }
+  to { transform: translateY(-100%); }
+}
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(1.2); opacity: 0; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.enter {
+  animation: enter 200ms ease-out;
+}
+.leave {
+  animation: leave 150ms ease-in forwards;
+}
+.slide-in-from-right {
+  animation: slide-in-from-right 250ms cubic-bezier(0.87, 0, 0.13, 1);
+}
+.slide-out-to-right {
+  animation: slide-out-to-right 200ms cubic-bezier(0.87, 0, 0.13, 1) forwards;
+}
+.slide-in-from-top {
+  animation: slide-in-from-top 300ms cubic-bezier(0.87, 0, 0.13, 1);
+}
+.pulse-ring {
+  animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
 }
