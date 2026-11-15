@@ -19,12 +19,19 @@ export function AiBubble({
   environments = null,
 }: Props) {
   const [openPanel, setOpenPanel] = useState<PanelId | null>(null)
-  const { q, r, missing } = msg
+  const { q, r, missing, rankingStatus, rankingError } = msg
   const best = r.top[0]
 
   function toggle(panel: PanelId) {
     setOpenPanel((cur) => (cur === panel ? null : panel))
   }
+
+  const invCountLabel =
+    rankingStatus === 'loading'
+      ? '…'
+      : rankingStatus === 'error'
+        ? '!'
+        : String(r.top.length)
 
   return (
     <div className="msg-ai" id={msg.id}>
@@ -43,12 +50,22 @@ export function AiBubble({
         </div>
       ) : null}
       <p className="summary">{summaryFor(q, r)}</p>
-      <span className="best">
-        Mais relevante: <b>{best.name}</b> ({best.id}) · nota {f1(best.nota)}/10 ·{' '}
-        {best.where}
-      </span>
+      {rankingStatus === 'loading' ? (
+        <span className="best">Carregando ranking da API…</span>
+      ) : rankingStatus === 'error' ? (
+        <span className="best" role="alert">
+          {rankingError ?? 'Falha ao carregar o ranking.'}
+        </span>
+      ) : best ? (
+        <span className="best">
+          Mais relevante: <b>{best.name}</b> ({best.id}) · nota {f1(best.nota)}
+          /10 · {best.where}
+        </span>
+      ) : (
+        <span className="best">Nenhuma investigação no topo do ranking.</span>
+      )}
       <span className="ai-label">
-        Exemplo fictício gerado por IA · abra as fontes nos detalhes
+        Score via API · síntese local nos textos · abra as fontes nos detalhes
       </span>
       <div className="details" role="group" aria-label="Detalhes da resposta">
         <button
@@ -66,7 +83,7 @@ export function AiBubble({
           aria-expanded={openPanel === 'inv'}
           onClick={() => toggle('inv')}
         >
-          Investigações <span className="count">{r.top.length}</span>
+          Investigações <span className="count">{invCountLabel}</span>
         </button>
         <button
           type="button"

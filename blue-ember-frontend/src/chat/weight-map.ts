@@ -1,7 +1,7 @@
 import type { ProfileDto, ScoreWeightsDto } from '@/services/contracts'
-import type { CritKey } from './types'
+import type { CritWeights } from './types'
 
-export type CritWeights = Record<CritKey, number>
+export type { CritWeights }
 
 /** Map API ScoreWeightsDto (w1–w5) onto UI CritKey weights. */
 export function scoreWeightsToCrit(weights: ScoreWeightsDto): CritWeights {

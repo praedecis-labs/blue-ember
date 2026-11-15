@@ -2,8 +2,10 @@ import type {
   ApiEnvironmentId,
   ApiProfileId,
   EnvironmentDto,
+  RankingItemDto,
+  ScoreCriteriaDto,
 } from '@/services/contracts'
-import type { EnvId, ProfileId } from './types'
+import type { CritKey, EnvId, ProfileId, ScoredInvestigation } from './types'
 
 /** Inverse of engine `kpa` (psi * 6.895). */
 export function kpaToPsi(kpa: number): number {
@@ -78,4 +80,50 @@ export function fromApiEnvironment(id: string): EnvId | null {
   if (id in API_TO_ENV) return API_TO_ENV[id as ApiEnvironmentId]
   if (isEnvId(id)) return id
   return null
+}
+
+/** Map API C1–C5 criteria onto UI CritKey vals (0–1). */
+export function criteriaToVals(
+  c: ScoreCriteriaDto,
+): Record<CritKey, number | null> {
+  return {
+    prox: c.c1Proximidade,
+    moc: c.c2MargemMoc,
+    spread: c.c3Cinetica,
+    hrr: c.c4SeveridadeTermica,
+    tox: c.c5Toxicidade,
+  }
+}
+
+function o2Tuple(range: number[]): [number, number] {
+  if (range.length >= 2) return [range[0], range[1]]
+  if (range.length === 1) return [range[0], range[0]]
+  return [0, 0]
+}
+
+/** Map a ranking item into the chat panel ScoredInvestigation shape. */
+export function rankingItemToScored(item: RankingItemDto): ScoredInvestigation {
+  const inv = item.investigation
+  const vals = criteriaToVals(item.criteria)
+  const have = (Object.values(vals) as Array<number | null>).filter(
+    (v) => v !== null && Number.isFinite(v),
+  ).length
+  return {
+    id: inv.id,
+    name: inv.acronym,
+    what: inv.title,
+    materials: [],
+    o2: o2Tuple(inv.o2Range),
+    flow: [0, 0],
+    thick: [],
+    gases: [],
+    goal: 'prevenir',
+    where: inv.platform,
+    doi: null,
+    nasaPsiUrl: inv.nasaPsiUrl,
+    c: { moc: null, spread: null, hrr: null, tox: null },
+    vals,
+    nota: item.score,
+    have,
+  }
 }

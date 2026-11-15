@@ -96,6 +96,19 @@
   .chat-app .details button[aria-expanded="true"] .count { background: rgba(255,255,255,.2); color: var(--white); }
   .chat-app .panel { background: var(--bg); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
   .chat-app .panel > b { font-size: 14px; }
+  .chat-app .skel-stack { display: flex; flex-direction: column; gap: 8px; }
+  .chat-app .skel-line {
+    height: 12px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--field) 25%, var(--white) 50%, var(--field) 75%);
+    background-size: 200% 100%;
+    animation: skel-shimmer 1.2s ease-in-out infinite;
+  }
+  .chat-app .skel-line.short { width: 55%; }
+  @keyframes skel-shimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+  }
 
   /* condições */
   .chat-app .cond-list { display: flex; flex-wrap: wrap; gap: 6px; }

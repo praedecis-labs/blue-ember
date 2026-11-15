@@ -1,3 +1,5 @@
+import type { RequestStatus } from '@/services/request-state'
+
 export type ProfileId = 'eng' | 'pesq' | 'est'
 export type EnvId = 'lua' | 'marte' | 'iss'
 export type MaterialId = 'tecido' | 'plastico' | 'liquido'
@@ -11,6 +13,7 @@ export type ScreenId = 'profile' | 'home' | 'chat'
 export type ThemeId = 'light' | 'dark'
 export type PanelId = 'cond' | 'inv' | 'ev' | 'gaps' | 'src'
 export type CritKey = 'prox' | 'moc' | 'spread' | 'hrr' | 'tox'
+export type CritWeights = Record<CritKey, number>
 
 export type QueryState = {
   env: EnvId
@@ -49,6 +52,8 @@ export type Investigation = {
   goal: GoalId
   where: string
   doi: string | null
+  /** Official PSI URL from API summary when available. */
+  nasaPsiUrl?: string | null
   c: { moc: number | null; spread: number | null; hrr: number | null; tox: number | null }
 }
 
@@ -66,6 +71,8 @@ export type ComputeResult = {
   maxO2: number
   above: boolean
   partialG: boolean
+  /** Featured fire-safety count from gaps API (evidence panel denominator). */
+  featuredCount: number
 }
 
 export type HistoryItem = {
@@ -89,6 +96,9 @@ export type ChatMessage =
       r: ComputeResult
       prof: ProfileId
       verdict: [EvidenceLevel, string] | null
+      rankingStatus: RequestStatus
+      rankingError: string | null
+      weights: CritWeights | null
     }
 
 export type PersistedState = {

@@ -10,7 +10,10 @@ export function SourcesPanel({ msg }: { msg: AiMsg }) {
           <li key={d.id}>
             {d.name}:{' '}
             <a
-              href={`https://psi.nasa.gov/physci/repo/data/investigations/${d.id}`}
+              href={
+                d.nasaPsiUrl ||
+                `https://psi.nasa.gov/physci/repo/data/investigations/${d.id}`
+              }
               target="_blank"
               rel="noopener noreferrer"
             >

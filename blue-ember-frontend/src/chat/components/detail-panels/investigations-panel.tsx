@@ -1,13 +1,62 @@
-import {
-  CRIT,
-  PROFILES,
-  WEIGHTS,
-} from '../../data'
+import { CRIT, PROFILES, WEIGHTS } from '../../data'
 import { f1, fmt } from '../../engine'
+import type { CritWeights } from '../../types'
 import type { AiMsg } from './types'
 
+function psiHref(d: {
+  id: string
+  nasaPsiUrl?: string | null
+}): string {
+  return (
+    d.nasaPsiUrl ||
+    `https://psi.nasa.gov/physci/repo/data/investigations/${d.id}`
+  )
+}
+
+function hasFlow(flow: [number, number]): boolean {
+  return !(flow[0] === 0 && flow[1] === 0)
+}
+
 export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
-  const { r, prof } = msg
+  const { r, prof, rankingStatus, rankingError, weights } = msg
+  const panelWeights: CritWeights = weights ?? WEIGHTS[prof]
+
+  if (rankingStatus === 'loading') {
+    return (
+      <div className="panel">
+        <b>Investigações da NASA</b>
+        <span className="hint">Carregando ranking da API…</span>
+        <div className="skel-stack" aria-hidden>
+          <div className="skel-line" />
+          <div className="skel-line" />
+          <div className="skel-line short" />
+        </div>
+      </div>
+    )
+  }
+
+  if (rankingStatus === 'error') {
+    return (
+      <div className="panel">
+        <b>Investigações da NASA</b>
+        <span className="hint" role="alert">
+          {rankingError ?? 'Não foi possível carregar o ranking.'}
+        </span>
+      </div>
+    )
+  }
+
+  if (r.top.length === 0) {
+    return (
+      <div className="panel">
+        <b>Investigações da NASA</b>
+        <span className="hint">
+          Nenhuma investigação featured para este perfil e ambiente.
+        </span>
+      </div>
+    )
+  }
+
   return (
     <div className="panel">
       <div className="row" style={{ justifyContent: 'space-between' }}>
@@ -15,8 +64,7 @@ export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
         <span className="hint">Pesos do perfil {PROFILES[prof].name}</span>
       </div>
       <span className="hint">
-        Ordenadas pela relevância para a sua pergunta (C₁). A nota junta os 5
-        critérios com os pesos do perfil.
+        Ordenadas pelo ranking fire-safety da API (C₁–C₅ com pesos do perfil).
       </span>
       {r.top.map((d, i) => (
         <div className="item" key={d.id}>
@@ -30,22 +78,25 @@ export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
                 </span>
               </b>
               <span className="why">
-                Testou {d.what}. O₂:{' '}
+                {d.what}. O₂:{' '}
                 {d.o2[0] === d.o2[1]
                   ? fmt(d.o2[0])
                   : `${fmt(d.o2[0])}–${fmt(d.o2[1])}`}
-                % · fluxo:{' '}
-                {d.flow[0] === d.flow[1]
-                  ? d.flow[0]
-                  : `${d.flow[0]}–${d.flow[1]}`}{' '}
-                cm/s · {d.where}.
+                %
+                {hasFlow(d.flow) ? (
+                  <>
+                    {' '}
+                    · fluxo:{' '}
+                    {d.flow[0] === d.flow[1]
+                      ? d.flow[0]
+                      : `${d.flow[0]}–${d.flow[1]}`}{' '}
+                    cm/s
+                  </>
+                ) : null}{' '}
+                · {d.where}.
               </span>
               <span>
-                <a
-                  href={`https://psi.nasa.gov/physci/repo/data/investigations/${d.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={psiHref(d)} target="_blank" rel="noopener noreferrer">
                   Ver no PSI →
                 </a>
                 {d.doi ? (
@@ -92,13 +143,13 @@ export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
                     </div>
                     <span className="v">
                       {fmt((d.vals[k] as number) * 10)} ·{' '}
-                      {Math.round(WEIGHTS[prof][k] * 100)}%
+                      {Math.round(panelWeights[k] * 100)}%
                     </span>
                   </div>
                 ),
               )}
               <span className="hint">
-                Valor de 0 a 10 · peso do perfil. &quot;Sem dado&quot;: a
+                Valor de 0 a 10 · peso do perfil (API). &quot;Sem dado&quot;: a
                 investigação não mediu esse critério.
               </span>
             </div>
@@ -108,4 +159,3 @@ export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
     </div>
   )
 }
-

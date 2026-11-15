@@ -1,7 +1,7 @@
 # To-dos — Frontend Blue Ember (chat → API)
 
 **Objetivo:** o protótipo em `src/chat/` deixar de ser só mock local e consumir a API .NET com contrato estável, pronto para demo do hackathon.  
-**Estado atual:** UI/fluxo em React; **T1+T2** fechados (client HTTP + perfil/ambientes da API, persistência canônica). Score/gaps/ranking nos painéis do chat ainda são **locais** (`engine.ts`) até T3–T5.  
+**Estado atual:** UI/fluxo em React; **T1+T2+T3** fechados (client HTTP + perfil/ambientes + ranking fire-safety / evidência via API). Painel Gaps ainda usa copy local (`localGaps`) até T4; chat→params finos fica em T5.  
 **Fora desta fatia (hackathon):** auth real, `/ask` no backend, pgvector, Planetary Computer.
 
 **Mapa de IDs (alinhar antes de integrar):**
@@ -119,14 +119,14 @@ Sugestão de donos (preencher):
 
 ### T3 — Ranking e força da evidência na UI
 
-- [ ] Painel **Investigações**: popular com `GET /api/ranking/fire-safety?profile=&environment=`
+- [x] Painel **Investigações**: popular com `GET /api/ranking/fire-safety?profile=&environment=`
   - Nota / critérios C1–C5 da API (`c1Proximidade` … `c5Toxicidade`)
-  - Links PSI / DOI do summary
-- [ ] Painel **Força da evidência**: derivar de ranking + gaps (não inventar % fictícios)
-- [ ] Remover / isolar o score local de `engine.ts` para não contradizer a API
-- [ ] Loading skeleton / empty / erro no painel
+  - Links PSI do summary (`nasaPsiUrl`; DOI omitido — summary não traz)
+- [x] Painel **Força da evidência**: derivar de ranking + gaps (não inventar % fictícios)
+- [x] Remover / isolar o score local de `engine.ts` para não contradizer a API
+- [x] Loading skeleton / empty / erro no painel
 
-**Done quando:** resposta do chat mostra top investigações **iguais** ao Swagger para o mesmo profile+environment.
+**Done quando:** resposta do chat mostra top investigações **iguais** ao Swagger para o mesmo profile+environment. ✅ (15/11/2026)
 
 ---
 
@@ -223,4 +223,4 @@ Se forem **3+ pessoas:** T1 sozinho → em seguida T2 ∥ T3 ∥ T4 → T5 integ
 
 ---
 
-*Atualizado 15/11/2026 — T1 + T2 fechados (client HTTP; perfil/ambientes da API + localStorage canônico). Próximo: T3 ranking nos painéis.*
+*Atualizado 15/11/2026 — T1 + T2 + T3 fechados (ranking fire-safety + evidência via API nos painéis). Próximo: T4 gaps & fontes.*

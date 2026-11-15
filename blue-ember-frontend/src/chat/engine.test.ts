@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildVerdict, compute, parseHypothesis } from './engine'
+import { buildVerdict, compute, localGaps, parseHypothesis } from './engine'
 
 describe('parseHypothesis', () => {
   it('extracts lunar habitat conditions', () => {
@@ -26,8 +26,44 @@ describe('parseHypothesis', () => {
   })
 })
 
-describe('compute', () => {
-  it('ranks fire-safety investigations for lunar tissue query', () => {
+describe('localGaps', () => {
+  it('flags lunar partial gravity and high O2 gaps', () => {
+    const r = localGaps({
+      env: 'lua',
+      material: 'tecido',
+      o2: 34,
+      psi: 8.2,
+      flow: 10,
+      thick: 'fina',
+      dir: '',
+      gas: '',
+      goal: 'prevenir',
+    })
+    expect(r.above).toBe(true)
+    expect(r.gaps.some((g) => g.includes('Lua'))).toBe(true)
+  })
+
+  it('uses mars-specific gap copy', () => {
+    const r = localGaps({
+      env: 'marte',
+      material: 'plastico',
+      o2: 26.5,
+      psi: 10.2,
+      flow: 20,
+      thick: 'grossa',
+      dir: 'favor',
+      gas: '',
+      goal: 'prevenir',
+    })
+    const grav = r.gaps.find((g) => g.includes('Gravidade parcial'))
+    expect(grav).toBeTruthy()
+    expect(grav).toContain('Marte')
+    expect(grav).not.toContain('gravidade lunar')
+  })
+})
+
+describe('compute (legacy local DATA ranking)', () => {
+  it('still ranks mock DATA for regression until removed', () => {
     const r = compute(
       {
         env: 'lua',
@@ -43,33 +79,8 @@ describe('compute', () => {
       'eng',
     )
     expect(r.top.length).toBe(3)
-    expect(r.partialG).toBe(true)
-    expect(r.above).toBe(true)
-    expect(r.gaps.some((g) => g.includes('Marte') || g.includes('Lua'))).toBe(
-      true,
-    )
+    expect(r.featuredCount).toBeGreaterThan(0)
     expect(r.top[0].nota).toBeGreaterThan(0)
-  })
-
-  it('uses mars-specific gap copy', () => {
-    const r = compute(
-      {
-        env: 'marte',
-        material: 'plastico',
-        o2: 26.5,
-        psi: 10.2,
-        flow: 20,
-        thick: 'grossa',
-        dir: 'favor',
-        gas: '',
-        goal: 'prevenir',
-      },
-      'pesq',
-    )
-    const grav = r.gaps.find((g) => g.includes('Gravidade parcial'))
-    expect(grav).toBeTruthy()
-    expect(grav).toContain('Marte')
-    expect(grav).not.toContain('gravidade lunar')
   })
 })
 

@@ -93,6 +93,50 @@ export function parseHypothesis(t: string): ParseResult {
   }
 }
 
+/**
+ * Local gap copy for the Gaps panel until T4 consumes GET /api/gaps fully.
+ * Does not score or rank investigations (API owns ranking in T3).
+ */
+export function localGaps(q: QueryState): {
+  gaps: string[]
+  maxO2: number
+  above: boolean
+} {
+  const same = DATA.filter((d) => d.materials.includes(q.material))
+  const maxO2 = same.length ? Math.max(...same.map((d) => d.o2[1])) : 0
+  const maxFlow = same.length ? Math.max(...same.map((d) => d.flow[1])) : 0
+  const above = same.length > 0 && q.o2 > maxO2
+  const flowOut = same.length > 0 && q.flow > maxFlow
+  const partialG = q.env !== 'iss'
+  const lowP = q.psi < 14
+
+  const gaps: string[] = []
+  if (partialG) {
+    gaps.push(
+      q.env === 'lua'
+        ? 'Gravidade parcial: o PSI não tem testes na gravidade da Lua (0,16 g). Estudos da NASA indicam que, perto da gravidade lunar, materiais podem queimar com menos oxigênio do que na Terra. O experimento FM2 vai medir isso na Lua.'
+        : 'Gravidade parcial: o PSI não tem testes na gravidade de Marte (0,38 g). Estudos da NASA indicam que, em gravidade parcial, materiais podem queimar com menos oxigênio do que na Terra. Dados futuros (ex.: FM2) ajudarão a fechar essa lacuna.',
+    )
+  }
+  if (above)
+    gaps.push(`Nenhum teste com ${MAT[q.material]} acima de ${fmt(maxO2)}% de O₂.`)
+  if (flowOut)
+    gaps.push(
+      `Nenhum teste com fluxo de ar acima de ${maxFlow} cm/s para ${MAT[q.material]}.`,
+    )
+  if (lowP)
+    gaps.push(
+      `Os testes do PSI foram feitos perto de 14,7 psi; nenhum a ${fmt(q.psi)} psi.`,
+    )
+  if (q.thick === 'grossa' && !same.some((d) => d.thick.includes('grossa')))
+    gaps.push('Nenhum teste com material grosso nessas condições.')
+  if (q.gas && !same.some((d) => d.gases.includes(q.gas as 'co2' | 'he' | 'n2')))
+    gaps.push(`Nenhum teste apagando ${MAT[q.material]} com ${GAS[q.gas]}.`)
+
+  return { gaps, maxO2, above }
+}
+
+/** @deprecated Local DATA ranking — kept for legacy unit tests only. Chat uses API. */
 function score(
   d: (typeof DATA)[number],
   q: QueryState,
@@ -130,18 +174,26 @@ function score(
   return { vals, nota: wsum ? (sum / wsum) * 10 : 0, have }
 }
 
+/** @deprecated Prefer API ranking + localGaps. Kept for legacy engine tests. */
 export function compute(q: QueryState, prof: ProfileId): ComputeResult {
   const top = DATA.map((d) => ({ ...d, ...score(d, q, prof) }))
     .sort((a, b) => b.vals.prox! - a.vals.prox! || b.nota - a.nota)
     .slice(0, 3)
 
-  const same = DATA.filter((d) => d.materials.includes(q.material))
-  const maxO2 = Math.max(...same.map((d) => d.o2[1]))
-  const maxFlow = Math.max(...same.map((d) => d.flow[1]))
-  const above = q.o2 > maxO2
-  const flowOut = q.flow > maxFlow
+  const { gaps, maxO2, above } = localGaps(q)
+  const missingCrit = CRIT.filter(
+    ([k]) => k !== 'prox' && top.every((d) => d.vals[k] === null),
+  ).map(([, l]) => l.replace(/^C\S+ /, ''))
+  const gapsWithCrit = [...gaps]
+  if (missingCrit.length)
+    gapsWithCrit.push(
+      `Nenhuma das 3 investigações mediu: ${missingCrit.join(', ')}.`,
+    )
+
   const partialG = q.env !== 'iss'
-  const lowP = q.psi < 14
+  const same = DATA.filter((d) => d.materials.includes(q.material))
+  const maxFlow = same.length ? Math.max(...same.map((d) => d.flow[1])) : 0
+  const flowOut = same.length > 0 && q.flow > maxFlow
   const issues = [above, partialG, flowOut].filter(Boolean).length
   const level: [EvidenceLevel, string] =
     issues >= 2
@@ -150,34 +202,6 @@ export function compute(q: QueryState, prof: ProfileId): ComputeResult {
         ? ['moderate', 'Evidência moderada']
         : ['strong', 'Evidência forte']
 
-  const gaps: string[] = []
-  if (partialG) {
-    gaps.push(
-      q.env === 'lua'
-        ? 'Gravidade parcial: o PSI não tem testes na gravidade da Lua (0,16 g). Estudos da NASA indicam que, perto da gravidade lunar, materiais podem queimar com menos oxigênio do que na Terra. O experimento FM2 vai medir isso na Lua.'
-        : 'Gravidade parcial: o PSI não tem testes na gravidade de Marte (0,38 g). Estudos da NASA indicam que, em gravidade parcial, materiais podem queimar com menos oxigênio do que na Terra. Dados futuros (ex.: FM2) ajudarão a fechar essa lacuna.',
-    )
-  }
-  if (above) gaps.push(`Nenhum teste com ${MAT[q.material]} acima de ${fmt(maxO2)}% de O₂.`)
-  if (flowOut)
-    gaps.push(
-      `Nenhum teste com fluxo de ar acima de ${maxFlow} cm/s para ${MAT[q.material]}.`,
-    )
-  if (lowP)
-    gaps.push(
-      `Os testes do PSI foram feitos perto de 14,7 psi; nenhum a ${fmt(q.psi)} psi.`,
-    )
-
-  const missingCrit = CRIT.filter(
-    ([k]) => k !== 'prox' && top.every((d) => d.vals[k] === null),
-  ).map(([, l]) => l.replace(/^C\S+ /, ''))
-  if (missingCrit.length)
-    gaps.push(`Nenhuma das 3 investigações mediu: ${missingCrit.join(', ')}.`)
-  if (q.thick === 'grossa' && !same.some((d) => d.thick.includes('grossa')))
-    gaps.push('Nenhum teste com material grosso nessas condições.')
-  if (q.gas && !same.some((d) => d.gases.includes(q.gas as 'co2' | 'he' | 'n2')))
-    gaps.push(`Nenhum teste apagando ${MAT[q.material]} com ${GAS[q.gas]}.`)
-
   const near = DATA.filter(
     (d) =>
       d.materials.includes(q.material) &&
@@ -185,7 +209,16 @@ export function compute(q: QueryState, prof: ProfileId): ComputeResult {
       distTo(q.flow, d.flow) <= 5,
   ).length
 
-  return { top, level, gaps, near, maxO2, above, partialG }
+  return {
+    top,
+    level,
+    gaps: gapsWithCrit,
+    near,
+    maxO2,
+    above,
+    partialG,
+    featuredCount: DATA.length,
+  }
 }
 
 export function buildVerdict(
@@ -207,7 +240,9 @@ export function summaryFor(q: QueryState, r: ComputeResult): string {
   const best = r.top[0]
   const base = r.above
     ? `A NASA testou ${MAT[q.material]} com no máximo ${fmt(r.maxO2)}% de O₂. Com ${fmt(q.o2)}%, ele tende a queimar com mais facilidade do que os testes mostram: trate o risco como maior.`
-    : `Há testes da NASA em condições próximas da sua; o ${best.name} é o mais parecido.`
+    : best
+      ? `Há testes da NASA em condições próximas da sua; o ${best.name} é o mais parecido.`
+      : `Buscando investigações da NASA para o ambiente selecionado…`
   const extra = r.partialG
     ? ` Na gravidade ${q.env === 'lua' ? 'da Lua' : 'de Marte'}, estudos indicam que alguns materiais queimam com menos oxigênio do que na Terra.`
     : ''
