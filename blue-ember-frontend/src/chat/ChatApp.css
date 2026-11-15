@@ -807,3 +807,8 @@
 
 /* Dashboard no tema escuro: barras azul-marinho ficam azuis para aparecer no fundo noturno */
 .chat-app[data-theme="dark"] .highcharts-point[fill="#1B2B85"] { fill: #4080FF; }
+
+/* Os 3 botões da resposta: a regra ".chat-app button...ghost { padding: 0 }" zerava o espaçamento */
+.chat-app .msg-ai button.map-toggle { padding: 6px 12px; }
+/* Barra lateral: "+ Nova análise" em destaque também no modo recolhido */
+.chat-app [data-sidebar="sidebar"] .sidebar-new svg { color: #151622; }

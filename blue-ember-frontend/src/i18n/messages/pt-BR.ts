@@ -2,6 +2,7 @@ import type { MessageTree } from './en-US'
 
 export const ptBR: MessageTree = {
   nav: {
+    language: 'Idioma',
     home: 'Início',
     newAnalysis: 'Nova análise',
     profile: 'Perfil',
@@ -13,6 +14,11 @@ export const ptBR: MessageTree = {
     switchProfile: 'Trocar perfil',
   },
   header: {
+    profileLabel: 'Perfil:',
+    profileHint: 'Trocar quem está perguntando (muda os pesos do ranking)',
+    export: 'Exportar',
+    exportMenuCsv: 'CSV (planilha)',
+    exportMenuJson: 'JSON (dados)',
     apiLoading: 'API…',
     apiOnline: 'API online',
     apiOffline: 'API offline',
