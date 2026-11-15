@@ -23,6 +23,7 @@ public static class AgentCompletion
                 - No máximo 4 a 6 frases curtas.
                 - Texto puro: sem markdown (#, **, listas com - ou *, tabelas, emojis).
                 - Sem seções longas; vá direto ao ponto.
+                - Termine com uma última linha começando com "Próximo passo:" e um teste ou verificação concreta que reduziria a incerteza (não é recomendação de segurança).
 
                 Dados:
                 - Use as ferramentas para ranking, lacunas e fichas NASA PSI.
@@ -49,6 +50,7 @@ public static class AgentCompletion
             - At most 4 to 6 short sentences.
             - Plain text only: no markdown (#, **, lists with - or *, tables, emojis).
             - No long sections; get straight to the point.
+            - End with a final line starting with "Next step:" naming one concrete test or check that would reduce the uncertainty (not a safety recommendation).
 
             Data:
             - Use the tools for ranking, gaps, and NASA PSI investigation records.

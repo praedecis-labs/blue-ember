@@ -76,6 +76,7 @@ builder.Services.AddSingleton<IAgentProvider>(sp => sp.GetRequiredService<Gemini
 builder.Services.AddSingleton<GroqAgentProvider>();
 builder.Services.AddSingleton<IAgentProvider>(sp => sp.GetRequiredService<GroqAgentProvider>());
 builder.Services.AddSingleton<AgentProviderResolver>();
+builder.Services.AddSingleton<AgentTranslator>();
 builder.Services.AddScoped<NasaRefreshService>();
 builder.Services.AddHostedService<InvestigationCacheRefreshWorker>();
 
@@ -97,6 +98,7 @@ app.MapGapEndpoints();
 app.MapExportEndpoints();
 app.MapNasaEndpoints();
 app.MapAgentEndpoints();
+app.MapAgentTranslateEndpoints();
 app.MapJevEndpoints();
 
 await BootstrapInvestigationsAsync(app);

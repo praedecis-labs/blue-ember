@@ -6,6 +6,11 @@ import type { EnvironmentDto } from '@/services/shared/contracts'
 import type { ChatMessage, QueryState } from '../domain/types'
 import { AiBubble } from './AiBubble'
 
+/** O quadro interpretativo da IA só aparece quando a pessoa pede um dashboard. */
+function asksForDashboard(prev: ChatMessage | undefined): boolean {
+  return prev?.kind === 'user' && /dashboard|painel|\bmap\b|mapa|coverage|cobertura|where .*fall|onde .*cai/i.test(prev.text)
+}
+
 type Props = {
   profileLabel: string
   messages: ChatMessage[]
@@ -98,7 +103,7 @@ export function ChatScreen({
             </div>
           ) : null}
 
-          {messages.map((m) =>
+          {messages.map((m, i) =>
             m.kind === 'user' ? (
               <div
                 className="animate-[rise_0.35s_ease-out_both] max-w-[min(92%,520px)] self-end rounded-2xl rounded-br-sm bg-[#1B2B85] px-3.5 py-3 text-white [overflow-wrap:anywhere]"
@@ -110,6 +115,7 @@ export function ChatScreen({
               <AiBubble
                 key={m.id}
                 msg={m}
+                showDashboard={asksForDashboard(messages[i - 1])}
                 onFollowup={onFollowup}
                 onApplyConditions={(q) => onApplyConditions(q, m.id)}
                 environments={environments}

@@ -93,6 +93,8 @@ export const enUS = {
     localLabel:
       'Answer from local templates · scores from the API · sources in the details below',
     offTopicLabel: 'Scope check · no ranking run',
+    serverOffline: 'Could not reach the Blue Ember server. Check that the backend is running and try again.',
+    autoSummaryNote: 'AI unavailable right now: automatic summary built from the NASA data. Ask again in a minute for the AI answer.',
     agentOffline:
       'AI agent is offline (no API key). Showing NASA ranking and gaps only.',
     agentFallback:
@@ -128,7 +130,49 @@ export const enUS = {
     partialGWarning:
       'The PSI has almost no partial-gravity data (Moon ~0.16 g / Mars ~0.38 g). Most tests ran at 0 g or 1 g; interpolating between those regimes may underestimate the risk.',
   },
-  dashboard: {
+  answer: {
+    nextStep: 'Next step:',
+    evidencePill: 'Evidence: {{level}}',
+    yourHyp: 'Your hypothesis',
+    testedToggle: 'What NASA tested near your case',
+    unknownToggle: 'What is still unknown ({{n}})',
+    translating: 'Translating the AI answer…',
+    langNote: 'The AI answer was written in {{lang}}; above is the summary in the current language. Ask again for a new AI answer.',
+    showOriginal: 'Show original',
+    hideOriginal: 'Hide original',
+    langPt: 'Portuguese',
+    langEn: 'English',
+    shows: 'What the tests show',
+    tested: 'What NASA tested near your case',
+    unknown: 'What is still unknown',
+    samples: 'NASA test samples (rods, films, droplets) differ from the materials and layouts of a real habitat.',
+    disclaimer: 'Descriptive summary of NASA test records, not a safety assessment.',
+  },  evidenceTag: {
+    nearby: 'Nearby NASA evidence',
+    nearbyNote: 'NASA tests in this oxygen and pressure range: {{n}}. Similar conditions, not proof that your case is safe.',
+    adjacent: 'Tested only in other conditions',
+    adjacentNote: 'No NASA test in this exact oxygen and pressure range; the closest ones are in a neighboring range.',
+    none: 'No NASA test in these conditions',
+    noneNote: 'Nothing in the NASA data covers this oxygen and pressure. Treat it as a research gap, not a safe zone.',
+    gravity: 'All of these tests ran in microgravity; none in lunar or Martian gravity.',
+  },  estimated: {
+    badge: 'Estimated',
+    tip: 'Oxygen, pressure and air-flow ranges per investigation are estimates; measured values from the NASA PSI tables are being added.',
+  },  coverageMap: {
+    hide: 'Hide the coverage map',
+    show: 'See where your case falls among NASA tests',
+    title: 'Where your case falls among NASA tests',
+    caption: 'Your case: {{o2}}% O₂ · {{kpa}} kPa → {{n}} tests in this range',
+    outside: 'Your case ({{o2}}% O₂ · {{kpa}} kPa) is outside every tested range',
+    o2Axis: 'O₂',
+    pressureAxis: 'Pressure (kPa)',
+    you: 'you',
+    cellTitle: '{{n}} tests',
+    legendNone: 'no tests',
+    legendFew: 'few',
+    legendMany: 'many',
+    noData: 'No coverage data for this environment.',
+  },  dashboard: {
     label: 'Dashboard',
     aiBadge: 'AI interpretation',
     hazardTitle: 'Relative hazard',
@@ -331,6 +375,7 @@ export const enUS = {
       'Across the NASA investigations consulted, the highest O₂ tested was {{maxO2}}%{{source}}. At {{o2}}%, the material tends to burn more readily than tests show: treat the risk as higher.',
     near: 'There are NASA tests in conditions close to yours; {{best}} is the closest match{{o2Range}}.',
     o2Range: ' (O₂ tested: {{lo}}–{{hi}}%)',
+    o2Single: ' (O₂ tested: {{v}}%)',
     searching: 'Looking up NASA investigations for the selected environment…',
     partialG:
       ' In {{env}} gravity, studies suggest some materials burn with less oxygen than on Earth.',

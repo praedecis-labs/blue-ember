@@ -257,6 +257,8 @@ export function useChatHydration(deps: HydrationDeps) {
         )
         .filter((t) => t.text.trim().length > 0)
 
+      // Idioma da pergunta: a IA responde nele; a tela usa isso se a pessoa trocar o idioma depois
+      const askedLocale = localeRef.current
       let agent: AgentAskResponse | null = null
       try {
         agent = await askAgent({
@@ -264,7 +266,7 @@ export function useChatHydration(deps: HydrationDeps) {
           profile: toApiProfile(prof),
           environment: toApiEnvironment(query.env),
           category: toApiCategory(query.goal),
-          locale: localeRef.current,
+          locale: askedLocale,
           query: {
             env: toApiEnvironment(query.env),
             material: query.material,
@@ -283,15 +285,20 @@ export function useChatHydration(deps: HydrationDeps) {
         if (!stillThere) return
         const translate = tRef.current
         const offline = err instanceof ApiError && err.status === 503
+        // Sem resposta nenhuma do servidor: o backend está fora do ar
+        const serverDown = !(err instanceof ApiError)
         if (!offline) {
           setError(messageFromUnknown(err))
         }
         patchAiMessage(msgId, (msg) => ({
           ...msg,
-          lead: offline
-            ? translate('bubble.agentOffline')
-            : translate('bubble.agentFallback'),
+          lead: serverDown
+            ? translate('bubble.serverOffline')
+            : offline
+              ? translate('bubble.agentOffline')
+              : translate('bubble.agentFallback'),
           agentReply: true,
+          agentFailed: true,
           loadingPhase: runRanking ? 'ranking' : 'agent',
           rankingStatus: runRanking ? msg.rankingStatus : 'idle',
           rankingError: null,
@@ -309,6 +316,7 @@ export function useChatHydration(deps: HydrationDeps) {
 
       const lead = sanitizeAgentProse(agent.text.trim())
       const dashboard = agent.dashboard ?? null
+      patchAiMessage(msgId, (msg) => ({ ...msg, agentLocale: askedLocale }))
 
       if (!runRanking) {
         patchAiMessage(msgId, (msg) => ({

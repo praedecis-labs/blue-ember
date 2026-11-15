@@ -1,30 +1,28 @@
-import { useState } from 'react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Spinner } from '@/components/ui/spinner'
-import { useT } from '@/i18n'
-import { cn } from '@/lib/utils'
+import { useEffect, useState } from 'react'
+import { translateAgentText } from '@/services/api/agent'
+import { useI18n, useT } from '@/i18n'
+import { retranslate } from '@/i18n/retranslate'
+import { emptyCellBullets } from '../domain/gaps-from-api'
 import type { EnvironmentDto } from '@/services/shared/contracts'
 import { LOGO_SRC } from '../domain/data'
-import { f1, summaryFor } from '../domain/engine'
-import { psiUrl } from '../domain/psi-url'
+import { f1, kpa, summaryFor } from '../domain/engine'
 import type { ChatMessage, PanelId, QueryState } from '../domain/types'
 import { DetailPanels } from './detail-panels'
 import { HypothesisDashboard } from './HypothesisDashboard'
+import { CoverageMap } from './CoverageMap'
+import { EstimatedBadge } from './EstimatedBadge'
+import { CitedText, FALLBACK } from './CitedText'
+import { splitNextStep } from '../domain/next-step'
+import { coverageStatus } from '../domain/coverage-status'
+import { psiUrl } from '../domain/psi-url'
 
 type Props = {
   msg: Extract<ChatMessage, { kind: 'ai' }>
+  /** Mostra o quadro interpretativo da IA (só quando a pessoa pediu). */
+  showDashboard?: boolean
   onFollowup: (text: string) => void
   onApplyConditions: (q: QueryState) => void
   environments?: EnvironmentDto[] | null
-}
-
-function verdictToneClass(tone: string): string {
-  if (tone === 'strong') return 'verdict-tone verdict-tone--strong'
-  if (tone === 'moderate') return 'verdict-tone verdict-tone--moderate'
-  if (tone === 'weak') return 'verdict-tone verdict-tone--weak'
-  return 'verdict-tone verdict-tone--unknown'
 }
 
 export function AiBubble({
@@ -32,11 +30,55 @@ export function AiBubble({
   onFollowup,
   onApplyConditions,
   environments = null,
+  showDashboard = false,
 }: Props) {
-  const t = useT()
+  const { t, locale } = useI18n()
+  // A IA escreve no idioma da pergunta. Se a pessoa trocou o idioma depois,
+  // mostra o resumo local já traduzido e deixa o texto original a um clique.
+  const staleAi = Boolean(msg.agentReply && msg.agentLocale && msg.agentLocale !== locale)
+  const [showOriginal, setShowOriginal] = useState(false)
+  // Tradução da resposta da IA para o idioma atual (feita uma vez por idioma e guardada)
+  const [translations, setTranslations] = useState<Record<string, string>>({})
+  const [translating, setTranslating] = useState<string | null>(null)
+  const [translateFailed, setTranslateFailed] = useState<Record<string, boolean>>({})
+  const translated = translations[locale]
+  useEffect(() => {
+    if (!staleAi || !msg.lead || msg.agentFailed || FALLBACK.test(msg.lead) || translations[locale] || translateFailed[locale]) return
+    let alive = true
+    setTranslating(locale)
+    translateAgentText(msg.lead, locale)
+      .then((res) => {
+        if (alive && res.text) setTranslations((cur) => ({ ...cur, [locale]: res.text }))
+      })
+      .catch(() => {
+        if (alive) setTranslateFailed((cur) => ({ ...cur, [locale]: true }))
+      })
+      .finally(() => {
+        if (alive) setTranslating(null)
+      })
+    return () => {
+      alive = false
+    }
+  }, [staleAi, locale, msg.lead, translations, translateFailed])
   const [openPanel, setOpenPanel] = useState<PanelId | null>(null)
   const { q, r, missing, rankingStatus, rankingError } = msg
+  const cov = coverageStatus(msg.coverageCells, q)
+  // Mapa só quando ajuda: pedido pela pessoa ou quando o caso cai numa lacuna
+  // Mapa e "o que ainda não se sabe" ficam guardados em botões; o mapa só abre sozinho quando pedido
+  const [mapOpen, setMapOpen] = useState(showDashboard)
+  const [unknownOpen, setUnknownOpen] = useState(false)
+  const [testedOpen, setTestedOpen] = useState(false)
+  // "O que ainda não se sabe": lacunas da API (até 3) + limites fixos e verdadeiros dos dados
+  const unknowns = [
+    // recalculadas a partir das células para acompanhar o idioma atual
+    ...(msg.coverageCells?.length
+      ? emptyCellBullets(msg.coverageCells, q.o2, kpa(q.psi), t)
+      : r.gaps.slice(0, 3)),
+    ...(cov?.partialGravity || r.partialG ? [t('evidenceTag.gravity')] : []),
+    t('answer.samples'),
+  ]
 
+  // Texto do carregamento = etapa real em andamento (não é ilustrativo)
   const loadingText =
     msg.loadingPhase === 'ranking'
       ? t('bubble.loadingRanking')
@@ -48,10 +90,11 @@ export function AiBubble({
     setOpenPanel((cur) => (cur === panel ? null : panel))
   }
 
+  // Veredito único no topo: a hipótese (quando houver) + a força da evidência numa linha só
   const hyp = msg.verdict && msg.verdict[0] !== 'unknown' ? msg.verdict : null
   const verdictTone = hyp ? hyp[0] : r.above ? 'weak' : r.level[0]
   const verdictTitle = hyp
-    ? hyp[1]
+    ? retranslate(hyp[1], t)
     : r.above
       ? t('verdict.riskHigher')
       : r.level[0] === 'strong'
@@ -59,9 +102,6 @@ export function AiBubble({
         : r.level[0] === 'moderate'
           ? t('verdict.testsSimilar')
           : t('verdict.fewTests')
-  const verdictKicker = hyp
-    ? t('verdict.hypKicker', { level: r.level[1].toLowerCase() })
-    : r.level[1]
 
   const invCountLabel =
     rankingStatus === 'loading'
@@ -75,155 +115,243 @@ export function AiBubble({
 
   if (msg.offTopic) {
     return (
-      <div
-        className="animate-[rise_0.35s_ease-out_both] flex min-w-0 flex-col gap-3 self-stretch rounded-2xl rounded-bl-sm bg-[var(--white)] p-3.5 [overflow-wrap:anywhere] md:p-5"
-        id={msg.id}
-      >
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide text-[var(--blue)] uppercase">
-            <img
-              className="block size-[30px] rounded-full bg-[#151622]"
-              src={LOGO_SRC}
-              alt=""
-            />
+      <div className="msg-ai" id={msg.id}>
+        <div className="head">
+          <span className="by">
+            <img className="avatar" src={LOGO_SRC} alt="" />
             Blue Ember
           </span>
         </div>
-        {msg.lead ? (
-          <span className="text-sm text-[var(--sub)]">{msg.lead}</span>
-        ) : null}
-        <span className="text-xs text-muted-foreground">
-          {t('bubble.offTopicLabel')}
-        </span>
+        {msg.lead ? <span className="why">{msg.lead}</span> : null}
+        <span className="ai-label">{t('bubble.offTopicLabel')}</span>
       </div>
     )
   }
 
   return (
-    <div
-      className="animate-[rise_0.35s_ease-out_both] relative flex min-w-0 flex-col gap-3 self-stretch rounded-2xl rounded-bl-sm bg-[var(--white)] p-3.5 [overflow-wrap:anywhere] md:p-5"
-      id={msg.id}
-    >
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide text-[var(--blue)] uppercase">
-          <img
-            className="block size-[30px] rounded-full bg-[#151622]"
-            src={LOGO_SRC}
-            alt=""
-          />
+    <div className="msg-ai" id={msg.id}>
+      <div className="head">
+        <span className="by">
+          <img className="avatar" src={LOGO_SRC} alt="" />
           Blue Ember
         </span>
       </div>
-
       {rankingStatus === 'loading' ? (
-        <div
-          className="flex flex-col gap-3"
-          role="status"
-          aria-live="polite"
-        >
-          <span className="inline-flex items-center gap-2 text-sm text-[var(--sub)]">
-            <Spinner size="sm" className="size-4 shrink-0 text-[var(--navy)]" />
-            <span key={loadingText}>{loadingText}</span>
+        // Carregando: um bloco só, sem veredito nem números antes da resposta chegar
+        <div className="answer-loading" role="status" aria-live="polite">
+          <span className="kicker">
+            <span className="spinner" aria-hidden />
+            <span key={loadingText} className="step-text">
+              {loadingText}
+            </span>
           </span>
-          <div className="flex flex-col gap-2" aria-hidden>
-            <Skeleton className="h-4 w-[85%]" />
-            <Skeleton className="h-3 w-full" />
-            <Skeleton className="h-3 w-[55%]" />
+          <div className="skel-stack" aria-hidden>
+            <div className="skel-line title" />
+            <div className="skel-line" />
+            <div className="skel-line short" />
           </div>
         </div>
       ) : (
         <>
+          {/* 1. Veredito compacto primeiro: dá o contexto sem roubar a cena */}
           {rankingStatus === 'ok' ? (
-            <div
-              className={cn(verdictToneClass(verdictTone))}
-              role="status"
-            >
-              <span className="verdict-tone__kicker">{verdictKicker}</span>
-              <span className="verdict-tone__title">{verdictTitle}</span>
-            </div>
-          ) : null}
-
-          {msg.agentReply && msg.lead ? (
-            <p className="text-[17px] leading-relaxed">{msg.lead}</p>
-          ) : (
-            <>
-              {msg.lead && msg.lead !== t('bubble.thinking') ? (
-                <span className="text-sm text-[var(--sub)]">{msg.lead}</span>
-              ) : null}
-              {rankingStatus === 'ok' ? (
-                <p className="text-[17px] leading-relaxed">
-                  {summaryFor(q, r, t)}
-                </p>
-              ) : null}
-            </>
-          )}
-
-          {rankingStatus === 'idle' ? null : rankingStatus === 'error' ? (
-            <span className="text-sm text-[var(--sub)]" role="alert">
-              {rankingError ?? t('bubble.rankingFail')}
-            </span>
-          ) : r.top.length ? (
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
-                {t('bubble.investigations')}
+            <div className={`verdict-big ${verdictTone}`} role="status">
+              {/* Selos lado a lado (estilo do vídeo): força da evidência + ambiente */}
+              <span className="verdict-pills">
+                <span className={`vpill ev ${r.level[0]}`}>
+                  {t('answer.evidencePill', { level: t(`evidence.${r.level[0]}`).toLowerCase() })}
+                </span>
+                <span className={`vpill env${q.env !== 'iss' ? ' est' : ''}`}>
+                  {t(`env.${q.env}`)}
+                  {q.env !== 'iss' ? ` · ${t('estimated.badge').toLowerCase()}` : ''}
+                </span>
               </span>
-              <ol className="m-0 flex list-none flex-col gap-1.5 p-0">
-                {r.top.slice(0, 3).map((d, i) => (
-                  <li key={d.id} className="flex gap-1.5">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      aria-expanded={openPanel === 'inv'}
-                      onClick={() => toggle('inv')}
-                      className="h-auto min-w-0 flex-1 justify-start gap-3 rounded-[10px] px-3 py-2.5 text-left shadow-none"
-                    >
-                      <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-[var(--info)] text-xs font-bold text-[var(--navy)]">
-                        {i + 1}
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <b className="block truncate text-[15px] text-[var(--navy)]">
-                          {d.name}
-                        </b>
-                        <small className="block truncate text-xs text-muted-foreground">
-                          {d.id}
-                          {d.where ? ` · ${d.where}` : ''}
-                        </small>
-                      </span>
-                      <span className="shrink-0 text-sm font-semibold text-[var(--navy)]">
-                        {t('panels.scoreNote', { n: f1(d.nota) })}
-                      </span>
-                    </Button>
-                    <a
-                      className="grid size-10 shrink-0 place-items-center rounded-[10px] border border-border bg-[var(--white)] text-[var(--navy)] no-underline hover:bg-[var(--info)]"
-                      href={psiUrl(d)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={t('panels.onPsi', { id: d.id })}
-                      title={t('panels.onPsi', { id: d.id })}
-                    >
-                      <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden>
-                        <path
-                          d="M6 3h7v7M13 3 4 12"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </a>
-                  </li>
-                ))}
-              </ol>
+              {hyp ? <span className="kicker">{t('answer.yourHyp')}</span> : null}
+              <span className="title">{verdictTitle}</span>
             </div>
-          ) : rankingStatus === 'ok' ? (
-            <span className="text-sm text-[var(--sub)]">{t('bubble.noneTop')}</span>
           ) : null}
-
-          <span className="text-xs text-muted-foreground">
-            {msg.agentReply ? t('bubble.agentLabel') : t('bubble.localLabel')}
+          {/* Resposta em blocos fixos (inspirado no padrão "evidência útil / o que mostra / o que falta"):
+              1. o que os testes mostram, 2. o que a NASA testou perto, 3. o que ainda não se sabe */}
+          <section className="ans-block shows">
+            <h4 className="ans-h">{t('answer.shows')}</h4>
+              {/* 2. A resposta: texto da IA ou, sem IA, o resumo local.
+                  Esconde o "pensando…" provisório se ele sobrar no modo sem IA */}
+              {msg.agentFailed && rankingStatus === 'ok' ? (
+                // IA indisponível: resumo automático com os dados da NASA, com aviso honesto
+                <>
+                  <p className="summary">{summaryFor(q, r, t)}</p>
+                  <span className="lang-note auto-note">{t('bubble.autoSummaryNote')}</span>
+                </>
+              ) : msg.agentReply && msg.lead && staleAi && translated ? (
+                <AnswerText text={translated} invs={r.top.slice(0, 8)} />
+              ) : msg.agentReply && msg.lead && staleAi && translating === locale ? (
+                <p className="summary translating" aria-busy="true">
+                  <span className="spinner" aria-hidden /> {t('answer.translating')}
+                </p>
+              ) : msg.agentReply && msg.lead && staleAi && rankingStatus === 'ok' ? (
+                <>
+                  <p className="summary">{summaryFor(q, r, t)}</p>
+                  <span className="lang-note">
+                    {t('answer.langNote', {
+                      lang: msg.agentLocale === 'pt-BR' ? t('answer.langPt') : t('answer.langEn'),
+                    })}{' '}
+                    <button
+                      type="button"
+                      className="ghost lang-toggle"
+                      onClick={() => setShowOriginal((v) => !v)}
+                    >
+                      {showOriginal ? t('answer.hideOriginal') : t('answer.showOriginal')}
+                    </button>
+                  </span>
+                  {showOriginal ? (
+                    <p className="summary original" lang={msg.agentLocale}>
+                      {msg.lead}
+                    </p>
+                  ) : null}
+                </>
+              ) : msg.agentReply && msg.lead ? (
+                <AnswerText text={retranslate(msg.lead, t)} invs={r.top.slice(0, 8)} />
+              ) : (
+                <>
+                  {msg.lead && msg.lead !== t('bubble.thinking') ? (
+                    <span className="why">{msg.lead}</span>
+                  ) : null}
+                  {rankingStatus === 'ok' ? (
+                    <p className="summary">{summaryFor(q, r, t)}</p>
+                  ) : null}
+                </>
+              )}
+          </section>
+          {/* Extras sob demanda: o que a NASA testou perto, mapa de cobertura e o que ainda não se sabe */}
+          {rankingStatus === 'ok' ? (
+            <div className="ans-more">
+              {r.top.length ? (
+                <button
+                  type="button"
+                  className="ghost map-toggle"
+                  aria-expanded={testedOpen}
+                  onClick={() => setTestedOpen((v) => !v)}
+                >
+                  {t('answer.testedToggle')}
+                </button>
+              ) : null}
+              {msg.coverageCells?.length ? (
+                <button
+                  type="button"
+                  className="ghost map-toggle"
+                  aria-expanded={mapOpen}
+                  onClick={() => setMapOpen((v) => !v)}
+                >
+                  {mapOpen ? t('coverageMap.hide') : t('coverageMap.show')}
+                </button>
+              ) : null}
+              {unknowns.length ? (
+                <button
+                  type="button"
+                  className="ghost map-toggle"
+                  aria-expanded={unknownOpen}
+                  onClick={() => setUnknownOpen((v) => !v)}
+                >
+                  {t('answer.unknownToggle', { n: unknowns.length })}
+                </button>
+              ) : null}
+            </div>
+          ) : null}
+          {(rankingStatus === 'ok' && testedOpen) || rankingStatus === 'error' ? (
+            <section className="ans-block tested">
+              <h4 className="ans-h">{t('answer.tested')}</h4>
+              {/* Rótulo honesto: o quanto a NASA testou nessas condições (de /api/gaps) */}
+              {cov ? (
+                <div className={`evidence-tag ${cov.status}`}>
+                  <b>{t(`evidenceTag.${cov.status}`)}</b>
+                  <span>{t(`evidenceTag.${cov.status}Note`, { n: cov.n })}</span>
+                </div>
+              ) : null}
+              {/* 3. As investigações da NASA à vista, não só dentro do painel */}
+              {rankingStatus === 'error' ? (
+                <span className="best" role="alert">
+                  {rankingError ?? t('bubble.rankingFail')}
+                </span>
+              ) : r.top.length ? (
+                <div className="top-inv">
+                  <span className="top-inv-label">
+                    {t('bubble.investigations')}
+                    <EstimatedBadge />
+                  </span>
+                  <ol>
+                    {r.top.slice(0, 3).map((d, i) => (
+                      <li key={d.id} style={{ ['--i' as string]: i }}>
+                        <button
+                          type="button"
+                          className="top-inv-row"
+                          aria-expanded={openPanel === 'inv'}
+                          onClick={() => toggle('inv')}
+                        >
+                          <span className="rank">{i + 1}</span>
+                          <span className="name">
+                            <b>{d.name}</b>
+                            <small>
+                              {d.id}
+                              {d.where ? ` · ${d.where}` : ''}
+                            </small>
+                          </span>
+                          <span className="score">
+                            {t('panels.scoreNote', { n: f1(d.nota) })}
+                            {/* Barra da nota (0–10), no estilo do vídeo de demonstração */}
+                            <span className="score-bar" aria-hidden>
+                              <span style={{ width: `${Math.max(0, Math.min(10, d.nota)) * 10}%` }} />
+                            </span>
+                          </span>
+                        </button>
+                        {/* Link direto para a página oficial da investigação no PSI da NASA */}
+                        <a
+                          className="top-inv-link"
+                          href={psiUrl(d)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={t('panels.onPsi', { id: d.id })}
+                          title={t('panels.onPsi', { id: d.id })}
+                        >
+                          <span className="psi-chip-id">{d.id}</span>
+                          <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden>
+                            <path
+                              d="M6 3h7v7M13 3 4 12"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="1.8"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              ) : (
+                <span className="best">{t('bubble.noneTop')}</span>
+              )}
+            </section>
+          ) : null}
+          {rankingStatus === 'ok' && mapOpen && msg.coverageCells?.length ? (
+            <CoverageMap cells={msg.coverageCells} q={q} />
+          ) : null}
+          {rankingStatus === 'ok' && unknownOpen && unknowns.length ? (
+            <section className="ans-block unknown">
+              <h4 className="ans-h">{t('answer.unknown')}</h4>
+              <ul>
+                {unknowns.map((u) => (
+                  <li key={u}>{u}</li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
+          {rankingStatus === 'ok' ? (
+            <span className="ans-disclaimer">{t('answer.disclaimer')}</span>
+          ) : null}
+          <span className="ai-label">
+            {msg.agentReply && !msg.agentFailed ? t('bubble.agentLabel') : t('bubble.localLabel')}
           </span>
-
           {rankingStatus === 'ok' && r.top.length > 0 ? (
             <HypothesisDashboard
               spec={msg.dashboard}
@@ -233,171 +361,127 @@ export function AiBubble({
           ) : null}
         </>
       )}
-
-      {rankingStatus !== 'loading' && rankingStatus !== 'idle' ? (
+      {/* Painéis e perguntas de continuação só depois que a resposta chega */}
+      {rankingStatus !== 'loading' ? (
         <>
-          <div
-            className="flex flex-wrap gap-1.5 pt-1"
-            role="group"
-            aria-label={t('panels.detailsAria')}
+      <div className="details" role="group" aria-label={t('panels.detailsAria')}>
+        <button
+          type="button"
+          aria-expanded={openPanel === 'cond'}
+          onClick={() => toggle('cond')}
+        >
+          {t('bubble.conditions')}
+          {missing.length ? (
+            <span className="count warn">
+              {t('bubble.defaultCount', { n: missing.length })}
+            </span>
+          ) : null}
+        </button>
+        <button
+          type="button"
+          aria-expanded={openPanel === 'inv'}
+          onClick={() => toggle('inv')}
+        >
+          {t('bubble.investigations')}{' '}
+          <span className="count">{invCountLabel}</span>
+        </button>
+        <button
+          type="button"
+          aria-expanded={openPanel === 'ev'}
+          onClick={() => toggle('ev')}
+        >
+          {t('bubble.evidence')}
+        </button>
+        <button
+          type="button"
+          aria-expanded={openPanel === 'gaps'}
+          onClick={() => toggle('gaps')}
+        >
+          {t('bubble.gaps')} <span className="count">{r.gaps.length}</span>
+        </button>
+        <button
+          type="button"
+          aria-expanded={openPanel === 'src'}
+          onClick={() => toggle('src')}
+        >
+          {t('bubble.sources')}
+        </button>
+      </div>
+      <div className="panel-slot">
+        <DetailPanels
+          msg={msg}
+          openPanel={openPanel}
+          onApplyConditions={onApplyConditions}
+          environments={environments}
+        />
+      </div>
+      <div className="followups">
+        {q.env !== 'iss' ? (
+          <button
+            type="button"
+            onClick={() => onFollowup(t('bubble.followIssPrompt'))}
           >
-            {(
-              [
-                {
-                  id: 'cond' as const,
-                  label: t('bubble.conditions'),
-                  count: missing.length
-                    ? t('bubble.defaultCount', { n: missing.length })
-                    : null,
-                  warn: missing.length > 0,
-                },
-                {
-                  id: 'inv' as const,
-                  label: t('bubble.investigations'),
-                  count: invCountLabel,
-                  warn: false,
-                },
-                {
-                  id: 'ev' as const,
-                  label: t('bubble.evidence'),
-                  count: null,
-                  warn: false,
-                },
-                {
-                  id: 'gaps' as const,
-                  label: t('bubble.gaps'),
-                  count: String(r.gaps.length),
-                  warn: false,
-                },
-                {
-                  id: 'src' as const,
-                  label: t('bubble.sources'),
-                  count: null,
-                  warn: false,
-                },
-              ] as const
-            ).map((tab) => {
-              const expanded = openPanel === tab.id
-              return (
-                <Button
-                  key={tab.id}
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  aria-expanded={expanded}
-                  onClick={() => toggle(tab.id)}
-                  className={cn(
-                    'rounded-full font-medium',
-                    expanded &&
-                      '!bg-[#1B2B85] !text-white hover:!bg-[#1B2B85]',
-                  )}
-                >
-                  {tab.label}
-                  {tab.count != null ? (
-                    <Badge
-                      variant={tab.warn ? 'warning' : 'secondary'}
-                      size="sm"
-                      className={cn(
-                        'h-auto px-1.5',
-                        expanded && '!bg-white/20 !text-white',
-                        tab.warn &&
-                          !expanded &&
-                          '!bg-[var(--miss)] !text-[#6B6E00]',
-                      )}
-                    >
-                      {tab.count}
-                    </Badge>
-                  ) : null}
-                </Button>
-              )
-            })}
-          </div>
-
-          <DetailPanels
-            msg={msg}
-            openPanel={openPanel}
-            onApplyConditions={onApplyConditions}
-            environments={environments}
-          />
+            {t('bubble.followIss')}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => onFollowup(t('bubble.followLunarPrompt'))}
+          >
+            {t('bubble.followLunar')}
+          </button>
+        )}
+        {q.flow !== 0 ? (
+          <button type="button" onClick={() => onFollowup(t('bubble.followStillPrompt'))}>
+            {t('bubble.followStill')}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() => onFollowup(t('bubble.followVentPrompt'))}
+          >
+            {t('bubble.followVent')}
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={() =>
+            onFollowup(
+              q.material === 'plastico'
+                ? t('bubble.followFabricPrompt')
+                : t('bubble.followAcrylicPrompt'),
+            )
+          }
+        >
+          {t('bubble.followMaterial', { material: altMaterial })}
+        </button>
+        <button
+          type="button"
+          onClick={() => onFollowup(t('bubble.dashboardChip'))}
+        >
+          {t('bubble.dashboardChipLabel')}
+        </button>
+      </div>
         </>
       ) : null}
-
-      {rankingStatus !== 'loading' ? (
-        <div className="flex flex-wrap gap-1.5">
-          {q.env !== 'iss' ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="px-0 text-[var(--blue)] hover:bg-transparent hover:underline"
-              onClick={() => onFollowup(t('bubble.followIssPrompt'))}
-            >
-              <span aria-hidden className="text-muted-foreground">↳ </span>
-              {t('bubble.followIss')}
-            </Button>
-          ) : (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="px-0 text-[var(--blue)] hover:bg-transparent hover:underline"
-              onClick={() => onFollowup(t('bubble.followLunarPrompt'))}
-            >
-              <span aria-hidden className="text-muted-foreground">↳ </span>
-              {t('bubble.followLunar')}
-            </Button>
-          )}
-          {q.flow !== 0 ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="px-0 text-[var(--blue)] hover:bg-transparent hover:underline"
-              onClick={() => onFollowup(t('bubble.followStillPrompt'))}
-            >
-              <span aria-hidden className="text-muted-foreground">↳ </span>
-              {t('bubble.followStill')}
-            </Button>
-          ) : (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="px-0 text-[var(--blue)] hover:bg-transparent hover:underline"
-              onClick={() => onFollowup(t('bubble.followVentPrompt'))}
-            >
-              <span aria-hidden className="text-muted-foreground">↳ </span>
-              {t('bubble.followVent')}
-            </Button>
-          )}
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="px-0 text-[var(--blue)] hover:bg-transparent hover:underline"
-            onClick={() =>
-              onFollowup(
-                q.material === 'plastico'
-                  ? t('bubble.followFabricPrompt')
-                  : t('bubble.followAcrylicPrompt'),
-              )
-            }
-          >
-            <span aria-hidden className="text-muted-foreground">↳ </span>
-            {t('bubble.followMaterial', { material: altMaterial })}
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="px-0 text-[var(--blue)] hover:bg-transparent hover:underline"
-            onClick={() => onFollowup(t('bubble.dashboardChip'))}
-          >
-            <span aria-hidden className="text-muted-foreground">↳ </span>
-            {t('bubble.dashboardChipLabel')}
-          </Button>
-        </div>
-      ) : null}
     </div>
+  )
+}
+
+/** Texto da IA com chips de fonte e a linha "Próximo passo" destacada (estilo do vídeo). */
+function AnswerText({ text, invs }: { text: string; invs: Parameters<typeof CitedText>[0]['invs'] }) {
+  const t = useT()
+  const { body, next } = splitNextStep(text)
+  return (
+    <>
+      <p className="summary">
+        <CitedText text={body} invs={invs} />
+      </p>
+      {next ? (
+        <p className="next-step">
+          <b>{t('answer.nextStep')}</b> {next}
+        </p>
+      ) : null}
+    </>
   )
 }
