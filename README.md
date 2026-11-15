@@ -102,8 +102,11 @@ Ports: **http://localhost:5006** · Swagger (dev): `/swagger`
 | Path | Role |
 | --- | --- |
 | `src/App.tsx` | Shell — `I18nProvider` + `ChatApp` |
-| `src/chat/` | Screens, panels, session hooks, adapters, parser |
-| `src/services/` | Typed HTTP client (`contracts`, `http`, ranking, gaps, export, agent, …) |
+| `src/chat/components/` | Screens and panels |
+| `src/chat/use-cases/` | Session, hydration, export, profiles/environments hooks |
+| `src/chat/domain/` | Adapters, engine/parser, storage, evidence/gaps mapping |
+| `src/services/api/` | Typed API clients (ranking, gaps, export, agent, …) |
+| `src/services/shared/` | `contracts`, `http`, `request-state` |
 | `src/i18n/` | `en-US` / `pt-BR` catalogs |
 | `src/components/ui/` | shadcn-style primitives |
 | `src/hooks/` | Shared React hooks |
@@ -118,7 +121,7 @@ Ports: **http://localhost:5006** · Swagger (dev): `/swagger`
 | `eng` / `pesq` / `est` | `ShipEngineer` / `Researcher` / `Student` |
 | `lua` / `marte` / `iss` | `Moon` / `Mars` / `Iss` |
 
-Canonical API IDs are what we persist in `localStorage`. Mapping lives in `src/chat/adapters.ts`.
+Canonical API IDs are what we persist in `localStorage`. Mapping lives in `src/chat/domain/adapters.ts`.
 
 **Tracks (status):** T1–T6 done (typed client → API-backed chat → export/polish). Optional **T7:** main ranking screen, dedicated detail, comparer, 2D gap map, spinoffs — see `blue-ember-frontend/docs/TODO-FRONTEND.md`.
 

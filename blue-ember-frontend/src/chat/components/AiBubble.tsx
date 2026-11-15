@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useT } from '@/i18n'
-import type { EnvironmentDto } from '@/services/contracts'
-import { LOGO_SRC } from '../data'
-import { f1, summaryFor } from '../engine'
-import type { ChatMessage, PanelId, QueryState } from '../types'
+import type { EnvironmentDto } from '@/services/shared/contracts'
+import { LOGO_SRC } from '../domain/data'
+import { f1, summaryFor } from '../domain/engine'
+import type { ChatMessage, PanelId, QueryState } from '../domain/types'
 import { DetailPanels } from './detail-panels'
 import { HypothesisDashboard } from './HypothesisDashboard'
 

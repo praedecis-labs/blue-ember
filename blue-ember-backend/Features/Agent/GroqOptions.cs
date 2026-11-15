@@ -6,7 +6,7 @@ public sealed class GroqOptions
 
     public string BaseUrl { get; set; } = "https://api.groq.com/openai/v1";
     public string ApiKey { get; set; } = "";
-    public string Model { get; set; } = "openai/gpt-oss-120b";
-    public int MaxToolRounds { get; set; } = 5;
+    public string Model { get; set; } = "openai/gpt-oss-20b";
+    public int MaxToolRounds { get; set; } = 4;
     public int TimeoutSeconds { get; set; } = 180;
 }

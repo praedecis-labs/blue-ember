@@ -1,8 +1,8 @@
 import { translatedExamples, useT } from '@/i18n'
-import type { EnvironmentDto } from '@/services/contracts'
-import { environmentLabel } from '../env-defaults'
-import { fmt } from '../engine'
-import type { HistoryItem } from '../types'
+import type { EnvironmentDto } from '@/services/shared/contracts'
+import { environmentLabel } from '../domain/env-defaults'
+import { fmt } from '../domain/engine'
+import type { HistoryItem } from '../domain/types'
 
 type Props = {
   history: HistoryItem[]

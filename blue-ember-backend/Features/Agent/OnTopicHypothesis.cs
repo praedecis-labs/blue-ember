@@ -5,14 +5,19 @@ namespace BlueEmber.Api.Features.Agent;
 public static partial class OnTopicHypothesis
 {
     [GeneratedRegex(
-        @"\b(?:fire|burn|flame|combust(?:ion)?|smoke|oxygen|o2|psi|kpa|iss|moon|mars|lunar|marte|lua|habitat|cabin|fabric|cotton|acrylic|pmma|nomex|suppress|extinguish|detect(?:ion)?|alarm|toxic|toxicity|moc|saffire|bass|fogo|chama|queima|fumaca|fumaça|oxigenio|oxigênio|tecido|pano|roupa|algodao|algodão|acrilico|acrílico|plastico|plástico|liquido|líquido|apagar|exting|detectar|sensor|alarme|pressao|pressão|ventila|fluxo|gravidade|microgravidade|prevenc|deteccao|detecção|supress|segur|risco|perig|material|investigac)",
+        @"\b(?:fire|burn|flame|combust(?:ion)?|smoke|oxygen|o2|psi|kpa|iss|moon|mars|lunar|marte|lua|habitat|cabin|fabric|cotton|acrylic|pmma|nomex|suppress|extinguish|detect(?:ion)?|alarm|toxic|toxicity|moc|saffire|bass|fogo|chama|queima|fumaca|fumaça|oxigenio|oxigênio|tecido|pano|roupa|algodao|algodão|acrilico|acrílico|plastico|plástico|liquido|líquido|apagar|exting|detectar|sensor|alarme|pressao|pressão|ventila|fluxo|gravidade|microgravidade|prevenc|deteccao|detecção|supress|segur|risco|perig|material|investigac|dashboard|painel|periculosidade|legendas|hazard|previsib|visualiza|hipotese|hipótese|hypothesis)\b",
         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex DomainRegex();
 
     [GeneratedRegex(
-        @"(\d{2,3}(?:[.,]\d+)?)\s*%|(\d{1,2}(?:[.,]\d+)?)\s*psi|(\d{1,3}(?:[.,]\d+)?)\s*cm\s*/\s*s|\b(?:iss|marte|lua|lunar|esta[cç][aã]o espacial|tecido|pano|roupa|nomex|algod[aã]o|cortina|pl[aá]stico|acr[ií]lico|pmma|l[ií]quido|combust[ií]vel|gota|apag|extin|suprim|detect|fuma[cç]a|sensor|alarme|evitar|prevenir|segur|risco|queima|perig|co2|co₂|h[eé]lio|nitrog|ar parado|sem ventila|sem fluxo|pouca ventila|fire|burn|flame|combust|smoke|oxygen|moon|mars|fabric|cotton|acrylic|suppress|extinguish|habitat|cabin)\b",
+        @"(\d{2,3}(?:[.,]\d+)?)\s*%|(\d{1,2}(?:[.,]\d+)?)\s*psi|(\d{1,3}(?:[.,]\d+)?)\s*cm\s*/\s*s|\b(?:iss|marte|lua|lunar|esta[cç][aã]o espacial|tecido|pano|roupa|nomex|algod[aã]o|cortina|pl[aá]stico|acr[ií]lico|pmma|l[ií]quido|combust[ií]vel|gota|apag|extin|suprim|detect|fuma[cç]a|sensor|alarme|evitar|prevenir|segur|risco|queima|perig|co2|co₂|h[eé]lio|nitrog|ar parado|sem ventila|sem fluxo|pouca ventila|fire|burn|flame|combust|smoke|oxygen|moon|mars|fabric|cotton|acrylic|suppress|extinguish|habitat|cabin|dashboard|painel|periculosidade|legendas|hazard|hip[oó]tese|hypothesis)\b",
         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
     private static partial Regex ParsedSignalRegex();
+
+    [GeneratedRegex(
+        @"^(e se|e com|e no|e na|what if|and with|and if|build (an )?interpretive|montar dashboard)\b",
+        RegexOptions.IgnoreCase | RegexOptions.CultureInvariant)]
+    private static partial Regex FollowUpRegex();
 
     public static bool IsOnTopic(string? message)
     {
@@ -23,6 +28,10 @@ public static partial class OnTopicHypothesis
         if (trimmed.Length < 4)
             return false;
 
-        return ParsedSignalRegex().IsMatch(trimmed) || DomainRegex().IsMatch(trimmed);
+        if (ParsedSignalRegex().IsMatch(trimmed) || DomainRegex().IsMatch(trimmed))
+            return true;
+
+        // Chips de follow-up / dashboard do chat (já no contexto de uma análise).
+        return FollowUpRegex().IsMatch(trimmed);
     }
 }

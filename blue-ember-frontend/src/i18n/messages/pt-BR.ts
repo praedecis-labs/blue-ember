@@ -83,18 +83,22 @@ export const ptBR: MessageTree = {
     rerunSame: 'Refaça a análise com as mesmas condições.',
   },
   bubble: {
-    thinking: 'Pensando com Gemini…',
-    thinkingPanels: 'O Gemini respondeu · carregando ranking e lacunas da NASA…',
-    thinkingRanking: 'Pensando com Gemini e consultando ranking…',
+    thinking: 'Pensando com o agente de IA…',
+    thinkingPanels: 'O agente respondeu · carregando ranking e lacunas da NASA…',
+    thinkingRanking: 'Pensando com o agente de IA e consultando ranking…',
     loadingRanking: 'Carregando ranking da API…',
     rankingFail: 'Falha ao carregar o ranking.',
     mostRelevant: 'Mais relevante:',
     noneTop: 'Nenhuma investigação no topo do ranking.',
     agentLabel:
-      'Resposta do Gemini, com base no ranking e nas lacunas da API · fontes nos detalhes abaixo',
+      'Resposta do agente · tools ranking/gaps · abra as fontes nos detalhes',
     localLabel:
       'Resposta por modelos locais · notas da API · fontes nos detalhes abaixo',
     offTopicLabel: 'Checagem de escopo · ranking não executado',
+    agentOffline:
+      'Agente de IA offline (sem API key). Mostrando só ranking e gaps da NASA.',
+    agentFallback:
+      'O agente de IA não concluiu (limite de taxa ou erro do provedor). Mostrando só ranking e gaps da NASA — tente de novo em alguns segundos.',
     yourHypothesis: 'Sua hipótese:',
     conditions: 'Condições usadas',
     defaultCount: '{{n}} padrão',

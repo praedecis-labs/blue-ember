@@ -80,18 +80,22 @@ export const enUS = {
     rerunSame: 'Rerun the analysis with the same conditions.',
   },
   bubble: {
-    thinking: 'Thinking with Gemini…',
-    thinkingPanels: 'Gemini answered · loading NASA ranking and gaps…',
-    thinkingRanking: 'Thinking with Gemini and loading ranking…',
+    thinking: 'Thinking with the AI agent…',
+    thinkingPanels: 'AI agent answered · loading NASA ranking and gaps…',
+    thinkingRanking: 'Thinking with the AI agent and loading ranking…',
     loadingRanking: 'Loading ranking from the API…',
     rankingFail: 'Failed to load ranking.',
     mostRelevant: 'Most relevant:',
     noneTop: 'No investigation at the top of the ranking.',
     agentLabel:
-      'Answer by Gemini, based on the API ranking and gaps · sources in the details below',
+      'AI agent reply · ranking/gaps tools · open sources in details',
     localLabel:
       'Answer from local templates · scores from the API · sources in the details below',
     offTopicLabel: 'Scope check · no ranking run',
+    agentOffline:
+      'AI agent is offline (no API key). Showing NASA ranking and gaps only.',
+    agentFallback:
+      'AI agent could not finish (rate limit or provider error). Showing NASA ranking and gaps only — try again in a few seconds.',
     yourHypothesis: 'Your hypothesis:',
     conditions: 'Conditions used',
     defaultCount: '{{n}} default',

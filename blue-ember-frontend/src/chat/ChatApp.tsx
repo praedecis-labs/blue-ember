@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { ToastProvider } from '@/components/ui/toast-provider'
-import { toApiCategory, toApiEnvironment, toApiProfile } from './adapters'
+import { toApiCategory, toApiEnvironment, toApiProfile } from './domain/adapters'
 import { AnalysesHome } from './components/AnalysesHome'
 import { AppSidebar } from './components/AppSidebar'
 import { ChatHeader } from './components/ChatHeader'
@@ -12,13 +12,13 @@ import {
   profileDisplayName,
 } from './components/ProfileScreen'
 import { useI18n } from '@/i18n'
-import { loadTheme, saveTheme } from './storage'
-import type { ThemeId } from './types'
-import { useApiHealth } from './use-api-health'
-import { useChatSession } from './use-chat-session'
-import { useEnvironments } from './use-environments'
-import { useExportRanking } from './use-export-ranking'
-import { useProfiles } from './use-profiles'
+import { loadTheme, saveTheme } from './domain/storage'
+import type { ThemeId } from './domain/types'
+import { useApiHealth } from './use-cases/use-api-health'
+import { useChatSession } from './use-cases/use-chat-session'
+import { useEnvironments } from './use-cases/use-environments'
+import { useExportRanking } from './use-cases/use-export-ranking'
+import { useProfiles } from './use-cases/use-profiles'
 import './ChatApp.css'
 
 export function ChatApp() {
@@ -96,7 +96,7 @@ export function ChatApp() {
             onOpenDoc={session.openDoc}
             onToggleTheme={toggleTheme}
           />
-          <SidebarInset>
+          <SidebarInset className="min-w-0 overflow-x-clip">
             <div className="chat-app" data-theme={theme}>
               <ChatHeader
                 screen={session.screen}

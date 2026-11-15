@@ -13,7 +13,7 @@ import {
   setCurrentLocale,
   type AppLocale,
 } from './locales'
-import { loadLocale, saveLocale } from '@/chat/storage'
+import { loadLocale, saveLocale } from '@/chat/domain/storage'
 import { enUS, type MessageTree } from './messages/en-US'
 import { ptBR } from './messages/pt-BR'
 

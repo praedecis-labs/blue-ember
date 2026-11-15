@@ -1,7 +1,7 @@
 import { useT } from '@/i18n'
-import { WEIGHTS } from '../../data'
-import { f1, fmt } from '../../engine'
-import type { CritKey, CritWeights } from '../../types'
+import { WEIGHTS } from '../../domain/data'
+import { f1, fmt } from '../../domain/engine'
+import type { CritKey, CritWeights } from '../../domain/types'
 import { SHOW_DOI, type AiMsg } from './types'
 
 const CRIT_KEYS: CritKey[] = ['prox', 'moc', 'spread', 'hrr', 'tox']

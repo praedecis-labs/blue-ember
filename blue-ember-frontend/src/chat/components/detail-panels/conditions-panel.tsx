@@ -1,14 +1,15 @@
 import { useEffect, useMemo, useRef, type FormEvent } from 'react'
 import { useT } from '@/i18n'
-import type { EnvironmentDto } from '@/services/contracts'
-import { ENV_IDS } from '../../adapters'
-import { GRAV } from '../../data'
+import type { EnvironmentDto } from '@/services/shared/contracts'
+import { ENV_IDS } from '../../domain/adapters'
+import { GRAV } from '../../domain/data'
 import {
   buildQueryDefaults,
   environmentLabel,
-} from '../../env-defaults'
-import { fmt, kpa } from '../../engine'
-import type { EnvId, QueryState } from '../../types'
+  findEnvironmentDto,
+} from '../../domain/env-defaults'
+import { fmt, kpa } from '../../domain/engine'
+import type { EnvId, QueryState } from '../../domain/types'
 import type { AiMsg } from './types'
 
 type AtmChip = {
