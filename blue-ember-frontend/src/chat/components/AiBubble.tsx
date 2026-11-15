@@ -26,6 +26,22 @@ export function AiBubble({
     setOpenPanel((cur) => (cur === panel ? null : panel))
   }
 
+  // Veredito único no topo: a hipótese (quando houver) + a força da evidência numa linha só
+  const hyp = msg.verdict && msg.verdict[0] !== 'unknown' ? msg.verdict : null
+  const verdictTone = hyp ? hyp[0] : r.above ? 'weak' : r.level[0]
+  const verdictTitle = hyp
+    ? hyp[1]
+    : r.above
+      ? 'Risco maior do que os testes mostram'
+      : r.level[0] === 'strong'
+        ? 'Há testes da NASA nessas condições'
+        : r.level[0] === 'moderate'
+          ? 'Há testes parecidos, com diferenças'
+          : 'Poucos testes parecidos com o seu caso'
+  const verdictKicker = hyp
+    ? `Sua hipótese · ${r.level[1].toLowerCase()}`
+    : r.level[1]
+
   const invCountLabel =
     rankingStatus === 'loading'
       ? '…'
@@ -40,15 +56,12 @@ export function AiBubble({
           <img className="avatar" src={LOGO_SRC} alt="" />
           Blue Ember
         </span>
-        <span className={`pill ${r.level[0]}`}>{r.level[1]}</span>
       </div>
       {msg.lead ? <span className="why">{msg.lead}</span> : null}
-      {msg.verdict ? (
-        <div className="verdict">
-          <b>Sua hipótese:</b>
-          <span className={`pill ${msg.verdict[0]}`}>{msg.verdict[1]}</span>
-        </div>
-      ) : null}
+      <div className={`verdict-big ${verdictTone}`} role="status">
+        <span className="kicker">{verdictKicker}</span>
+        <span className="title">{verdictTitle}</span>
+      </div>
       <p className="summary">{summaryFor(q, r)}</p>
       {rankingStatus === 'loading' ? (
         <span className="best">Carregando ranking da API…</span>
