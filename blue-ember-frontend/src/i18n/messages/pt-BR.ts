@@ -95,6 +95,8 @@ export const ptBR: MessageTree = {
     localLabel:
       'Resposta por modelos locais · notas da API · fontes nos detalhes abaixo',
     offTopicLabel: 'Checagem de escopo · ranking não executado',
+    serverOffline: 'Não foi possível falar com o servidor do Blue Ember. Verifique se o backend está no ar e tente de novo.',
+    autoSummaryNote: 'IA indisponível agora: resumo automático feito com os dados da NASA. Pergunte de novo em um minuto para a resposta da IA.',
     agentOffline:
       'Agente de IA offline (sem API key). Mostrando só ranking e gaps da NASA.',
     agentFallback:
@@ -376,6 +378,7 @@ export const ptBR: MessageTree = {
       'Nas investigações da NASA consultadas, o maior O₂ testado foi {{maxO2}}%{{source}}. Com {{o2}}%, o material tende a queimar com mais facilidade do que os testes mostram: trate o risco como maior.',
     near: 'Há testes da NASA em condições próximas da sua; o {{best}} é o mais parecido{{o2Range}}.',
     o2Range: ' (O₂ testado: {{lo}}–{{hi}}%)',
+    o2Single: ' (O₂ testado: {{v}}%)',
     searching: 'Buscando investigações da NASA para o ambiente selecionado…',
     partialG:
       ' Na gravidade {{env}}, estudos indicam que alguns materiais queimam com menos oxigênio do que na Terra.',

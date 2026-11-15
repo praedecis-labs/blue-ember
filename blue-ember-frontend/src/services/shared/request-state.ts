@@ -53,6 +53,11 @@ export function messageFromUnknown(err: unknown): string {
   if (err instanceof TypeError && /fetch/i.test(err.message)) {
     return offlineMsg()
   }
+  // axios sem resposta do servidor (backend fora do ar ou rede caiu)
+  const code = (err as { code?: string } | null)?.code
+  if (code === 'ERR_NETWORK' || code === 'ECONNREFUSED' || (err instanceof Error && err.message === 'Network Error')) {
+    return offlineMsg()
+  }
   if (err instanceof Error && err.message) return err.message
   return pt()
     ? 'Algo deu errado ao falar com a API.'

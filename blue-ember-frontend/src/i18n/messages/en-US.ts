@@ -92,6 +92,8 @@ export const enUS = {
     localLabel:
       'Answer from local templates · scores from the API · sources in the details below',
     offTopicLabel: 'Scope check · no ranking run',
+    serverOffline: 'Could not reach the Blue Ember server. Check that the backend is running and try again.',
+    autoSummaryNote: 'AI unavailable right now: automatic summary built from the NASA data. Ask again in a minute for the AI answer.',
     agentOffline:
       'AI agent is offline (no API key). Showing NASA ranking and gaps only.',
     agentFallback:
@@ -372,6 +374,7 @@ export const enUS = {
       'Across the NASA investigations consulted, the highest O₂ tested was {{maxO2}}%{{source}}. At {{o2}}%, the material tends to burn more readily than tests show: treat the risk as higher.',
     near: 'There are NASA tests in conditions close to yours; {{best}} is the closest match{{o2Range}}.',
     o2Range: ' (O₂ tested: {{lo}}–{{hi}}%)',
+    o2Single: ' (O₂ tested: {{v}}%)',
     searching: 'Looking up NASA investigations for the selected environment…',
     partialG:
       ' In {{env}} gravity, studies suggest some materials burn with less oxygen than on Earth.',
