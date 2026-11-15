@@ -18,12 +18,13 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from '@/components/ui/sidebar'
-import { LOGO_SRC, PROFILES } from '../data'
+import { LOGO_SRC } from '../data'
 import type { HistoryItem, ProfileId, ScreenId, ThemeId } from '../types'
 
 type Props = {
   screen: ScreenId
   profile: ProfileId | null
+  profileLabel: string | null
   theme: ThemeId
   history: HistoryItem[]
   onHome: () => void
@@ -36,6 +37,7 @@ type Props = {
 export function AppSidebar({
   screen,
   profile,
+  profileLabel,
   theme,
   history,
   onHome,
@@ -133,7 +135,7 @@ export function AppSidebar({
               <SidebarMenuButton onClick={onProfile} tooltip="Trocar perfil">
                 <UserRound />
                 <span className="truncate">
-                  {PROFILES[profile].name}
+                  {profileLabel ?? profile}
                 </span>
               </SidebarMenuButton>
             </SidebarMenuItem>

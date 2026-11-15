@@ -5,7 +5,14 @@ import { motion } from 'framer-motion'
 import { ArrowRight, CheckCircle, AlertTriangle, Info, Flame } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Empty } from '@/components/ui/empty'
 import { Progress } from '@/components/ui/progress'
 import { Spinner } from '@/components/ui/spinner'
@@ -112,10 +119,8 @@ export function ShadcnDemo() {
               </div>
             </CardContent>
             <CardFooter>
-              <Button size="sm" asChild>
-                <a href="#" className="flex items-center gap-2">
-                  Ver detalhes <ArrowRight className="size-4" />
-                </a>
+              <Button size="sm" className="gap-2">
+                Ver detalhes <ArrowRight className="size-4" />
               </Button>
             </CardFooter>
           </Card>

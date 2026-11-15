@@ -1,7 +1,7 @@
 # To-dos — Frontend Blue Ember (chat → API)
 
 **Objetivo:** o protótipo em `src/chat/` deixar de ser só mock local e consumir a API .NET com contrato estável, pronto para demo do hackathon.  
-**Estado atual:** UI/fluxo portados do protótipo visual v1 (`docs/prototipos/blue-ember-chat-v1.html` → `src/chat/`); score, gaps e ranking ainda são **locais** (`src/chat/data.ts` + `engine.ts`). Só existe `services/health.ts` (+ adapters de IDs).  
+**Estado atual:** UI/fluxo em React; **T1+T2** fechados (client HTTP + perfil/ambientes da API, persistência canônica). Score/gaps/ranking nos painéis do chat ainda são **locais** (`engine.ts`) até T3–T5.  
 **Fora desta fatia (hackathon):** auth real, `/ask` no backend, pgvector, Planetary Computer.
 
 **Mapa de IDs (alinhar antes de integrar):**
@@ -107,13 +107,13 @@ Sugestão de donos (preencher):
 
 ### T2 — Perfil e ambientes reais
 
-- [ ] Carregar `GET /api/profiles` na tela de perfil (labels + barras de peso da API)
-- [ ] Remover pesos hardcoded de `WEIGHTS` **como fonte de verdade** (podem ficar só como fallback offline)
-- [ ] Carregar `GET /api/environments` (alvos O₂ / pressão / fluxo)
-- [ ] Persistência: gravar no `localStorage` os IDs **canônicos da API** (`ShipEngineer`, `Moon`, …)
-- [ ] Indicador de API no header (reusar ideia do `HomePage` health: online/offline)
+- [x] Carregar `GET /api/profiles` na tela de perfil (labels + barras de peso da API)
+- [x] Remover pesos hardcoded de `WEIGHTS` **como fonte de verdade** (podem ficar só como fallback offline)
+- [x] Carregar `GET /api/environments` (alvos O₂ / pressão / fluxo)
+- [x] Persistência: gravar no `localStorage` os IDs **canônicos da API** (`ShipEngineer`, `Moon`, …)
+- [x] Indicador de API no header (reusar ideia do `HomePage` health: online/offline)
 
-**Done quando:** trocar perfil muda o ranking que a API devolve (mesmo sem chat perfeito).
+**Done quando:** trocar perfil muda o ranking que a API devolve (mesmo sem chat perfeito). ✅ (15/11/2026)
 
 ---
 
@@ -223,4 +223,4 @@ Se forem **3+ pessoas:** T1 sozinho → em seguida T2 ∥ T3 ∥ T4 → T5 integ
 
 ---
 
-*Atualizado 14/11/2026 — T1 (contratos + client HTTP) fechado. Atualizar quando um track fechar (marcar checkboxes + data).*
+*Atualizado 15/11/2026 — T1 + T2 fechados (client HTTP; perfil/ambientes da API + localStorage canônico). Próximo: T3 ranking nos painéis.*

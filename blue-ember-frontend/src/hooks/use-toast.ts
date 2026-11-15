@@ -29,7 +29,7 @@ const actionTypes = {
 let count = 0
 
 function genId() {
-  count = (count + 1) % Number.MAX_VALUE
+  count = (count + 1) % Number.MAX_SAFE_INTEGER
   return count.toString()
 }
 
@@ -47,17 +47,25 @@ interface State {
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>()
 
-const removeToastTimeout = (toastId: string) => {
-  clearTimeout(toastTimeouts.get(toastId))
+const listeners: Array<(state: State) => void> = []
+
+let memoryState: State = { toasts: [] }
+
+function dispatch(action: Action) {
+  memoryState = reducer(memoryState, action)
+  listeners.forEach((listener) => {
+    listener(memoryState)
+  })
 }
 
-const addToastTimeout = (
-  toastId: string,
-  callback: () => void,
-  delay: number
-) => {
-  removeToastTimeout(toastId)
-  const timeout = setTimeout(callback, delay)
+function addToRemoveQueue(toastId: string) {
+  if (toastTimeouts.has(toastId)) return
+
+  const timeout = setTimeout(() => {
+    toastTimeouts.delete(toastId)
+    dispatch({ type: actionTypes.REMOVE_TOAST, toastId })
+  }, TOAST_REMOVE_DELAY)
+
   toastTimeouts.set(toastId, timeout)
 }
 
@@ -73,29 +81,21 @@ const reducer = (state: State, action: Action): State => {
       return {
         ...state,
         toasts: state.toasts.map((t) =>
-          t.id === action.toast.id ? { ...t, ...action.toast } : t
+          t.id === action.toast.id ? { ...t, ...action.toast } : t,
         ),
       }
 
     case actionTypes.DISMISS_TOAST: {
       const { toastId } = action
       if (toastId) {
-        addToastTimeout(toastId, () => {
-          dispatch({ type: actionTypes.REMOVE_TOAST, toastId })
-        }, TOAST_REMOVE_DELAY)
+        addToRemoveQueue(toastId)
       } else {
-        state.toasts.forEach((t) => {
-          addToastTimeout(t.id, () => {
-            dispatch({ type: actionTypes.REMOVE_TOAST, toastId: t.id })
-          }, TOAST_REMOVE_DELAY)
-        })
+        state.toasts.forEach((t) => addToRemoveQueue(t.id))
       }
       return {
         ...state,
         toasts: state.toasts.map((t) =>
-          t.id === toastId || !toastId
-            ? { ...t, open: false }
-            : t
+          t.id === toastId || toastId === undefined ? { ...t, open: false } : t,
         ),
       }
     }
@@ -114,23 +114,6 @@ const reducer = (state: State, action: Action): State => {
   }
 }
 
-function listeners(
-  state: State,
-  action: Action,
-  setState: React.Dispatch<State>
-) {
-  if (action.type === actionTypes.REMOVE_TOAST) {
-    removeToastTimeout(action.toastId ?? '')
-  }
-}
-
-let state: State = { toasts: [] }
-
-function dispatch(action: Action) {
-  state = reducer(state, action)
-  listeners(state, action, setState)
-}
-
 type ToastContent = {
   title?: React.ReactNode
   description?: React.ReactNode
@@ -141,8 +124,12 @@ type ToastContent = {
 function toast({ ...props }: ToastContent) {
   const id = genId()
   const update = (newProps: Partial<ToasterToast>) =>
-    dispatch({ type: actionTypes.UPDATE_TOAST, toast: { ...newProps, id } })
-  const dismiss = () => dispatch({ type: actionTypes.DISMISS_TOAST, toastId: id })
+    dispatch({
+      type: actionTypes.UPDATE_TOAST,
+      toast: { ...newProps, id },
+    })
+  const dismiss = () =>
+    dispatch({ type: actionTypes.DISMISS_TOAST, toastId: id })
 
   dispatch({
     type: actionTypes.ADD_TOAST,
@@ -150,9 +137,6 @@ function toast({ ...props }: ToastContent) {
       ...props,
       id,
       open: true,
-      onOpenChange: (open: boolean) => {
-        if (!open) dismiss()
-      },
     },
   })
 
@@ -164,11 +148,15 @@ function toast({ ...props }: ToastContent) {
 }
 
 function useToast() {
-  const [state, setState] = React.useState<State>(state)
+  const [state, setState] = React.useState<State>(memoryState)
 
   React.useEffect(() => {
-    listeners(state, { type: 'INIT' as any, toast: undefined }, setState)
-  }, [state])
+    listeners.push(setState)
+    return () => {
+      const index = listeners.indexOf(setState)
+      if (index > -1) listeners.splice(index, 1)
+    }
+  }, [])
 
   return {
     ...state,

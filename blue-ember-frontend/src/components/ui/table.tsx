@@ -1,21 +1,20 @@
 import * as React from 'react'
-import { motion } from 'framer-motion'
+import { motion, type HTMLMotionProps } from 'framer-motion'
 
 import { cn } from '@/lib/utils'
 
-const Table = React.forwardRef<
-  HTMLTableElement,
-  React.HTMLAttributes<HTMLTableElement>
->(({ className, ...props }, ref) => (
-  <motion.table
-    ref={ref}
-    className={cn('w-full border-separate border-spacing-0 text-sm', className)}
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    {...props}
-  />
-))
+const Table = React.forwardRef<HTMLTableElement, HTMLMotionProps<'table'>>(
+  ({ className, ...props }, ref) => (
+    <motion.table
+      ref={ref}
+      className={cn('w-full border-separate border-spacing-0 text-sm', className)}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      {...props}
+    />
+  ),
+)
 Table.displayName = 'Table'
 
 const TableHeader = React.forwardRef<
@@ -32,7 +31,7 @@ TableHeader.displayName = 'TableHeader'
 
 const TableBody = React.forwardRef<
   HTMLTableSectionElement,
-  React.HTMLAttributes<HTMLTableSectionElement>
+  HTMLMotionProps<'tbody'>
 >(({ className, ...props }, ref) => (
   <motion.tbody
     ref={ref}
@@ -54,35 +53,34 @@ const TableFooter = React.forwardRef<
 ))
 TableFooter.displayName = 'TableFooter'
 
-const TableRow = React.forwardRef<
-  HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement>
->(({ className, ...props }, ref) => (
-  <motion.tr
-    ref={ref}
-    layout
-    className={cn(
-      'border-b border-border/50 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted data-[state=selected]:text-foreground',
-      className
-    )}
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -10 }}
-    transition={{ duration: 0.2 }}
-    {...props}
-  />
-))
+const TableRow = React.forwardRef<HTMLTableRowElement, HTMLMotionProps<'tr'>>(
+  ({ className, ...props }, ref) => (
+    <motion.tr
+      ref={ref}
+      layout
+      className={cn(
+        'border-b border-border/50 transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted data-[state=selected]:text-foreground',
+        className,
+      )}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.2 }}
+      {...props}
+    />
+  ),
+)
 TableRow.displayName = 'TableRow'
 
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
-  React.HTMLAttributes<HTMLTableCellElement>
+  HTMLMotionProps<'th'>
 >(({ className, ...props }, ref) => (
   <motion.th
     ref={ref}
     className={cn(
       'h-10 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0',
-      className
+      className,
     )}
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
@@ -94,13 +92,13 @@ TableHead.displayName = 'TableHead'
 
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
-  React.HTMLAttributes<HTMLTableCellElement>
+  HTMLMotionProps<'td'>
 >(({ className, ...props }, ref) => (
   <motion.td
     ref={ref}
     className={cn(
       'p-4 align-middle [&:has([role=checkbox])]:pr-0',
-      className
+      className,
     )}
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}

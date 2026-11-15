@@ -1,3 +1,4 @@
+import type { EnvironmentDto } from '@/services/contracts'
 import type { PanelId, QueryState } from '../../types'
 import { ConditionsPanel } from './conditions-panel'
 import { EvidencePanel } from './evidence-panel'
@@ -10,12 +11,24 @@ type Props = {
   msg: AiMsg
   openPanel: PanelId | null
   onApplyConditions: (q: QueryState) => void
+  environments?: EnvironmentDto[] | null
 }
 
-export function DetailPanels({ msg, openPanel, onApplyConditions }: Props) {
+export function DetailPanels({
+  msg,
+  openPanel,
+  onApplyConditions,
+  environments = null,
+}: Props) {
   if (!openPanel) return null
   if (openPanel === 'cond')
-    return <ConditionsPanel msg={msg} onApply={onApplyConditions} />
+    return (
+      <ConditionsPanel
+        msg={msg}
+        onApply={onApplyConditions}
+        environments={environments}
+      />
+    )
   if (openPanel === 'inv') return <InvestigationsPanel msg={msg} />
   if (openPanel === 'ev') return <EvidencePanel msg={msg} />
   if (openPanel === 'gaps') return <GapsPanel msg={msg} />

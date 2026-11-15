@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { motion } from 'framer-motion'
+import { motion, type HTMLMotionProps } from 'framer-motion'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'
@@ -21,16 +21,9 @@ const cardVariants = cva(
   }
 )
 
-interface CardProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof cardVariants> {}
+type CardProps = HTMLMotionProps<'div'> & VariantProps<typeof cardVariants>
 
-function Card({
-  className,
-  variant,
-  children,
-  ...props
-}: CardProps) {
+function Card({ className, variant, children, ...props }: CardProps) {
   return (
     <motion.div
       whileHover={{ y: -2 }}

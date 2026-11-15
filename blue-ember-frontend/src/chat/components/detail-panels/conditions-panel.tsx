@@ -1,27 +1,67 @@
-import { useEffect, useRef, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, type FormEvent } from 'react'
+import type { EnvironmentDto } from '@/services/contracts'
+import { ENV_IDS } from '../../adapters'
 import {
   DIR,
-  ENV,
   GAS,
   GOAL,
   GRAV,
   MAT,
   THICK,
 } from '../../data'
+import {
+  buildQueryDefaults,
+  environmentLabel,
+  findEnvironmentDto,
+} from '../../env-defaults'
 import { fmt, kpa } from '../../engine'
-import type { QueryState } from '../../types'
+import type { EnvId, QueryState } from '../../types'
 import type { AiMsg } from './types'
+
+type AtmChip = {
+  env: EnvId
+  label: string
+  psi: number
+  o2: number
+  flow: number
+}
+
+function buildAtmChips(
+  environments?: EnvironmentDto[] | null,
+): AtmChip[] {
+  if (environments?.length) {
+    return ENV_IDS.map((env) => {
+      const defaults = buildQueryDefaults(env, environments)
+      const dto = findEnvironmentDto(env, environments)
+      return {
+        env,
+        label: dto?.label ?? environmentLabel(env, environments),
+        psi: defaults.psi,
+        o2: defaults.o2,
+        flow: defaults.flow,
+      }
+    })
+  }
+  return [
+    { env: 'iss', label: 'ISS', psi: 14.7, o2: 21, flow: 10 },
+    { env: 'lua', label: 'Habitat lunar', psi: 8.2, o2: 34, flow: 10 },
+    { env: 'lua', label: 'Habitat lunar', psi: 10.2, o2: 26.5, flow: 10 },
+  ]
+}
 
 export function ConditionsPanel({
   msg,
   onApply,
+  environments = null,
 }: {
   msg: AiMsg
   onApply: (q: QueryState) => void
+  environments?: EnvironmentDto[] | null
 }) {
   const { q, missing } = msg
   const formRef = useRef<HTMLFormElement>(null)
   const errRef = useRef<HTMLSpanElement>(null)
+  const chips = useMemo(() => buildAtmChips(environments), [environments])
 
   useEffect(() => {
     const f = formRef.current
@@ -32,8 +72,9 @@ export function ConditionsPanel({
     })
   }, [q])
 
+  const envLabel = environmentLabel(q.env, environments)
   const items: Array<[string | null, string]> = [
-    ['env', ENV[q.env]],
+    ['env', envLabel],
     [null, GRAV[q.env][0] + (GRAV[q.env][1] ? ' (estimado)' : '')],
     ['material', MAT[q.material]],
     ['o2', `${fmt(q.o2)}% O₂`],
@@ -45,12 +86,16 @@ export function ConditionsPanel({
   if (q.gas) items.push([null, GAS[q.gas]])
   items.push([null, `objetivo: ${GOAL[q.goal]}`])
 
-  function setAtm(env: string, psi: string, o2: string) {
+  function setAtm(chip: AtmChip) {
     const f = formRef.current
     if (!f) return
-    ;(f.elements.namedItem('env') as HTMLSelectElement).value = env
-    ;(f.elements.namedItem('psi') as HTMLInputElement).value = psi
-    ;(f.elements.namedItem('o2') as HTMLInputElement).value = o2
+    ;(f.elements.namedItem('env') as HTMLSelectElement).value = chip.env
+    ;(f.elements.namedItem('psi') as HTMLInputElement).value = String(
+      Number(chip.psi.toFixed(1)),
+    )
+    ;(f.elements.namedItem('o2') as HTMLInputElement).value = String(chip.o2)
+    const flowEl = f.elements.namedItem('flow') as HTMLInputElement | null
+    if (flowEl) flowEl.value = String(chip.flow)
   }
 
   function onSubmit(e: FormEvent) {
@@ -135,35 +180,26 @@ export function ConditionsPanel({
           <div className="lbl full">
             Atmosfera de referência (NASA)
             <div className="chips">
-              <button
-                type="button"
-                className="chip atm"
-                onClick={() => setAtm('iss', '14.7', '21')}
-              >
-                ISS · 14,7 psi · 21%
-              </button>
-              <button
-                type="button"
-                className="chip atm"
-                onClick={() => setAtm('lua', '8.2', '34')}
-              >
-                Habitat lunar · 8,2 psi · 34%
-              </button>
-              <button
-                type="button"
-                className="chip atm"
-                onClick={() => setAtm('lua', '10.2', '26.5')}
-              >
-                Habitat lunar · 10,2 psi · 26,5%
-              </button>
+              {chips.map((chip) => (
+                <button
+                  key={`${chip.env}-${chip.o2}-${chip.psi}`}
+                  type="button"
+                  className="chip atm"
+                  onClick={() => setAtm(chip)}
+                >
+                  {chip.label} · {fmt(chip.psi, 1)} psi · {fmt(chip.o2)}%
+                </button>
+              ))}
             </div>
           </div>
           <label>
             Ambiente
             <select name="env" defaultValue={q.env}>
-              <option value="lua">Base lunar</option>
-              <option value="marte">Base em Marte</option>
-              <option value="iss">ISS</option>
+              {ENV_IDS.map((env) => (
+                <option key={env} value={env}>
+                  {environmentLabel(env, environments)}
+                </option>
+              ))}
             </select>
           </label>
           <label>
@@ -228,4 +264,3 @@ export function ConditionsPanel({
     </div>
   )
 }
-

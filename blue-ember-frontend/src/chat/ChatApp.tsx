@@ -6,11 +6,17 @@ import { AnalysesHome } from './components/AnalysesHome'
 import { AppSidebar } from './components/AppSidebar'
 import { ChatHeader } from './components/ChatHeader'
 import { ChatScreen } from './components/ChatScreen'
-import { ProfileScreen } from './components/ProfileScreen'
+import {
+  ProfileScreen,
+  profileDisplayName,
+} from './components/ProfileScreen'
+import { PROFILES } from './data'
 import { loadTheme, saveTheme } from './storage'
 import type { ThemeId } from './types'
-import { useChatSession } from './use-chat-session'
 import { useApiHealth } from './use-api-health'
+import { useChatSession } from './use-chat-session'
+import { useEnvironments } from './use-environments'
+import { useProfiles } from './use-profiles'
 import './ChatApp.css'
 
 export function ChatApp() {
@@ -18,7 +24,11 @@ export function ChatApp() {
     typeof window !== 'undefined' ? loadTheme() : 'light',
   )
   const health = useApiHealth()
-  const session = useChatSession()
+  const profilesState = useProfiles()
+  const environmentsState = useEnvironments()
+  const environments =
+    environmentsState.status === 'ok' ? environmentsState.data : null
+  const session = useChatSession({ environments })
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme
@@ -30,6 +40,10 @@ export function ChatApp() {
     saveTheme(next)
   }
 
+  const profileLabel = session.profile
+    ? profileDisplayName(session.profile, profilesState)
+    : null
+
   if (!session.booted) return null
 
   return (
@@ -37,68 +51,75 @@ export function ChatApp() {
       <ToastProvider>
         <SidebarProvider>
           <AppSidebar
-          screen={session.screen}
-          profile={session.profile}
-          theme={theme}
-          history={session.history}
-          onHome={session.goHome}
-          onNew={() =>
-            session.profile ? session.newChat() : session.setScreen('profile')
-          }
-          onProfile={session.goProfile}
-          onOpenDoc={session.openDoc}
-          onToggleTheme={toggleTheme}
-        />
-        <SidebarInset>
-          <div className="chat-app" data-theme={theme}>
-            <ChatHeader
-              screen={session.screen}
-              profile={session.profile}
-              theme={theme}
-              apiHealth={health}
-              onHome={session.goHome}
-              onNew={() =>
-                session.profile
-                  ? session.newChat()
-                  : session.setScreen('profile')
-              }
-              onWho={session.goProfile}
-              onToggleTheme={toggleTheme}
-            />
-            {session.screen === 'profile' ? (
-              <ProfileScreen
-                pending={session.pendingProfile}
-                onSelect={session.setPendingProfile}
-                onContinue={session.confirmProfile}
-              />
-            ) : null}
-            {session.screen === 'home' && session.profile ? (
-              <AnalysesHome
-                history={session.history}
-                onNew={session.newChat}
-                onOpen={session.openDoc}
-                onExample={session.startExample}
-              />
-            ) : null}
-            {session.screen === 'chat' && session.profile ? (
-              <ChatScreen
+            screen={session.screen}
+            profile={session.profile}
+            profileLabel={profileLabel}
+            theme={theme}
+            history={session.history}
+            onHome={session.goHome}
+            onNew={() =>
+              session.profile ? session.newChat() : session.setScreen('profile')
+            }
+            onProfile={session.goProfile}
+            onOpenDoc={session.openDoc}
+            onToggleTheme={toggleTheme}
+          />
+          <SidebarInset>
+            <div className="chat-app" data-theme={theme}>
+              <ChatHeader
+                screen={session.screen}
                 profile={session.profile}
-                messages={session.messages}
-                draft={session.draft}
-                error={session.error}
-                onDraftChange={(v) => {
-                  session.setDraft(v)
-                  if (session.error) session.setError(null)
-                }}
-                onSend={() => session.sendText(session.draft)}
-                onFollowup={(text) => session.sendText(text)}
-                onApplyConditions={session.applyConditions}
-                onExampleFill={session.setDraft}
+                profileLabel={profileLabel}
+                theme={theme}
+                apiHealth={health}
+                onHome={session.goHome}
+                onNew={() =>
+                  session.profile
+                    ? session.newChat()
+                    : session.setScreen('profile')
+                }
+                onWho={session.goProfile}
+                onToggleTheme={toggleTheme}
               />
-            ) : null}
-          </div>
-        </SidebarInset>
-      </SidebarProvider>
+              {session.screen === 'profile' ? (
+                <ProfileScreen
+                  pending={session.pendingProfile}
+                  profilesState={profilesState}
+                  onSelect={session.setPendingProfile}
+                  onContinue={session.confirmProfile}
+                />
+              ) : null}
+              {session.screen === 'home' && session.profile ? (
+                <AnalysesHome
+                  history={session.history}
+                  environments={environments}
+                  onNew={session.newChat}
+                  onOpen={session.openDoc}
+                  onExample={session.startExample}
+                />
+              ) : null}
+              {session.screen === 'chat' && session.profile ? (
+                <ChatScreen
+                  profileLabel={
+                    profileLabel ?? PROFILES[session.profile].name
+                  }
+                  messages={session.messages}
+                  draft={session.draft}
+                  error={session.error}
+                  environments={environments}
+                  onDraftChange={(v) => {
+                    session.setDraft(v)
+                    if (session.error) session.setError(null)
+                  }}
+                  onSend={() => session.sendText(session.draft)}
+                  onFollowup={(text) => session.sendText(text)}
+                  onApplyConditions={session.applyConditions}
+                  onExampleFill={session.setDraft}
+                />
+              ) : null}
+            </div>
+          </SidebarInset>
+        </SidebarProvider>
       </ToastProvider>
     </TooltipProvider>
   )

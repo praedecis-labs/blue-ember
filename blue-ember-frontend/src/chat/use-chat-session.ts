@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
-import { DEFAULTS, EXTRA_KEYS, MAIN_KEYS, PROFILES } from './data'
+import type { EnvironmentDto } from '@/services/contracts'
+import { EXTRA_KEYS, MAIN_KEYS, PROFILES } from './data'
+import { buildQueryDefaults } from './env-defaults'
 import {
   buildVerdict,
   compute,
@@ -11,12 +13,17 @@ import { loadPersisted, savePersisted } from './storage'
 import type {
   ChatMessage,
   ClaimId,
+  EnvId,
   EvidenceLevel,
   HistoryItem,
   ProfileId,
   QueryState,
   ScreenId,
 } from './types'
+
+export type ChatSessionOptions = {
+  environments?: EnvironmentDto[] | null
+}
 
 type Hypothesis = { text: string; claim: ClaimId }
 
@@ -32,11 +39,16 @@ type SessionSnap = {
 let msgSeq = 0
 const nextId = (prefix: string) => `${prefix}-${++msgSeq}`
 
-export function useChatSession() {
+export function useChatSession(options: ChatSessionOptions = {}) {
+  const { environments = null } = options
+  const environmentsRef = useRef(environments)
+  environmentsRef.current = environments
+
   const reactId = useId()
   const [screen, setScreen] = useState<ScreenId>('profile')
   const [profile, setProfile] = useState<ProfileId | null>(null)
   const [pendingProfile, setPendingProfile] = useState<ProfileId | null>(null)
+  const [environment, setEnvironment] = useState<EnvId>('lua')
   const [history, setHistory] = useState<HistoryItem[]>([])
   const [q, setQ] = useState<QueryState | null>(null)
   const [missing, setMissing] = useState<string[]>([])
@@ -64,6 +76,7 @@ export function useChatSession() {
     const saved = loadPersisted()
     setProfile(saved.profile)
     setPendingProfile(saved.profile)
+    setEnvironment(saved.environment)
     setHistory(saved.history)
     syncSnap({ profile: saved.profile })
     if (!saved.profile) setScreen('profile')
@@ -74,8 +87,8 @@ export function useChatSession() {
 
   useEffect(() => {
     if (!booted) return
-    savePersisted({ profile, history })
-  }, [booted, profile, history])
+    savePersisted({ profile, environment, history })
+  }, [booted, profile, environment, history])
 
   useEffect(() => {
     syncSnap({
@@ -209,11 +222,10 @@ export function useChatSession() {
 
     const p = parseHypothesis(text)
     const first = opts?.asFirst || !snap.q
-    const base: QueryState = first ? { ...DEFAULTS } : { ...snap.q! }
-    if (first && p.env === 'iss') {
-      base.o2 = 21
-      base.psi = 14.7
-    }
+    const seedEnv: EnvId = p.env ?? environment
+    const base: QueryState = first
+      ? buildQueryDefaults(seedEnv, environmentsRef.current)
+      : { ...snap.q! }
 
     const changed: Array<keyof QueryState> = []
     for (const [k] of MAIN_KEYS) {
@@ -261,6 +273,7 @@ export function useChatSession() {
 
     setHypothesis(nextHypothesis)
     setQ(base)
+    setEnvironment(base.env)
     setMissing(nextMissing)
     setMessages(nextMessages)
 
@@ -324,6 +337,7 @@ export function useChatSession() {
     const nextMessages = [...snap.messages, aiMsg]
 
     setQ(nq)
+    setEnvironment(nq.env)
     setMissing(nextMissing)
     setMessages(nextMessages)
 
@@ -373,6 +387,7 @@ export function useChatSession() {
     profile,
     pendingProfile,
     setPendingProfile,
+    environment,
     history,
     messages,
     draft,

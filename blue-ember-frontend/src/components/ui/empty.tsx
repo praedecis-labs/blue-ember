@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { motion } from 'framer-motion'
+import { motion, type HTMLMotionProps } from 'framer-motion'
 
 import { cn } from '@/lib/utils'
 
-interface EmptyProps extends React.HTMLAttributes<HTMLDivElement> {
+interface EmptyProps extends HTMLMotionProps<'div'> {
   title?: string
   description?: React.ReactNode
   action?: React.ReactNode

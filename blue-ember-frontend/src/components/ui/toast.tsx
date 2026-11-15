@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { motion } from 'framer-motion'
+import { motion, type HTMLMotionProps } from 'framer-motion'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { X } from 'lucide-react'
 
@@ -102,12 +102,13 @@ function Toaster({ position = 'top-right' }: ToasterProps) {
   )
 }
 
-export type ToastProps = React.HTMLAttributes<HTMLDivElement> & VariantProps<typeof toastVariants> & {
-  title?: React.ReactNode
-  description?: React.ReactNode
-  action?: React.ReactNode
-  closeButton?: boolean
-}
+export type ToastProps = HTMLMotionProps<'div'> &
+  VariantProps<typeof toastVariants> & {
+    title?: React.ReactNode
+    description?: React.ReactNode
+    action?: React.ReactNode
+    closeButton?: boolean
+  }
 
 export type ToastAction = React.ReactNode
 

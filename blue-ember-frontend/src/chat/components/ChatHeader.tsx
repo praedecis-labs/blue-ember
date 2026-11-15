@@ -1,10 +1,10 @@
 import type { HealthStatus } from '@/services/health'
-import { PROFILES } from '../data'
 import type { ProfileId, ScreenId, ThemeId } from '../types'
 
 type Props = {
   screen: ScreenId
   profile: ProfileId | null
+  profileLabel: string | null
   theme: ThemeId
   apiHealth: HealthStatus
   onHome: () => void
@@ -16,6 +16,7 @@ type Props = {
 export function ChatHeader({
   screen,
   profile,
+  profileLabel,
   theme,
   apiHealth,
   onHome,
@@ -50,7 +51,7 @@ export function ChatHeader({
       </nav>
       {profile && screen !== 'profile' ? (
         <button type="button" className="who" onClick={onWho}>
-          {PROFILES[profile].name} ▾
+          {profileLabel ?? profile} ▾
         </button>
       ) : null}
       <button

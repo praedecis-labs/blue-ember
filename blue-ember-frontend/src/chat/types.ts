@@ -93,5 +93,7 @@ export type ChatMessage =
 
 export type PersistedState = {
   profile: ProfileId | null
+  /** Last selected mission environment (UI id; storage serializes API id). */
+  environment: EnvId
   history: HistoryItem[]
 }

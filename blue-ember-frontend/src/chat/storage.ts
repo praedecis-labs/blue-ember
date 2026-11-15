@@ -1,6 +1,12 @@
-import { isEnvId, isProfileId } from './adapters'
+import {
+  fromApiEnvironment,
+  fromApiProfile,
+  toApiEnvironment,
+  toApiProfile,
+} from './adapters'
 import type {
   ClaimId,
+  EnvId,
   EvidenceLevel,
   HistoryItem,
   PersistedState,
@@ -10,6 +16,7 @@ import type {
 
 const STATE_KEY = 'blueEmberChat'
 const THEME_KEY = 'blueEmberTheme'
+const DEFAULT_ENV: EnvId = 'lua'
 
 const EVIDENCE_LEVELS: EvidenceLevel[] = [
   'strong',
@@ -25,8 +32,12 @@ function isClaim(value: unknown): value is ClaimId {
 function isQueryState(value: unknown): value is QueryState {
   if (!value || typeof value !== 'object') return false
   const q = value as Record<string, unknown>
+  const env =
+    typeof q.env === 'string' ? fromApiEnvironment(q.env) : null
+  if (!env) return false
+  // Normalize legacy/API env ids inside history queries to UI ids.
+  ;(q as { env: EnvId }).env = env
   return (
-    isEnvId(q.env) &&
     (q.material === 'tecido' ||
       q.material === 'plastico' ||
       q.material === 'liquido') &&
@@ -78,21 +89,32 @@ function sanitizeHistoryItem(raw: unknown, index: number): HistoryItem | null {
   }
 }
 
+function emptyPersisted(): PersistedState {
+  return { profile: null, environment: DEFAULT_ENV, history: [] }
+}
+
 export function loadPersisted(): PersistedState {
   try {
     const raw = localStorage.getItem(STATE_KEY)
-    if (!raw) return { profile: null, history: [] }
+    if (!raw) return emptyPersisted()
     const parsed = JSON.parse(raw) as Record<string, unknown>
-    const profile = isProfileId(parsed.profile) ? parsed.profile : null
+    const profile =
+      typeof parsed.profile === 'string'
+        ? fromApiProfile(parsed.profile)
+        : null
+    const environment =
+      typeof parsed.environment === 'string'
+        ? (fromApiEnvironment(parsed.environment) ?? DEFAULT_ENV)
+        : DEFAULT_ENV
     const history = Array.isArray(parsed.history)
       ? parsed.history
           .map(sanitizeHistoryItem)
           .filter((item): item is HistoryItem => item !== null)
           .slice(0, 12)
       : []
-    return { profile, history }
+    return { profile, environment, history }
   } catch {
-    return { profile: null, history: [] }
+    return emptyPersisted()
   }
 }
 
@@ -101,7 +123,8 @@ export function savePersisted(state: PersistedState) {
     localStorage.setItem(
       STATE_KEY,
       JSON.stringify({
-        profile: state.profile,
+        profile: state.profile ? toApiProfile(state.profile) : null,
+        environment: toApiEnvironment(state.environment),
         history: state.history.slice(0, 12),
       }),
     )

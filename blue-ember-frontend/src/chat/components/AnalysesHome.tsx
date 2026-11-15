@@ -1,15 +1,24 @@
-import { ENV, EXAMPLES, MAT } from '../data'
+import type { EnvironmentDto } from '@/services/contracts'
+import { EXAMPLES, MAT } from '../data'
+import { environmentLabel } from '../env-defaults'
 import { fmt } from '../engine'
 import type { HistoryItem } from '../types'
 
 type Props = {
   history: HistoryItem[]
+  environments?: EnvironmentDto[] | null
   onNew: () => void
   onOpen: (item: HistoryItem) => void
   onExample: (text: string) => void
 }
 
-export function AnalysesHome({ history, onNew, onOpen, onExample }: Props) {
+export function AnalysesHome({
+  history,
+  environments = null,
+  onNew,
+  onOpen,
+  onExample,
+}: Props) {
   return (
     <section id="screen-home" className="screen">
       <div className="home">
@@ -42,7 +51,7 @@ export function AnalysesHome({ history, onNew, onOpen, onExample }: Props) {
                 <q>{h.text}</q>
                 <div className="mini">
                   {[
-                    ENV[h.q.env],
+                    environmentLabel(h.q.env, environments),
                     MAT[h.q.material],
                     `${fmt(h.q.o2)}% O₂`,
                     `${fmt(h.q.psi)} psi`,

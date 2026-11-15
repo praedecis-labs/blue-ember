@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import type { EnvironmentDto } from '@/services/contracts'
 import { LOGO_SRC } from '../data'
 import { f1, summaryFor } from '../engine'
 import type { ChatMessage, PanelId, QueryState } from '../types'
@@ -8,9 +9,15 @@ type Props = {
   msg: Extract<ChatMessage, { kind: 'ai' }>
   onFollowup: (text: string) => void
   onApplyConditions: (q: QueryState) => void
+  environments?: EnvironmentDto[] | null
 }
 
-export function AiBubble({ msg, onFollowup, onApplyConditions }: Props) {
+export function AiBubble({
+  msg,
+  onFollowup,
+  onApplyConditions,
+  environments = null,
+}: Props) {
   const [openPanel, setOpenPanel] = useState<PanelId | null>(null)
   const { q, r, missing } = msg
   const best = r.top[0]
@@ -88,6 +95,7 @@ export function AiBubble({ msg, onFollowup, onApplyConditions }: Props) {
           msg={msg}
           openPanel={openPanel}
           onApplyConditions={onApplyConditions}
+          environments={environments}
         />
       </div>
       <div className="followups">

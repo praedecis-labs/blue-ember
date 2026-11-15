@@ -1,5 +1,27 @@
-import type { ApiEnvironmentId, ApiProfileId } from '@/services/contracts'
+import type {
+  ApiEnvironmentId,
+  ApiProfileId,
+  EnvironmentDto,
+} from '@/services/contracts'
 import type { EnvId, ProfileId } from './types'
+
+/** Inverse of engine `kpa` (psi * 6.895). */
+export function kpaToPsi(kpa: number): number {
+  return kpa / 6.895
+}
+
+/** Map API environment targets into QueryState numeric fields (psi from kPa). */
+export function envTargetsToQueryPartial(dto: EnvironmentDto): {
+  o2: number
+  psi: number
+  flow: number
+} {
+  return {
+    o2: dto.targetO2Percent,
+    psi: kpaToPsi(dto.targetPressureKpa),
+    flow: dto.targetFlowCms,
+  }
+}
 
 export type { ApiEnvironmentId, ApiProfileId }
 

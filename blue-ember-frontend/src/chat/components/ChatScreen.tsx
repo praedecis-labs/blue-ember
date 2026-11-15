@@ -1,13 +1,15 @@
 import { useEffect, useRef, type KeyboardEvent } from 'react'
-import { EXAMPLES, PROFILES } from '../data'
-import type { ChatMessage, ProfileId, QueryState } from '../types'
+import type { EnvironmentDto } from '@/services/contracts'
+import { EXAMPLES } from '../data'
+import type { ChatMessage, QueryState } from '../types'
 import { AiBubble } from './AiBubble'
 
 type Props = {
-  profile: ProfileId
+  profileLabel: string
   messages: ChatMessage[]
   draft: string
   error: string | null
+  environments?: EnvironmentDto[] | null
   onDraftChange: (v: string) => void
   onSend: () => void
   onFollowup: (text: string) => void
@@ -16,10 +18,11 @@ type Props = {
 }
 
 export function ChatScreen({
-  profile,
+  profileLabel,
   messages,
   draft,
   error,
+  environments = null,
   onDraftChange,
   onSend,
   onFollowup,
@@ -48,7 +51,7 @@ export function ChatScreen({
         <div className="thread-inner" id="thread-inner">
           {empty ? (
             <div className="welcome" id="welcome">
-              <span className="step">Perfil: {PROFILES[profile].name}</span>
+              <span className="step">Perfil: {profileLabel}</span>
               <h1>O que você quer saber sobre fogo na sua missão?</h1>
               <p className="why">
                 Escreva sua hipótese do seu jeito. A resposta vem resumida, com
@@ -81,6 +84,7 @@ export function ChatScreen({
                 msg={m}
                 onFollowup={onFollowup}
                 onApplyConditions={(q) => onApplyConditions(q, m.id)}
+                environments={environments}
               />
             ),
           )}
