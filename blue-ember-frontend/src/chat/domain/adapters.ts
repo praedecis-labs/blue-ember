@@ -139,13 +139,20 @@ export function rankingItemToScored(item: RankingItemDto): ScoredInvestigation {
   const have = (Object.values(vals) as Array<number | null>).filter(
     (v) => v !== null && Number.isFinite(v),
   ).length
+  const wc = item.winningCondition
+  const flow: [number, number] =
+    wc?.flowSpeedCms != null
+      ? [wc.flowSpeedCms, wc.flowSpeedCms]
+      : [0, 0]
+  const o2 =
+    wc?.o2Percent != null ? ([wc.o2Percent, wc.o2Percent] as [number, number]) : o2Tuple(inv.o2Range)
   return {
     id: inv.id,
     name: inv.acronym,
     what: inv.title,
     materials: [],
-    o2: o2Tuple(inv.o2Range),
-    flow: [0, 0],
+    o2,
+    flow,
     thick: [],
     gases: [],
     goal: 'prevenir',
@@ -156,5 +163,19 @@ export function rankingItemToScored(item: RankingItemDto): ScoredInvestigation {
     vals,
     nota: item.score,
     have,
+    category: inv.category,
+    winningCondition: wc
+      ? {
+          index: wc.index,
+          material: wc.material,
+          o2Percent: wc.o2Percent,
+          pressureKpa: wc.pressureKpa,
+          flowSpeedCms: wc.flowSpeedCms,
+          ppO2Kpa: wc.ppO2Kpa,
+          provenance: wc.provenance,
+          regime: wc.regime,
+        }
+      : null,
+    ppO2Kpa: item.criteria.ppO2Kpa ?? wc?.ppO2Kpa ?? null,
   }
 }

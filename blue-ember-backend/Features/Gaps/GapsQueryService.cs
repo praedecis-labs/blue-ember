@@ -34,8 +34,17 @@ public sealed class GapsQueryService(IInvestigationRepository repo)
                 var pHi = pBins[pi + 1];
 
                 var covering = investigations.Where(inv =>
-                    inv.O2Range.Any(o => o >= o2Lo && o <= o2Hi) &&
-                    inv.PressureKpa.Any(p => p >= pLo && p <= pHi)).ToList();
+                {
+                    if (inv.TestConditions.Count > 0)
+                    {
+                        return inv.TestConditions.Any(c =>
+                            c.O2Percent is { } o && o >= o2Lo && o <= o2Hi &&
+                            c.PressureKpa is { } p && p >= pLo && p <= pHi);
+                    }
+
+                    return inv.O2Range.Any(o => o >= o2Lo && o <= o2Hi) &&
+                           inv.PressureKpa.Any(p => p >= pLo && p <= pHi);
+                }).ToList();
 
                 cells.Add(new CoverageCellDto(
                     o2Lo,
@@ -49,6 +58,13 @@ public sealed class GapsQueryService(IInvestigationRepository repo)
 
         var nearTarget = investigations.Where(inv =>
         {
+            if (inv.TestConditions.Count > 0)
+            {
+                return inv.TestConditions.Any(c =>
+                    c.O2Percent is { } o && Math.Abs(o - targets.TargetO2Percent) <= 5 &&
+                    c.PressureKpa is { } p && Math.Abs(p - targets.TargetPressureKpa) <= 15);
+            }
+
             var o2Close = inv.O2Range.Any(o => Math.Abs(o - targets.TargetO2Percent) <= 5);
             var pClose = inv.PressureKpa.Any(p => Math.Abs(p - targets.TargetPressureKpa) <= 15);
             return o2Close && pClose;

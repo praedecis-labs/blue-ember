@@ -62,10 +62,24 @@ export type Investigation = {
   c: { moc: number | null; spread: number | null; hrr: number | null; tox: number | null }
 }
 
+export type WinningConditionView = {
+  index: number
+  material?: string | null
+  o2Percent?: number | null
+  pressureKpa?: number | null
+  flowSpeedCms?: number | null
+  ppO2Kpa?: number | null
+  provenance: string
+  regime?: string | null
+}
+
 export type ScoredInvestigation = Investigation & {
   vals: Record<CritKey, number | null>
   nota: number
   have: number
+  category?: string
+  winningCondition?: WinningConditionView | null
+  ppO2Kpa?: number | null
 }
 
 export type ComputeResult = {

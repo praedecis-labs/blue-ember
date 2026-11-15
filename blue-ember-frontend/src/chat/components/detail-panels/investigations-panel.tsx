@@ -2,7 +2,7 @@ import { useT } from '@/i18n'
 import { WEIGHTS } from '../../domain/data'
 import { f1, fmt } from '../../domain/engine'
 import type { CritKey, CritWeights } from '../../domain/types'
-import { SHOW_DOI, type AiMsg } from './types'
+import { SHOW_DOI, provenanceLabel, type AiMsg } from './types'
 
 const CRIT_KEYS: CritKey[] = ['prox', 'moc', 'spread', 'hrr', 'tox']
 
@@ -97,8 +97,37 @@ export function InvestigationsPanel({ msg }: { msg: AiMsg }) {
                   </>
                 ) : null}{' '}
                 · {d.where}.
+                {d.ppO2Kpa != null ? (
+                  <>
+                    {' '}
+                    · {t('panels.ppO2')}: {fmt(d.ppO2Kpa)} kPa
+                  </>
+                ) : null}
+                {d.category ? (
+                  <>
+                    {' '}
+                    ·{' '}
+                    {d.category === 'prevencao'
+                      ? t('category.prevencao')
+                      : d.category === 'deteccao'
+                        ? t('category.deteccao')
+                        : d.category === 'supressao'
+                          ? t('category.supressao')
+                          : t('category.outro')}
+                  </>
+                ) : null}
               </span>
-              <span>
+              <span className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
+                {d.winningCondition ? (
+                  <span className="pill moderate">
+                    {provenanceLabel(
+                      d.winningCondition.provenance,
+                      t('panels.provenanceEstimated'),
+                      t('panels.provenanceMeasured'),
+                      t('panels.provenanceUnknown'),
+                    )}
+                  </span>
+                ) : null}
                 <a href={psiHref(d)} target="_blank" rel="noopener noreferrer">
                   {t('panels.viewPsi')}
                 </a>

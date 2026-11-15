@@ -51,17 +51,33 @@ public sealed class RankingQueryService(IInvestigationRepository repo, ScoreCalc
             .Select(inv =>
             {
                 var breakdown = calculator.Calculate(inv, missionEnv, weights);
+                WinningConditionDto? winning = null;
+                if (breakdown.WinningCondition is { } wc)
+                {
+                    winning = new WinningConditionDto(
+                        breakdown.WinningConditionIndex ?? 0,
+                        wc.Material,
+                        wc.O2Percent,
+                        wc.PressureKpa,
+                        wc.FlowSpeedCms,
+                        wc.PpO2Kpa,
+                        wc.Provenance,
+                        wc.Regime);
+                }
+
                 return (
                     Score: breakdown.Total,
                     Criteria: ScoreCriteriaDto.From(breakdown),
-                    Investigation: InvestigationDtos.ToSummary(inv));
+                    Investigation: InvestigationDtos.ToSummary(inv),
+                    Winning: winning);
             })
             .OrderByDescending(x => x.Score)
             .Select((x, index) => new RankingItemDto(
                 index + 1,
                 x.Score,
                 x.Criteria,
-                x.Investigation))
+                x.Investigation,
+                x.Winning))
             .ToList();
 
         response = new RankingResponse(
