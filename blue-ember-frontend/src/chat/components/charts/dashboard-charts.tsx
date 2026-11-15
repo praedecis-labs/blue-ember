@@ -9,7 +9,7 @@ import { HighchartsHost } from './HighchartsHost'
 const Navy = '#1B2B85'
 const Blue = '#0050D8'
 const Sky = '#2491FF'
-const Gap = '#B23E00'
+const Gap = '#FF8A3D' // laranja do vídeo (antes #B23E00)
 
 type HeatmapFactory = (hc: typeof Highcharts) => void
 const applyHeatmap = HeatmapModule as unknown as HeatmapFactory

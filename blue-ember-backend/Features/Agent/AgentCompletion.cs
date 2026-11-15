@@ -29,6 +29,8 @@ public static class AgentCompletion
                 - Use as ferramentas para ranking, lacunas e fichas NASA PSI.
                 - ask_jev é opcional; se falhar ou não estiver disponível, continue só com ranking/gaps/PSI.
                 - Cite só o que as tools retornaram; não invente IDs, DOI, scores ou resultados.
+                - O score do ranking mede a relevância da investigação para o caso (0–10), não o risco de ignição nem a inflamabilidade do material.
+                - Nunca afirme que um material ou cenário é seguro ou inseguro: diga o que os testes da NASA cobrem, o que falta testar e a força da evidência.
 
                 Dashboards:
                 - Se o usuário pedir dashboard, painel, visualização, periculosidade ou previsibilidade/predição:
@@ -56,6 +58,8 @@ public static class AgentCompletion
             - Use the tools for ranking, gaps, and NASA PSI investigation records.
             - ask_jev is optional; if it fails or is unavailable, continue with ranking/gaps/PSI only.
             - Cite only what the tools returned; do not invent IDs, DOIs, scores, or results.
+            - The ranking score measures how relevant an investigation is to the case (0–10), not ignition risk or material flammability.
+            - Never state that a material or scenario is safe or unsafe: say what NASA tests cover, what still needs testing, and how strong the evidence is.
 
             Dashboards:
             - If the user asks for a dashboard, panel, visualization, hazard, or predictability/prediction:

@@ -73,7 +73,7 @@ export const ptBR: MessageTree = {
     hintKeys: 'Enter envia · Shift+Enter quebra a linha',
     send: 'Enviar',
     composerNote:
-      'Notas, investigações e cobertura vêm dos dados do PSI da NASA pela nossa API. As respostas são escritas pelo Gemini, ou por modelos locais quando a IA está fora do ar.',
+      'Notas, investigações e cobertura vêm dos dados do PSI da NASA pela nossa API. As respostas são escritas por IA (Groq ou Gemini), ou por um resumo automático quando a IA está fora do ar.',
     writeHypothesis: 'Escreva sua hipótese ou pergunta.',
     offTopicHypothesis:
       'Só consigo ajudar com segurança contra incêndio em habitats espaciais. Pergunte sobre materiais, O₂, pressão, detecção de fumaça ou cenários ISS/Lua/Marte.',
