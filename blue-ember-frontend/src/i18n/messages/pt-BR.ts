@@ -59,6 +59,7 @@ export const ptBR: MessageTree = {
     latest: 'Últimas análises',
     empty: 'Nenhuma análise ainda.',
     mostRelevant: 'Mais relevante:',
+    deleteAnalysis: 'Apagar análise',
     examplesTitle: 'Comece por um exemplo',
   },
   chat: {

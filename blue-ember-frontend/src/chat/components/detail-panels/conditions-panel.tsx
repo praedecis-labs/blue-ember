@@ -1,5 +1,9 @@
-import { useEffect, useMemo, useRef, type FormEvent } from 'react'
+import { useEffect, useMemo, useRef, useState, type SubmitEvent } from 'react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { useT } from '@/i18n'
+import { cn } from '@/lib/utils'
 import type { EnvironmentDto } from '@/services/shared/contracts'
 import { ENV_IDS } from '../../domain/adapters'
 import { GRAV } from '../../domain/data'
@@ -9,6 +13,11 @@ import {
 } from '../../domain/env-defaults'
 import { fmt, kpa } from '../../domain/engine'
 import type { EnvId, QueryState } from '../../domain/types'
+import {
+  fieldClassName,
+  labelClassName,
+  PanelShell,
+} from './panel-shell'
 import type { AiMsg } from './types'
 
 type AtmChip = {
@@ -17,6 +26,14 @@ type AtmChip = {
   psi: number
   o2: number
   flow: number
+}
+
+function fallbackAtmChips(): AtmChip[] {
+  return [
+    { env: 'iss', label: 'ISS', psi: 14.7, o2: 21, flow: 10 },
+    { env: 'lua', label: 'Lunar habitat', psi: 8.2, o2: 34, flow: 10 },
+    { env: 'lua', label: 'Lunar habitat', psi: 10.2, o2: 26.5, flow: 10 },
+  ]
 }
 
 function buildAtmChips(
@@ -34,11 +51,7 @@ function buildAtmChips(
       }
     })
   }
-  return [
-    { env: 'iss', label: 'ISS', psi: 14.7, o2: 21, flow: 10 },
-    { env: 'lua', label: 'Lunar habitat', psi: 8.2, o2: 34, flow: 10 },
-    { env: 'lua', label: 'Lunar habitat', psi: 10.2, o2: 26.5, flow: 10 },
-  ]
+  return fallbackAtmChips()
 }
 
 export function ConditionsPanel({
@@ -53,14 +66,18 @@ export function ConditionsPanel({
   const t = useT()
   const { q, missing } = msg
   const formRef = useRef<HTMLFormElement>(null)
-  const errRef = useRef<HTMLSpanElement>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
   const chips = useMemo(() => buildAtmChips(environments), [environments])
 
   useEffect(() => {
     const f = formRef.current
     if (!f) return
     ;(Object.keys(q) as Array<keyof QueryState>).forEach((k) => {
-      const el = f.elements.namedItem(k) as HTMLInputElement | HTMLSelectElement | null
+      const el = f.elements.namedItem(k) as
+        | HTMLInputElement
+        | HTMLSelectElement
+        | null
       if (el) el.value = String(q[k])
     })
   }, [q])
@@ -83,10 +100,7 @@ export function ConditionsPanel({
   if (q.thick) items.push([null, t(`thick.${q.thick}`)])
   if (q.dir) items.push([null, t(`dir.${q.dir}`)])
   if (q.gas) items.push([null, t(`gas.${q.gas}`)])
-  items.push([
-    null,
-    t('goal.label', { goal: t(`goal.${q.goal}`) }),
-  ])
+  items.push([null, t('goal.label', { goal: t(`goal.${q.goal}`) })])
 
   function setAtm(chip: AtmChip) {
     const f = formRef.current
@@ -100,33 +114,34 @@ export function ConditionsPanel({
     if (flowEl) flowEl.value = String(chip.flow)
   }
 
-  function onSubmit(e: FormEvent) {
+  function onSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
     const f = formRef.current
-    const err = errRef.current
-    if (!f || !err) return
+    if (!f) return
     const o2 = Number((f.elements.namedItem('o2') as HTMLInputElement).value)
     const psi = Number((f.elements.namedItem('psi') as HTMLInputElement).value)
     const flowRaw = (f.elements.namedItem('flow') as HTMLInputElement).value
     const flow = Number(flowRaw)
-    if (!o2 || o2 < 15 || o2 > 100) {
-      err.textContent = t('panels.errO2')
-      err.hidden = false
+    const invalidO2 = !o2 || o2 < 15 || o2 > 100
+    const invalidPsi = !psi || psi < 3 || psi > 15
+    const invalidFlow = flowRaw === '' || flow < 0 || flow > 100
+
+    if (invalidO2) {
+      setError(t('panels.errO2'))
       return
     }
-    if (!psi || psi < 3 || psi > 15) {
-      err.textContent = t('panels.errPsi')
-      err.hidden = false
+    if (invalidPsi) {
+      setError(t('panels.errPsi'))
       return
     }
-    if (flowRaw === '' || flow < 0 || flow > 100) {
-      err.textContent = t('panels.errFlow')
-      err.hidden = false
+    if (invalidFlow) {
+      setError(t('panels.errFlow'))
       return
     }
-    err.hidden = true
+    setError(null)
     onApply({
-      env: (f.elements.namedItem('env') as HTMLSelectElement).value as QueryState['env'],
+      env: (f.elements.namedItem('env') as HTMLSelectElement)
+        .value as QueryState['env'],
       material: (f.elements.namedItem('material') as HTMLSelectElement)
         .value as QueryState['material'],
       o2,
@@ -134,67 +149,83 @@ export function ConditionsPanel({
       flow,
       thick: (f.elements.namedItem('thick') as HTMLSelectElement)
         .value as QueryState['thick'],
-      dir: (f.elements.namedItem('dir') as HTMLSelectElement).value as QueryState['dir'],
-      gas: (f.elements.namedItem('gas') as HTMLSelectElement).value as QueryState['gas'],
+      dir: (f.elements.namedItem('dir') as HTMLSelectElement)
+        .value as QueryState['dir'],
+      gas: (f.elements.namedItem('gas') as HTMLSelectElement)
+        .value as QueryState['gas'],
       goal: (f.elements.namedItem('goal') as HTMLSelectElement)
         .value as QueryState['goal'],
     })
   }
 
   return (
-    <div className="panel">
-      <b>{t('panels.conditionsTitle')}</b>
-      <div className="cond-list">
+    <PanelShell title={t('panels.conditionsTitle')}>
+      <div className="flex flex-wrap gap-1.5">
         {items.map(([k, label], i) => (
-          <span
+          <Badge
             key={`${label}-${i}`}
-            className={k && missing.includes(k) ? 'missing' : undefined}
+            variant="secondary"
+            size="sm"
+            className={cn(
+              'h-auto font-medium text-[var(--sub)]',
+              k &&
+                missing.includes(k) &&
+                '!bg-[var(--miss)] !text-[#6B6E00]',
+            )}
           >
             {label}
-          </span>
+          </Badge>
         ))}
       </div>
       {missing.length ? (
-        <span className="hint">{t('panels.missingHint')}</span>
+        <span className="text-xs text-muted-foreground">
+          {t('panels.missingHint')}
+        </span>
       ) : null}
-      <details>
-        <summary
-          className="ghost"
-          style={{
-            cursor: 'pointer',
-            color: 'var(--blue)',
-            fontWeight: 500,
-            fontSize: 14,
-            listStyle: 'none',
-          }}
-        >
-          {t('panels.adjustConditions')}
-        </summary>
+
+      <Button
+        type="button"
+        variant="ghost"
+        size="sm"
+        className="w-fit px-0 text-[var(--blue)] hover:bg-transparent hover:underline"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+      >
+        {t('panels.adjustConditions')}
+      </Button>
+
+      {open ? (
         <form
-          className="grid cond-form"
-          style={{ marginTop: 10 }}
+          className="mt-1 grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-3"
           ref={formRef}
           onSubmit={onSubmit}
           noValidate
         >
-          <div className="lbl full">
+          <div className={cn(labelClassName, 'sm:col-span-2 md:col-span-3')}>
             {t('panels.atmRef')}
-            <div className="chips">
+            <div className="flex flex-wrap gap-1.5">
               {chips.map((chip) => (
-                <button
+                <Button
                   key={`${chip.env}-${chip.o2}-${chip.psi}`}
                   type="button"
-                  className="chip atm"
+                  variant="secondary"
+                  size="sm"
+                  className="rounded-full font-medium"
                   onClick={() => setAtm(chip)}
                 >
                   {chip.label} · {fmt(chip.psi, 1)} psi · {fmt(chip.o2)}%
-                </button>
+                </Button>
               ))}
             </div>
           </div>
-          <label>
+
+          <label className={labelClassName}>
             {t('panels.labelEnv')}
-            <select name="env" defaultValue={q.env}>
+            <select
+              name="env"
+              defaultValue={q.env}
+              className={fieldClassName}
+            >
               {ENV_IDS.map((env) => (
                 <option key={env} value={env}>
                   {environmentLabel(env, environments)}
@@ -202,65 +233,119 @@ export function ConditionsPanel({
               ))}
             </select>
           </label>
-          <label>
+          <label className={labelClassName}>
             {t('panels.labelMaterial')}
-            <select name="material" defaultValue={q.material}>
+            <select
+              name="material"
+              defaultValue={q.material}
+              className={fieldClassName}
+            >
               <option value="tecido">{t('panels.matFabric')}</option>
               <option value="plastico">{t('panels.matPlastic')}</option>
               <option value="liquido">{t('panels.matLiquid')}</option>
             </select>
           </label>
-          <label>
+          <label className={labelClassName}>
             {t('panels.labelO2')}
-            <input name="o2" type="number" min={15} max={100} step={0.5} defaultValue={q.o2} />
+            <Input
+              name="o2"
+              type="number"
+              min={15}
+              max={100}
+              step={0.5}
+              defaultValue={q.o2}
+              className="bg-[var(--white)]"
+            />
           </label>
-          <label>
+          <label className={labelClassName}>
             {t('panels.labelPsi')}
-            <input name="psi" type="number" min={3} max={15} step={0.1} defaultValue={q.psi} />
+            <Input
+              name="psi"
+              type="number"
+              min={3}
+              max={15}
+              step={0.1}
+              defaultValue={q.psi}
+              className="bg-[var(--white)]"
+            />
           </label>
-          <label>
+          <label className={labelClassName}>
             {t('panels.labelFlow')}
-            <input name="flow" type="number" min={0} max={100} step={1} defaultValue={q.flow} />
+            <Input
+              name="flow"
+              type="number"
+              min={0}
+              max={100}
+              step={1}
+              defaultValue={q.flow}
+              className="bg-[var(--white)]"
+            />
           </label>
-          <label>
+          <label className={labelClassName}>
             {t('panels.labelGoal')}
-            <select name="goal" defaultValue={q.goal}>
+            <select
+              name="goal"
+              defaultValue={q.goal}
+              className={fieldClassName}
+            >
               <option value="prevenir">{t('panels.goalPrevent')}</option>
               <option value="detectar">{t('panels.goalDetect')}</option>
               <option value="apagar">{t('panels.goalExtinguish')}</option>
             </select>
           </label>
-          <label>
+          <label className={labelClassName}>
             {t('panels.labelThick')}
-            <select name="thick" defaultValue={q.thick}>
+            <select
+              name="thick"
+              defaultValue={q.thick}
+              className={fieldClassName}
+            >
               <option value="">{t('panels.unknownOpt')}</option>
               <option value="fina">{t('panels.thickThin')}</option>
               <option value="grossa">{t('panels.thickThick')}</option>
             </select>
           </label>
-          <label>
+          <label className={labelClassName}>
             {t('panels.labelDir')}
-            <select name="dir" defaultValue={q.dir}>
+            <select
+              name="dir"
+              defaultValue={q.dir}
+              className={fieldClassName}
+            >
               <option value="">{t('panels.unknownOpt')}</option>
               <option value="favor">{t('panels.dirFavor')}</option>
               <option value="contra">{t('panels.dirContra')}</option>
             </select>
           </label>
-          <label>
+          <label className={labelClassName}>
             {t('panels.labelGas')}
-            <select name="gas" defaultValue={q.gas}>
+            <select
+              name="gas"
+              defaultValue={q.gas}
+              className={fieldClassName}
+            >
               <option value="">{t('panels.noneOpt')}</option>
               <option value="co2">CO₂</option>
               <option value="he">{t('gas.he')}</option>
               <option value="n2">{t('gas.n2')}</option>
             </select>
           </label>
-          <div className="full row">
-            <button type="submit">{t('panels.rerun')}</button>
-            <span className="error" ref={errRef} hidden />
+
+          <div className="flex flex-wrap items-center gap-2 sm:col-span-2 md:col-span-3">
+            <Button
+              type="submit"
+              className="!bg-[var(--yellow)] !text-[var(--ink)] hover:!bg-[var(--yellow)]/90"
+            >
+              {t('panels.rerun')}
+            </Button>
+            {error ? (
+              <span className="text-sm text-destructive" role="alert">
+                {error}
+              </span>
+            ) : null}
           </div>
         </form>
-      </details>
-    </div>
+      ) : null}
+    </PanelShell>
   )
 }

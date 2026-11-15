@@ -1,15 +1,16 @@
 import { useT } from '@/i18n'
 import { psiUrl } from '../../domain/psi-url'
+import { PanelShell, PanelSkeleton } from './panel-shell'
 import { SHOW_DOI, type AiMsg } from './types'
 
 function psiHref(d: {
   id: string
   nasaPsiUrl?: string | null
 }): string {
-  return (
-    psiUrl(d)
-  )
+  return psiUrl(d)
 }
+
+const linkClass = 'text-[var(--blue)] no-underline hover:underline'
 
 export function SourcesPanel({ msg }: { msg: AiMsg }) {
   const t = useT()
@@ -17,39 +18,36 @@ export function SourcesPanel({ msg }: { msg: AiMsg }) {
 
   if (rankingStatus === 'loading') {
     return (
-      <div className="panel">
-        <b>{t('panels.sourcesTitle')}</b>
-        <span className="hint">{t('panels.loadingSources')}</span>
-        <div className="skel-stack" aria-hidden>
-          <div className="skel-line" />
-          <div className="skel-line short" />
-        </div>
-      </div>
+      <PanelShell title={t('panels.sourcesTitle')}>
+        <span className="text-xs text-muted-foreground">
+          {t('panels.loadingSources')}
+        </span>
+        <PanelSkeleton />
+      </PanelShell>
     )
   }
 
   if (rankingStatus === 'error') {
     return (
-      <div className="panel">
-        <b>{t('panels.sourcesTitle')}</b>
-        <span className="hint" role="alert">
+      <PanelShell title={t('panels.sourcesTitle')}>
+        <span className="text-xs text-muted-foreground" role="alert">
           {rankingError ?? t('panels.sourcesFail')}
         </span>
-      </div>
+      </PanelShell>
     )
   }
 
   return (
-    <div className="panel">
-      <b>{t('panels.sourcesTitle')}</b>
+    <PanelShell title={t('panels.sourcesTitle')}>
       {r.top.length === 0 ? (
-        <span className="why">{t('panels.noSources')}</span>
+        <span className="text-sm text-[var(--sub)]">{t('panels.noSources')}</span>
       ) : (
-        <ul>
+        <ul className="flex list-disc flex-col gap-1 pl-4.5 text-sm">
           {r.top.map((d) => (
             <li key={d.id}>
               {d.name}:{' '}
               <a
+                className={linkClass}
                 href={psiHref(d)}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -61,6 +59,7 @@ export function SourcesPanel({ msg }: { msg: AiMsg }) {
                   {' '}
                   · DOI{' '}
                   <a
+                    className={linkClass}
                     href={`https://doi.org/${d.doi}`}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -73,13 +72,12 @@ export function SourcesPanel({ msg }: { msg: AiMsg }) {
           ))}
         </ul>
       )}
-      <p className="why" style={{ marginTop: '0.75rem' }}>
-        {t('panels.localContext')}
-      </p>
-      <ul>
+      <p className="mt-3 text-sm text-[var(--sub)]">{t('panels.localContext')}</p>
+      <ul className="flex list-disc flex-col gap-1 pl-4.5 text-sm">
         <li>
           {t('panels.atmLabel')}{' '}
           <a
+            className={linkClass}
             href="https://ntrs.nasa.gov/api/citations/20220013669/downloads/Internal%20Layout%20of%20a%20Lunar%20Surface%20Habitat.pdf"
             target="_blank"
             rel="noopener noreferrer"
@@ -90,6 +88,7 @@ export function SourcesPanel({ msg }: { msg: AiMsg }) {
         <li>
           {t('panels.partialGLabel')}{' '}
           <a
+            className={linkClass}
             href="https://www.nasa.gov/glenn/glenn-expertise-space-exploration/physical-sciences-program/combustion-science/flammability-of-materials-on-the-moon-fm2/"
             target="_blank"
             rel="noopener noreferrer"
@@ -99,6 +98,6 @@ export function SourcesPanel({ msg }: { msg: AiMsg }) {
         </li>
         <li>{t('panels.pressureGrav')}</li>
       </ul>
-    </div>
+    </PanelShell>
   )
 }

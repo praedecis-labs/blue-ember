@@ -46,6 +46,8 @@ export type SessionSnap = {
 export type HydrateOpts = {
   claimForVerdict?: ClaimId | null
   shouldVerdict?: boolean
+  /** When false, only ask the LLM — no NASA ranking/dashboard fallback. */
+  runRanking?: boolean
 }
 
 export type HydrationDeps = {
@@ -239,6 +241,7 @@ export function useChatHydration(deps: HydrationDeps) {
     userMessage: string,
     opts: HydrateOpts = {},
   ) {
+    const runRanking = opts.runRanking !== false
     void (async () => {
       const rankingParams = rankingParamsFromQuery(prof, query)
       const history = snapRef.current.messages
@@ -287,7 +290,6 @@ export function useChatHydration(deps: HydrationDeps) {
         if (!offline) {
           setError(messageFromUnknown(err))
         }
-        // Keep agentReply so local summary templates are not shown as if the LLM answered.
         patchAiMessage(msgId, (msg) => ({
           ...msg,
           lead: serverDown
@@ -297,9 +299,13 @@ export function useChatHydration(deps: HydrationDeps) {
               : translate('bubble.agentFallback'),
           agentReply: true,
           agentFailed: true,
-          loadingPhase: 'ranking',
+          loadingPhase: runRanking ? 'ranking' : 'agent',
+          rankingStatus: runRanking ? msg.rankingStatus : 'idle',
+          rankingError: null,
         }))
-        hydrateAiRanking(msgId, prof, query, opts)
+        if (runRanking) {
+          hydrateAiRanking(msgId, prof, query, opts)
+        }
         return
       }
 
@@ -311,6 +317,20 @@ export function useChatHydration(deps: HydrationDeps) {
       const lead = sanitizeAgentProse(agent.text.trim())
       const dashboard = agent.dashboard ?? null
       patchAiMessage(msgId, (msg) => ({ ...msg, agentLocale: askedLocale }))
+
+      if (!runRanking) {
+        patchAiMessage(msgId, (msg) => ({
+          ...msg,
+          lead,
+          agentReply: true,
+          dashboard: null,
+          rankingStatus: 'idle',
+          rankingError: null,
+          loadingPhase: 'agent',
+        }))
+        return
+      }
+
       if (agent.ranking && agent.gaps) {
         await applyRankingAndGaps(msgId, agent.ranking, agent.gaps, opts, {
           lead,
@@ -325,7 +345,6 @@ export function useChatHydration(deps: HydrationDeps) {
         lead,
         agentReply: true,
         dashboard,
-        // Etapa real: o agente respondeu, faltam ranking e lacunas
         loadingPhase: 'panels',
       }))
 

@@ -1,4 +1,7 @@
+import { memo } from 'react'
+import { Badge } from '@/components/ui/badge'
 import { useT } from '@/i18n'
+import { cn } from '@/lib/utils'
 import type {
   CoverageCellDto,
   DashboardSpec,
@@ -39,8 +42,12 @@ function WidgetTitle({
 }) {
   return (
     <div>
-      <h3 className="dash-widget-title">{children}</h3>
-      {subtitle ? <span className="hint">{subtitle}</span> : null}
+      <h3 className="m-0 text-[13px] font-semibold text-[var(--navy)]">
+        {children}
+      </h3>
+      {subtitle ? (
+        <span className="text-xs text-muted-foreground">{subtitle}</span>
+      ) : null}
     </div>
   )
 }
@@ -59,29 +66,44 @@ function MaterialHazard({
   const n = Math.min(Math.max(limit ?? 5, 1), 8)
   const items = top.slice(0, n)
   return (
-    <section className="dash-widget">
+    <section className="flex flex-col gap-2">
       <WidgetTitle>{title || t('dashboard.hazardTitle')}</WidgetTitle>
       {items.length === 0 ? (
-        <span className="hint">{t('dashboard.noRanking')}</span>
+        <span className="text-xs text-muted-foreground">
+          {t('dashboard.noRanking')}
+        </span>
       ) : (
-        <ol className="dash-hazard">
+        <ol className="m-0 flex list-none flex-col gap-2 p-0">
           {items.map((item, i) => {
             const level =
               item.nota >= 7.5 ? 'high' : item.nota >= 5 ? 'mid' : 'low'
             return (
-              <li key={item.id} data-level={level}>
-                <span className="dash-hazard-rank">{i + 1}</span>
-                <div>
-                  <b>{item.name}</b>
-                  <span className="hint">
+              <li
+                key={item.id}
+                className="flex items-center gap-2.5 rounded-[10px] bg-[var(--field)] px-2.5 py-2"
+              >
+                <span className="grid size-6 shrink-0 place-items-center rounded-md bg-[#1B2B85] text-xs font-bold text-white">
+                  {i + 1}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <b className="block truncate text-sm">{item.name}</b>
+                  <span className="text-xs text-muted-foreground">
                     {item.id} · {item.where}
                   </span>
                 </div>
-                <span
-                  className={`pill ${level === 'high' ? 'weak' : level === 'mid' ? 'moderate' : 'strong'}`}
+                <Badge
+                  variant={
+                    level === 'high'
+                      ? 'critical'
+                      : level === 'mid'
+                        ? 'warning'
+                        : 'success'
+                  }
+                  size="sm"
+                  className="h-auto"
                 >
                   {item.nota.toFixed(1)}
-                </span>
+                </Badge>
               </li>
             )
           })}
@@ -102,13 +124,13 @@ function ScenarioPredictability({
 }) {
   const scenarios = widget.scenarios ?? []
   return (
-    <section className="dash-widget">
+    <section className="flex flex-col gap-2">
       <WidgetTitle>{title || t('dashboard.predictabilityTitle')}</WidgetTitle>
-      <div className="dash-scenarios">
+      <div className="grid gap-2 md:grid-cols-3">
         {scenarios.map((s) => {
           const pred = String(s.predictability).toLowerCase()
-          const pill =
-            pred === 'high' ? 'strong' : pred === 'low' ? 'weak' : 'moderate'
+          const variant =
+            pred === 'high' ? 'success' : pred === 'low' ? 'critical' : 'warning'
           const label =
             pred === 'high'
               ? t('dash.predHigh')
@@ -118,14 +140,20 @@ function ScenarioPredictability({
           return (
             <article
               key={`${s.environment}-${s.label}`}
-              className="dash-scenario"
+              className="flex flex-col gap-1 rounded-[10px] bg-[var(--field)] p-2.5"
             >
-              <div className="row" style={{ justifyContent: 'space-between' }}>
-                <b>{s.label}</b>
-                <span className={`pill ${pill}`}>{label}</span>
+              <div className="flex items-center justify-between gap-2">
+                <b className="text-sm">{s.label}</b>
+                <Badge variant={variant} size="sm" className="h-auto">
+                  {label}
+                </Badge>
               </div>
-              <span className="hint">{s.environment}</span>
-              {s.note ? <p className="why">{s.note}</p> : null}
+              <span className="text-xs text-muted-foreground">
+                {s.environment}
+              </span>
+              {s.note ? (
+                <p className="m-0 text-sm text-[var(--sub)]">{s.note}</p>
+              ) : null}
             </article>
           )
         })}
@@ -144,9 +172,9 @@ function Insight({
   t: (key: string) => string
 }) {
   return (
-    <section className="dash-widget insight">
+    <section className="flex flex-col gap-2 rounded-[10px] bg-[var(--info)] p-3">
       <WidgetTitle>{title || t('dashboard.insightTitle')}</WidgetTitle>
-      <p className="why">{body}</p>
+      <p className="m-0 text-sm text-[var(--sub)]">{body}</p>
     </section>
   )
 }
@@ -172,7 +200,7 @@ function renderChartWidget(
   switch (widget.type) {
     case 'rankingTop3':
       return (
-        <section className="dash-widget">
+        <section className="flex flex-col gap-2">
           <WidgetTitle subtitle={t('dash.rankingSubtitle')}>
             {widget.title || t('dash.rankingTitle')}
           </WidgetTitle>
@@ -181,7 +209,7 @@ function renderChartWidget(
       )
     case 'criteriaBars':
       return (
-        <section className="dash-widget">
+        <section className="flex flex-col gap-2">
           <WidgetTitle subtitle={t('dash.criteriaSubtitle')}>
             {widget.title || t('dash.criteriaTitle')}
           </WidgetTitle>
@@ -201,7 +229,7 @@ function renderChartWidget(
       )
     case 'gapsHeatmap':
       return (
-        <section className="dash-widget">
+        <section className="flex flex-col gap-2">
           <WidgetTitle subtitle={t('dash.gapsSubtitle')}>
             {widget.title || t('dash.gapsTitle')}
           </WidgetTitle>
@@ -242,7 +270,11 @@ function renderInterpretive(
   }
 }
 
-export function HypothesisDashboard({ spec, top, coverageCells }: Props) {
+export const HypothesisDashboard = memo(function HypothesisDashboard({
+  spec,
+  top,
+  coverageCells,
+}: Props) {
   const t = useT()
   const widgets = spec?.widgets ?? []
   const charts = pickChartWidgets(widgets)
@@ -253,32 +285,65 @@ export function HypothesisDashboard({ spec, top, coverageCells }: Props) {
   const intent = String(spec?.intent ?? 'ranking')
 
   return (
-    <div className="hypothesis-dashboard" data-intent={intent}>
-      <div className="dash-head">
+    <div
+      className="mt-2.5 flex flex-col gap-3 rounded-xl border border-[color-mix(in_srgb,var(--navy)_12%,transparent)] bg-[var(--bg)] p-3.5"
+      data-intent={intent}
+    >
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <span className="step">
+          <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
             {t('dashboard.label')}
             {spec ? (
-              <span className="dash-ai-badge">{t('dashboard.aiBadge')}</span>
+              <Badge
+                variant="info"
+                size="sm"
+                className="h-auto normal-case tracking-normal"
+              >
+                {t('dashboard.aiBadge')}
+              </Badge>
             ) : null}
           </span>
-          <h2>{title}</h2>
-          {subtitle ? <p className="why">{subtitle}</p> : null}
+          <h2 className="mt-0.5 text-[17px] font-semibold text-[var(--navy)]">
+            {title}
+          </h2>
+          {subtitle ? (
+            <p className="m-0 text-sm text-[var(--sub)]">{subtitle}</p>
+          ) : null}
         </div>
       </div>
 
-      <div className="dash-grid charts">
+      <div
+        className={cn(
+          'grid grid-cols-1 gap-3',
+          charts.length > 1 && 'md:grid-cols-2',
+        )}
+      >
         {charts.map((w, i) => (
-          <div key={`chart-${w.type}-${i}`} className="dash-cell">
+          <div
+            key={`chart-${w.type}-${i}`}
+            className={cn(
+              'min-w-0',
+              charts.length > 1 &&
+                i === charts.length - 1 &&
+                charts.length % 2 === 1 &&
+                'md:col-span-2',
+            )}
+          >
             {renderChartWidget(w, top, coverageCells, t)}
           </div>
         ))}
       </div>
 
       {interpretive.length > 0 ? (
-        <div className="dash-grid interpretive">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {interpretive.map((w, i) => (
-            <div key={`interp-${w.type}-${i}`} className="dash-cell">
+            <div
+              key={`interp-${w.type}-${i}`}
+              className={cn(
+                'min-w-0',
+                w.type === 'insight' && 'md:col-span-2',
+              )}
+            >
               {renderInterpretive(w, top, t)}
             </div>
           ))}
@@ -286,8 +351,10 @@ export function HypothesisDashboard({ spec, top, coverageCells }: Props) {
       ) : null}
 
       {interpretive.some((w) => w.type === 'insight') ? null : (
-        <p className="dash-legend hint">{legendForIntent(intent, t)}</p>
+        <p className="m-0 border-t border-[color-mix(in_srgb,var(--navy)_10%,transparent)] pt-1 text-xs text-muted-foreground">
+          {legendForIntent(intent, t)}
+        </p>
       )}
     </div>
   )
-}
+})

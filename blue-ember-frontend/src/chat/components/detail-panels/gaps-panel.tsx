@@ -1,4 +1,5 @@
 import { useT } from '@/i18n'
+import { PanelShell, PanelSkeleton } from './panel-shell'
 import type { AiMsg } from './types'
 
 export function GapsPanel({ msg }: { msg: AiMsg }) {
@@ -7,25 +8,20 @@ export function GapsPanel({ msg }: { msg: AiMsg }) {
 
   if (rankingStatus === 'loading') {
     return (
-      <div className="panel gaps">
-        <b>{t('panels.gapsTitle')}</b>
-        <span className="hint">{t('panels.loadingGaps')}</span>
-        <div className="skel-stack" aria-hidden>
-          <div className="skel-line" />
-          <div className="skel-line short" />
-        </div>
-      </div>
+      <PanelShell title={t('panels.gapsTitle')} variant="gaps">
+        <span className="text-xs text-muted-foreground">{t('panels.loadingGaps')}</span>
+        <PanelSkeleton />
+      </PanelShell>
     )
   }
 
   if (rankingStatus === 'error') {
     return (
-      <div className="panel gaps">
-        <b>{t('panels.gapsTitle')}</b>
-        <span className="hint" role="alert">
+      <PanelShell title={t('panels.gapsTitle')} variant="gaps">
+        <span className="text-xs text-muted-foreground" role="alert">
           {rankingError ?? t('panels.gapsFail')}
         </span>
-      </div>
+      </PanelShell>
     )
   }
 
@@ -33,23 +29,22 @@ export function GapsPanel({ msg }: { msg: AiMsg }) {
   const hasGaps = r.gaps.length > 0
 
   return (
-    <div className="panel gaps">
-      <b>{t('panels.gapsTitle')}</b>
+    <PanelShell title={t('panels.gapsTitle')} variant="gaps">
       {hasGaps ? (
-        <ul>
+        <ul className="flex list-disc flex-col gap-1 pl-4.5 text-sm">
           {r.gaps.map((g) => (
             <li key={g}>{g}</li>
           ))}
         </ul>
       ) : !hasWarning ? (
-        <span className="why">{t('panels.noGaps')}</span>
+        <span className="text-sm text-[var(--sub)]">{t('panels.noGaps')}</span>
       ) : null}
       {hasWarning ? (
-        <div className="test">
-          <b style={{ color: 'var(--navy)' }}>{t('panels.partialGApi')}</b>{' '}
+        <div className="rounded-[10px] bg-[var(--white)] p-2.5 text-sm">
+          <b className="text-[var(--navy)]">{t('panels.partialGApi')}</b>{' '}
           {r.partialGravityWarning}
         </div>
       ) : null}
-    </div>
+    </PanelShell>
   )
 }

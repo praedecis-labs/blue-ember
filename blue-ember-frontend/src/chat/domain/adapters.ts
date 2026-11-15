@@ -96,12 +96,10 @@ const GOAL_TO_CATEGORY: Record<GoalId, string> = {
   apagar: 'supressao',
 }
 
-/** Map UI goal to ranking/export `category` query param. */
 export function toApiCategory(goal: GoalId): string {
   return GOAL_TO_CATEGORY[goal]
 }
 
-/** Build ranking query params from profile + parsed QueryState. */
 export function rankingParamsFromQuery(
   profile: ProfileId,
   q: Pick<QueryState, 'env' | 'goal'>,
@@ -113,7 +111,6 @@ export function rankingParamsFromQuery(
   }
 }
 
-/** Map API C1–C5 criteria onto UI CritKey vals (0–1). */
 export function criteriaToVals(
   c: ScoreCriteriaDto,
 ): Record<CritKey, number | null> {
@@ -132,7 +129,6 @@ function o2Tuple(range: number[]): [number, number] {
   return [0, 0]
 }
 
-/** Map a ranking item into the chat panel ScoredInvestigation shape. */
 export function rankingItemToScored(item: RankingItemDto): ScoredInvestigation {
   const inv = item.investigation
   const vals = criteriaToVals(item.criteria)
