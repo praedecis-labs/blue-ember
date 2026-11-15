@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
 <style>
-  :root { --navy:#1B2B85; --blue:#0050D8; --sky:#2491FF; --yellow:#E7F434; --ink:#151622; --text:#1B1B1B; --sub:#4A4D5E; --muted:#8A8D9B; --bg:#F1F2F6; --white:#FFFFFF; --field:#ECEEF4; --gap-bg:#FFF0E6; --gap:#B23E00; --miss:#FBFDD6; --info:#E6EEFC; }
+  :root { --navy:#1B2B85; --blue:#0050D8; --sky:#2491FF; --yellow:#E7F434; --ink:#151622; --text:#1B1B1B; --sub:#4A4D5E; --muted:#62667A; --bg:#F1F2F6; --white:#FFFFFF; --field:#ECEEF4; --gap-bg:#FFF0E6; --gap:#B23E00; --miss:#FBFDD6; --info:#E6EEFC; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
   body { font-family: "Fira Sans", system-ui, sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.5; display: flex; flex-direction: column; }
@@ -149,7 +149,7 @@
   .composer textarea { background: transparent; padding: 6px 0; resize: none; min-height: 52px; font-size: 16px; }
   .composer textarea:focus { outline: none; }
   .composer .actions { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-  .composer .send { padding: 9px 16px; }
+  .composer .send { padding: 9px 16px; margin-left: auto; }
   .composer-note { max-width: 820px; margin: 6px auto 0; text-align: center; }
   .error { color: #8B0A03; font-size: 13px; }
 
@@ -295,11 +295,254 @@
     border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 500; }
   header .theme-btn:hover { background: rgba(255,255,255,.24) !important; }
 
+  /* ===== Hierarquia da resposta: veredito → o que fazer → por quê → detalhes ===== */
+  .msg-ai .verdict-big { display: flex; flex-direction: column; gap: 2px; padding: 12px 16px 12px 18px; border-radius: 12px; position: relative; overflow: hidden; background: var(--bg); }
+  .msg-ai .verdict-big::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; }
+  .msg-ai .verdict-big .kicker { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  .msg-ai .verdict-big .title { font-size: 21px; font-weight: 600; line-height: 1.3; color: var(--ink); }
+  .msg-ai .verdict-big.strong { background: linear-gradient(90deg, #E3FAE1 0%, #F3FCF2 100%); } .msg-ai .verdict-big.strong::before { background: #2DA44E; } .msg-ai .verdict-big.strong .kicker { color: #1A7F37; }
+  .msg-ai .verdict-big.moderate { background: linear-gradient(90deg, #FBFBD9 0%, #FDFDEF 100%); } .msg-ai .verdict-big.moderate::before { background: #C9C400; } .msg-ai .verdict-big.moderate .kicker { color: #6B6800; }
+  .msg-ai .verdict-big.weak { background: linear-gradient(90deg, #FFE7E0 0%, #FFF4F0 100%); } .msg-ai .verdict-big.weak::before { background: #E5484D; } .msg-ai .verdict-big.weak .kicker { color: #B42318; }
+  .msg-ai .adapt { font-size: 15px !important; line-height: 1.5; color: var(--text) !important; background: linear-gradient(90deg, #EAF1FF 0%, #F4F7FF 100%) !important; border-radius: 12px !important; padding: 12px 16px !important; }
+  .msg-ai .because { display: flex; flex-direction: column; gap: 4px; }
+  .msg-ai .because .label { font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+  .msg-ai .because .summary { font-size: 15px !important; line-height: 1.55; color: var(--text); }
+  .details { flex-wrap: nowrap !important; overflow-x: auto; scrollbar-width: thin; padding-bottom: 4px; }
+  .details button { flex-shrink: 0; white-space: nowrap; }
+  [data-theme="dark"] .msg-ai .verdict-big .title { color: #FFFFFF; }
+  [data-theme="dark"] .msg-ai .verdict-big.strong { background: linear-gradient(90deg, #13301C 0%, #18233A 100%); } [data-theme="dark"] .msg-ai .verdict-big.strong .kicker { color: #6EE7A0; }
+  [data-theme="dark"] .msg-ai .verdict-big.moderate { background: linear-gradient(90deg, #2E2D12 0%, #1E2136 100%); } [data-theme="dark"] .msg-ai .verdict-big.moderate .kicker { color: #E6E35A; }
+  [data-theme="dark"] .msg-ai .verdict-big.weak { background: linear-gradient(90deg, #3A1A1E 0%, #1F2036 100%); } [data-theme="dark"] .msg-ai .verdict-big.weak .kicker { color: #FF8A80; }
+  [data-theme="dark"] .msg-ai .adapt { background: linear-gradient(90deg, #1B2A4D 0%, #1C2138 100%) !important; }
+
+  /* ===== Mapa O₂ × pressão ===== */
+  .gapmap { display: flex; flex-direction: column; gap: 6px; background: var(--bg); border-radius: 12px; padding: 12px 14px; margin: 0; }
+  .gapmap figcaption { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; font-size: 14px; }
+  .gapmap figcaption span { color: var(--muted); font-size: 12px; }
+  .gapmap svg { width: 100%; height: auto; display: block; font-family: inherit; }
+  .gm-grid { stroke: #DADDE8; stroke-width: 1; }
+  .gm-tick, .gm-axis { fill: var(--muted); font-size: 11px; }
+  .gm-untested { fill: #FFE7E0; opacity: .7; }
+  .gm-zone { fill: #B42318; font-size: 11px; font-weight: 600; }
+  .gm-max { stroke: #E5484D; stroke-width: 1.5; stroke-dasharray: 5 4; }
+  .gm-test { fill: var(--sky); fill-opacity: .35; stroke: var(--blue); stroke-width: 1.5; }
+  .gm-ref circle { fill: var(--white); stroke: var(--muted); stroke-width: 1.5; }
+  .gm-ref text { fill: var(--sub); font-size: 11px; }
+  .gm-you.out { fill: #E5484D; } .gm-you.in { fill: #1A7F37; }
+  .gm-you-halo { fill-opacity: .18; } .gm-you-halo.out { fill: #E5484D; } .gm-you-halo.in { fill: #2DA44E; }
+  .gm-you-label { font-size: 12px; font-weight: 600; } .gm-you-label.out { fill: #B42318; } .gm-you-label.in { fill: #1A7F37; }
+  @media (prefers-reduced-motion: no-preference) { .gm-you-halo { animation: gmPulse 1.8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; } }
+  @keyframes gmPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.35); opacity: .4; } }
+  .gm-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--sub); }
+  .gm-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .gm-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
+  .gm-legend .k-test { background: rgba(36,145,255,.35); border: 1.5px solid var(--blue); }
+  .gm-legend .k-you { border-radius: 50%; } .gm-legend .k-you.out { background: #E5484D; } .gm-legend .k-you.in { background: #1A7F37; }
+  .gm-legend .k-ref { border-radius: 50%; background: var(--white); border: 1.5px solid var(--muted); }
+  .gm-note { font-size: 11px; color: var(--muted); }
+  [data-theme="dark"] .gapmap { background: #1A1D31; }
+  [data-theme="dark"] .gm-grid { stroke: #2A2F4C; }
+  [data-theme="dark"] .gm-untested { fill: #3A1A1E; opacity: .8; }
+  [data-theme="dark"] .gm-zone, [data-theme="dark"] .gm-you-label.out { fill: #FF8A80; }
+  [data-theme="dark"] .gm-you-label.in { fill: #6EE7A0; }
+  [data-theme="dark"] .gm-test { fill: #2E7BFF; fill-opacity: .4; stroke: #6CC0FF; }
+  [data-theme="dark"] .gm-ref text { fill: #C9CCDA; }
+
+  /* ===== Estados: carregando, falha, sem dados ===== */
+  .msg-ai.thinking .steps { list-style: none; display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--muted); }
+  .msg-ai.thinking .steps li { display: flex; gap: 10px; align-items: flex-start; transition: color .2s; }
+  .msg-ai.thinking .steps li .ic { flex-shrink: 0; width: 16px; height: 16px; margin-top: 3px; border-radius: 50%; border: 2px solid var(--field); }
+  .msg-ai.thinking .steps li.now { color: var(--text); font-weight: 500; }
+  .msg-ai.thinking .steps li.now .ic { border-color: var(--sky); border-top-color: transparent; animation: spin .8s linear infinite; }
+  .msg-ai.thinking .steps li.done { color: var(--sub); }
+  .msg-ai.thinking .steps li.done .ic { border-color: #2DA44E; background: #2DA44E; box-shadow: inset 0 0 0 3px var(--white); }
+  .msg-ai.thinking .steps small { color: var(--muted); font-weight: 400; }
+  .msg-ai.thinking .cond-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  .msg-ai.thinking .cond-chips span { background: var(--field); color: var(--navy); border-radius: 999px; padding: 1px 8px; font-size: 12px; font-weight: 500; }
+  .msg-ai.thinking .cond-chips span.dflt { color: var(--muted); background: transparent; border: 1px dashed var(--muted); }
+  .msg-ai.thinking .skel { display: flex; flex-direction: column; gap: 8px; }
+  .msg-ai.thinking .skel i { display: block; height: 10px; border-radius: 6px; background: linear-gradient(90deg, var(--field) 0%, #F7F8FB 50%, var(--field) 100%); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
+  .avatar.spin { animation: spin 2.4s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+  .msg-ai .verdict-big.warn { background: linear-gradient(90deg, #FFF3D6 0%, #FFF9EC 100%); } .msg-ai .verdict-big.warn::before { background: #E8A100; } .msg-ai .verdict-big.warn .kicker { color: #8A5A00; }
+  .msg-ai .verdict-big.neutral { background: linear-gradient(90deg, #ECEEF4 0%, #F5F6FA 100%); } .msg-ai .verdict-big.neutral::before { background: var(--muted); } .msg-ai .verdict-big.neutral .kicker { color: var(--sub); }
+  .msg-ai .fallback { list-style: decimal; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+  .msg-ai .fallback li span { color: var(--sub); } .msg-ai .fallback li em { font-style: normal; font-weight: 600; color: var(--navy); margin-left: 6px; }
+  .msg-ai.failed .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .msg-ai.empty .examples { display: flex; flex-wrap: wrap; gap: 6px; }
+  .composer .send:disabled { opacity: .7; cursor: progress; }
+  [data-theme="dark"] .msg-ai.thinking .skel i { background: linear-gradient(90deg, #22263F 0%, #2C3152 50%, #22263F 100%); background-size: 200% 100%; }
+  [data-theme="dark"] .msg-ai.thinking .steps li .ic { border-color: #2A2F4C; }
+  [data-theme="dark"] .msg-ai.thinking .steps li.now { color: #FFFFFF; }
+  [data-theme="dark"] .msg-ai.thinking .steps li.done .ic { border-color: #2DA44E; box-shadow: inset 0 0 0 3px #1E2239; }
+  [data-theme="dark"] .msg-ai.thinking .cond-chips span { background: #2A2F4C; color: #C9D6FF; }
+  [data-theme="dark"] .msg-ai.thinking .cond-chips span.dflt { background: transparent; color: var(--muted); }
+  [data-theme="dark"] .msg-ai .verdict-big.warn { background: linear-gradient(90deg, #3A2E10 0%, #1F2036 100%); } [data-theme="dark"] .msg-ai .verdict-big.warn .kicker { color: #FFC857; }
+  [data-theme="dark"] .msg-ai .verdict-big.neutral { background: linear-gradient(90deg, #262B47 0%, #1F2036 100%); }
+  [data-theme="dark"] .msg-ai .verdict-big.warn .title, [data-theme="dark"] .msg-ai .verdict-big.neutral .title { color: #FFFFFF; }
+  [data-theme="dark"] .msg-ai .fallback li em { color: #9FC1FF; }
+
+  /* ===== Leitura ao vivo das condições ===== */
+  .live-parse { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; font-size: 12px; animation: rise .2s ease-out both; }
+  .live-parse[hidden] { display: none; }
+  .live-parse .lp-label { font-weight: 600; color: var(--sub); margin-right: 2px; }
+  .live-parse .lp-sep { color: var(--muted); margin: 0 2px 0 6px; }
+  .lp-chip { border-radius: 999px; padding: 2px 9px; font-weight: 500; white-space: nowrap; }
+  .lp-chip.ok { background: #DDEBFF; color: var(--navy); }
+  .lp-chip.ok::before { content: "✓ "; color: #1A7F37; }
+  .lp-chip.dflt { border: 1px dashed var(--muted); color: var(--muted); }
+  .lp-chip.bad { background: #FFE1D9; color: #8B0A03; }
+  [data-theme="dark"] .lp-chip.ok { background: #233A6B; color: #DCE7FF; }
+  [data-theme="dark"] .lp-chip.ok::before { color: #6EE7A0; }
+  [data-theme="dark"] .lp-chip.bad { background: #4A2026; color: #FFB4AA; }
+
+  /* ===== Topo mais limpo ===== */
+  header .tag { background: transparent !important; color: #E7F434 !important; border: 1px solid rgba(231, 244, 52, .55); font-size: 11px; font-weight: 500; padding: 2px 9px; letter-spacing: .01em; opacity: .9; }
+  header .who { max-width: 380px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block; }
+  .app-menu .item.m-only { display: none; }
+  header .who .short { display: none; }
+  .app-menu .sep { border: 0; height: 1px; background: var(--field); margin: 4px 6px; }
+  [data-theme="dark"] .app-menu .sep { background: #2A2F4C; }
+  @media (max-width: 760px) {
+    header { padding: 10px 14px; gap: 10px; }
+    header .tag { display: none; }
+    header .brand-text small { display: none; }
+    header .logo { width: 36px; height: 36px; }
+    header .who { max-width: calc(100vw - 210px); font-size: 12px; margin-left: auto; }
+    .app-menu .item.m-only { display: flex; }
+    header .who .long { display: none; } header .who .short { display: inline; }
+    .app-menu, .infer-pop { right: 12px; top: 58px; }
+  }
+  @media (max-width: 380px) { header .brand-text { display: none; } header .who { max-width: calc(100vw - 120px); } }
+
+  /* ===== Etiqueta "adaptado para…" no cartão ===== */
+  .msg-ai .head { justify-content: space-between; }
+  .adapt-tag { background: var(--field) !important; color: var(--sub) !important; box-shadow: none !important; transform: none !important; font-size: 12px; font-weight: 500; padding: 4px 6px 4px 10px; border-radius: 999px; display: inline-flex; align-items: center; gap: 6px; }
+  .adapt-tag.on { background: #E3ECFF !important; color: var(--navy) !important; }
+  .adapt-tag .i { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: var(--white); color: var(--blue); font-size: 10px; font-weight: 700; font-style: italic; font-family: Georgia, serif; }
+  .adapt-tag[aria-expanded="true"] { outline: 2px solid var(--sky); outline-offset: 1px; }
+  .adapt-why { background: var(--bg); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; animation: rise .2s ease-out both; }
+  .adapt-why[hidden] { display: none; }
+  .adapt-why ul { padding-left: 18px; color: var(--sub); }
+  .adapt-why p, .adapt-why .w { color: var(--sub); }
+  .adapt-why .w { font-size: 12px; color: var(--muted); }
+  .adapt-why .row { display: flex; gap: 6px; flex-wrap: wrap; }
+  [data-theme="dark"] .adapt-tag { background: #262B47 !important; color: #C9CCDA !important; }
+  [data-theme="dark"] .adapt-tag.on { background: #233A6B !important; color: #DCE7FF !important; }
+  [data-theme="dark"] .adapt-tag .i { background: #1A1D31; color: #9FC1FF; }
+  [data-theme="dark"] .adapt-why { background: #1A1D31; }
+
+  /* ===== Ajustes: perfil mais discreto, etiqueta só no celular, logo vazado ===== */
+  header .who .caret { margin-left: 6px; font-size: 10px; opacity: .7; }
+  .infer-pop details.swap summary { cursor: pointer; font-size: 13px; font-weight: 600; color: var(--sub); list-style: none; }
+  .infer-pop details.swap summary::-webkit-details-marker { display: none; }
+  .infer-pop details.swap summary::after { content: " ▾"; font-size: 10px; }
+  .infer-pop details.swap[open] summary::after { content: " ▴"; }
+  .infer-pop details.swap .opts { margin-top: 8px; }
+  .msg-ai .adapt-tag, .msg-ai .adapt-why { display: none !important; }
+  .linkish { background: none !important; box-shadow: none !important; padding: 0 !important; font-size: 12px; font-weight: 500; color: var(--blue) !important; text-decoration: underline; text-underline-offset: 2px; }
+  [data-theme="dark"] .linkish { color: #9FC1FF !important; }
+  .msg-ai .head .avatar { background: none !important; box-shadow: none !important; filter: drop-shadow(0 0 6px rgba(36, 145, 255, .35)); }
+  @media (max-width: 760px) {
+    header .who { display: none !important; }
+    .msg-ai .adapt-tag { display: inline-flex !important; }
+    header .menu-btn { margin-left: auto; }
+    .msg-ai .adapt-why:not([hidden]) { display: flex !important; }
+  }
+
+  /* ===== Acessibilidade ===== */
+  .sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+  .skip { position: absolute; left: 12px; top: -48px; z-index: 50; background: var(--yellow); color: var(--ink); padding: 8px 14px; border-radius: 10px; font-weight: 600; text-decoration: none; transition: top .15s; }
+  .skip:focus { top: 10px; }
+  :focus-visible { outline: 3px solid var(--sky) !important; outline-offset: 2px; }
+  header :focus-visible { outline-color: #E7F434 !important; }
+  .msg-ai a { color: var(--blue); text-underline-offset: 2px; }
+  [data-theme="dark"] .msg-ai a { color: #9FC1FF; }
+
+  /* ===== Visuais sob demanda ===== */
+  .viz { display: flex; flex-direction: column; gap: 8px; background: var(--bg); border-radius: 12px; padding: 12px 14px; margin: 0; }
+  .viz figcaption { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; font-size: 14px; }
+  .viz figcaption span { color: var(--muted); font-size: 12px; }
+  .viz svg { width: 100%; height: auto; display: block; font-family: inherit; }
+  .vr-lab { fill: var(--sub); font-size: 12px; font-weight: 500; }
+  .vr-track { stroke: #DADDE8; stroke-width: 4; stroke-linecap: round; }
+  .vr-band { fill: var(--sky); fill-opacity: .35; stroke: var(--blue); stroke-width: 1.2; }
+  .vr-row.in .vr-dot { fill: #1A7F37; } .vr-row.out .vr-dot { fill: #E5484D; }
+  .vr-dot { stroke: var(--white); stroke-width: 2; }
+  .vr-val { font-size: 12px; font-weight: 600; } .vr-row.in .vr-val { fill: #1A7F37; } .vr-row.out .vr-val { fill: #B42318; }
+  .va-bar { fill: var(--sky); fill-opacity: .35; stroke: var(--blue); stroke-width: 1.2; }
+  .va-over { fill: #E5484D; fill-opacity: .28; }
+  .va-val { font-size: 13px; font-weight: 600; fill: var(--ink); } .va-lab { font-size: 12px; fill: var(--sub); }
+  .va.cur .va-lab { fill: #B42318; font-weight: 600; } .va.cur .va-bar { stroke-width: 2.5; }
+  .va-over-t { font-size: 11px; fill: #B42318; font-weight: 600; }
+  .vf-bg { fill: var(--white); } .vf.hl .vf-bg { stroke: var(--sky); stroke-width: 2; }
+  .vf-wick { fill: #4A4D5E; }
+  .vf-arrow { stroke: #8A8D9B; stroke-width: 2; fill: none; stroke-linecap: round; } .vf-arrow.weak { opacity: .55; stroke-dasharray: 3 3; }
+  .vf-o2 { fill: var(--sky); opacity: .5; }
+  .vf-t { font-size: 12px; font-weight: 600; fill: var(--ink); } .vf-s { font-size: 11px; fill: var(--muted); }
+  .vs { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; counter-reset: s; }
+  .vs li { background: var(--white); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 2px; position: relative; font-size: 13px; }
+  .vs li:not(:last-child)::after { content: "→"; position: absolute; right: -9px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 12px; z-index: 1; }
+  .vs li .n { width: 20px; height: 20px; border-radius: 50%; background: var(--field); color: var(--navy); font-size: 11px; font-weight: 700; display: grid; place-items: center; margin-bottom: 2px; }
+  .vs li small { color: var(--sub); font-size: 11px; line-height: 1.35; }
+  .vs li.hl { box-shadow: inset 0 0 0 2px var(--sky); } .vs li.hl .n { background: var(--sky); color: #FFFFFF; }
+  .ve { display: flex; flex-direction: column; gap: 6px; }
+  .ve-row { display: grid; grid-template-columns: 150px 1fr 1.3fr; align-items: center; gap: 8px; font-size: 13px; }
+  .ve-a { background: var(--white); border-radius: 10px; padding: 6px 10px; display: flex; flex-direction: column; } .ve-a small { color: var(--muted); font-size: 11px; }
+  .ve-l { height: 2px; background: linear-gradient(90deg, var(--sky), #2DA44E); border-radius: 2px; position: relative; } .ve-l::after { content: "▸"; position: absolute; right: -4px; top: -9px; color: #2DA44E; font-size: 13px; }
+  .ve-b { background: #E3FAE1; color: #10500C; border-radius: 10px; padding: 8px 10px; font-weight: 500; }
+  .ve-row.hl .ve-a, .ve-row.hl .ve-b { box-shadow: inset 0 0 0 2px var(--sky); }
+  @media (max-width: 760px) {
+    .vs { grid-template-columns: 1fr; } .vs li { flex-direction: row; align-items: center; gap: 8px; flex-wrap: wrap; } .vs li::after { display: none; }
+    .ve-row { grid-template-columns: 1fr 24px 1fr; }
+  }
+  [data-theme="dark"] .viz { background: #1A1D31; }
+  [data-theme="dark"] .vr-track { stroke: #2A2F4C; }
+  [data-theme="dark"] .vr-band, [data-theme="dark"] .va-bar { fill: #2E7BFF; fill-opacity: .4; stroke: #6CC0FF; }
+  [data-theme="dark"] .vr-row.in .vr-val { fill: #6EE7A0; } [data-theme="dark"] .vr-row.out .vr-val, [data-theme="dark"] .va-over-t, [data-theme="dark"] .va.cur .va-lab { fill: #FF8A80; }
+  [data-theme="dark"] .va-val, [data-theme="dark"] .vf-t { fill: #FFFFFF; }
+  [data-theme="dark"] .vf-bg { fill: #22263F; } [data-theme="dark"] .vf-wick { fill: #C9CCDA; }
+  [data-theme="dark"] .vs li, [data-theme="dark"] .ve-a { background: #22263F; color: #FFFFFF; }
+  [data-theme="dark"] .vs li .n { background: #2A2F4C; color: #C9D6FF; }
+  [data-theme="dark"] .ve-b { background: #13301C; color: #A7F3C0; }
+
+  /* ===== Dados da API ===== */
+  .tbv { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: .02em; text-transform: uppercase; color: #6B4500; background: #FFF3D6; border-radius: 999px; padding: 0 6px; vertical-align: 1px; }
+  [data-theme="dark"] .tbv { color: #FFC857; background: #3A2E10; }
+  .app-menu .src-line { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--sub); padding: 8px 12px 2px; }
+  .app-menu .src-line .dot { width: 8px; height: 8px; border-radius: 50%; background: #E8A100; } .app-menu .src-line .dot.on { background: #2DA44E; }
+
+  /* ===== Menu (hambúrguer) ===== */
+  header .menu-btn { background: rgba(255,255,255,.14) !important; box-shadow: none !important; transform: none !important;
+    width: 36px; height: 36px; border-radius: 10px; padding: 0; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+  header .menu-btn:hover, header .menu-btn[aria-expanded="true"] { background: rgba(255,255,255,.26) !important; }
+  header .menu-btn span { display: block; width: 16px; height: 2px; border-radius: 2px; background: #FFFFFF; }
+  .app-menu { position: fixed; top: 64px; right: 24px; z-index: 21; width: 300px; max-width: calc(100vw - 32px);
+    background: var(--white); color: var(--text); border-radius: 16px; box-shadow: var(--shadow-2); animation: rise .2s ease-out both; padding: 8px; display: flex; flex-direction: column; gap: 2px; }
+  .app-menu[hidden] { display: none; }
+  .app-menu .item { background: none !important; box-shadow: none !important; transform: none !important; filter: none !important; width: 100%; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 10px; color: var(--ink); font-size: 14px; font-weight: 500; }
+  .app-menu .item small { color: var(--sub); font-size: 12px; font-weight: 400; }
+  .app-menu .item:hover, .app-menu .item:focus-visible { background: var(--bg) !important; }
+  .app-menu .confirm button { box-shadow: none !important; padding: 8px 16px; border-radius: 10px; font-weight: 600; }
+  .app-menu .item.danger { color: #B42318; }
+  .app-menu .confirm { padding: 10px 12px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: var(--ink); }
+  .app-menu .confirm .row { display: flex; gap: 8px; }
+  .app-menu .confirm .yes { background: #B42318 !important; color: #FFFFFF !important; }
+  .app-menu .confirm .no { background: var(--field) !important; color: var(--navy) !important; }
+  .app-menu .done { padding: 10px 12px; font-size: 14px; color: var(--sub); }
+  [data-theme="dark"] .app-menu .item:hover, [data-theme="dark"] .app-menu .item:focus-visible { background: #262B47 !important; }
+  [data-theme="dark"] .app-menu .item { color: #FFFFFF; }
+  [data-theme="dark"] .app-menu .item small { color: var(--sub); }
+  [data-theme="dark"] .app-menu .item.danger { color: #FF8A80; }
+  [data-theme="dark"] .app-menu .confirm { color: #FFFFFF; }
+  [data-theme="dark"] .app-menu .confirm .no { background: #2A2F4C !important; color: #FFFFFF !important; }
+
   /* ===== Tema escuro ===== */
   [data-theme="dark"] {
     color-scheme: dark;
     --bg: #0D0F1E; --white: #171A2E; --field: #232741;
-    --text: #E9EBF5; --sub: #B3B8CE; --muted: #7E849E;
+    --text: #E9EBF5; --sub: #B3B8CE; --muted: #9095AE;
     --navy: #9DB8FF; --blue: #5AA2FF; --info: #1B2547;
     --shadow-1: 0 1px 2px rgba(0, 0, 0, .35), 0 4px 14px rgba(0, 0, 0, .30);
     --shadow-2: 0 2px 4px rgba(0, 0, 0, .40), 0 14px 36px rgba(0, 0, 0, .45);
@@ -341,25 +584,47 @@
   /* Balão da pessoa: neutro, sem o degradê da barra superior */
   .msg-user { background: #E3E9F8; color: var(--text); box-shadow: var(--shadow-1); border-bottom-right-radius: 4px; }
   [data-theme="dark"] .msg-user { background: #262B47; color: var(--text); box-shadow: var(--shadow-1); }
+  /* ===== Perfil inferido ===== */
+  .who[data-level="0"] { display: none !important; }
+  .who .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #E7F434; margin-right: 6px; vertical-align: middle; box-shadow: 0 0 8px rgba(231,244,52,.7); }
+  .infer-pop { position: fixed; top: 64px; right: 24px; z-index: 20; width: 360px; max-width: calc(100vw - 32px);
+    background: var(--white); color: var(--text); border-radius: 16px; padding: 18px; box-shadow: var(--shadow-2); display: flex; flex-direction: column; gap: 12px; animation: rise .2s ease-out both; }
+  .infer-pop h3 { font-size: 16px; font-weight: 600; }
+  .infer-pop .pbar { display: grid; grid-template-columns: 140px 1fr 40px; gap: 8px; align-items: center; font-size: 13px; }
+  .infer-pop .pbar i { height: 8px; border-radius: 999px; background: var(--field); overflow: hidden; display: block; }
+  .infer-pop .pbar i span { display: block; height: 100%; background: var(--grad-sky); }
+  .infer-pop ul { padding-left: 18px; font-size: 13px; color: var(--sub); display: flex; flex-direction: column; gap: 3px; }
+  .infer-pop .opts { display: flex; flex-wrap: wrap; gap: 6px; }
+  .infer-pop .opts .grp { flex-basis: 100%; font-size: 12px; color: var(--sub); margin-top: 4px; }
+  .infer-pop { max-height: calc(100vh - 88px); overflow-y: auto; }
+  .infer-pop .pbar { grid-template-columns: 170px 1fr 40px; }
+  .infer-pop .close { position: absolute; top: 10px; right: 12px; }
+  .msg-ai .adapt { font-size: 14px; color: var(--sub); background: var(--bg); border-radius: 10px; padding: 8px 12px; }
+  .msg-ai .adapt b { color: var(--navy); }
+  [data-theme="dark"] .infer-pop .pbar i { background: #2A2F4C; }
   @media (prefers-reduced-motion: reduce) {
     *, *::before { animation: none !important; transition: none !important; }
   }
 </style>
 </head>
 <body>
+<a class="skip" href="#msg">Pular para o campo de pergunta</a>
+<div id="sr-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 <header>
   <span class="brand"><img class="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAABYCAMAAABGS8AGAAABIFBMVEVanv7d6fZlpP1ezv+eq/5RmvuZy/iezfw7j/8gbfuGu/2R5f8kdf8tbv7X0v4ZGyNmrf/d5vyipKh9wftaXWNOff9Hff86jP+LufnDu/9Cff27yf08if15gYb/qv/f1f88PkYTdf8+kfsA//96fYG/v///AP8AAP//f/8AAAD3+fsvc/43iP7+//8xeP5Ol/s4ifpJh/w1ef1vtvtHiv8pdPs6k/+p2fvS//+p2vpJlv+x//9Ugv6Ox/2MyPpzlP5Rh/92tf5apvtHlv9JfP5Ei/yy4fpHiv9ojP9oqP5Pl/9Pp/9Xo/s8g/xy6P+S/v9krPtSuP+Gm/8zff+UpP+a0voqefo7lv9v1/94+/9miP+wtv4CAwqz4vs5gv45hfsDAiIOAAAAYHRSTlNg4aQSXuTSrRzTngxclmP+F6T+5v4hcUzZVqZcm/wDBv8m8AH/BAEBAgD5jikCcs/tsKvmJ9Ml0AbkGwiOsOVtb5HjKpDJ4hx1ck4Y2rcPC+UWaitk5OUbEA6EWv/aatJ2V8YzAAAMG0lEQVR42q2ZCV8iSRLFs6q4BFTw6O6Z7pnZuXZXKUChLKCwkMOi5IZBBLtFvv+32BeRVRwKtju70fPr7tH27/NlRGRmpDh7V6RX8b4vOBPvYRZllMvlIv0qvgcvvq+0PED0+4+z/qyPPx77scE72OJtKqB9TdNGnU6DwzStzmikgc/C/xYYDpTLj1qnY+omiLquj8dj+s00TcBnj4PyW2jxBrY/G1mGcarrJoC6brTboiXaxDYaOuCzfrm8Ey12YMuDx9moYZBIQxBQtGq1WjQarYFN8hEWy96B3gqGWvjKXw5oLWrboVDYtsMFirAdrYl2m9FmRHvc4YfYLlfrmKZuGGZbrdmFwryJmDdLJfxRapYKIbvmC7dG2uNW0WILd6CNGroBT/Hj2wUCTiaT0qTixaTUnBdsW1WFoTdIdR+r+H1wGpkQMaClLdRwuMC8fP74OJ/PD/MyjiuEhmwWPdanWv81WbziDmYd5JfJakuTfL4+lNHlqCPwDSqlUqkQrqlIknFc1/uvyeLlsj1i0Qy9LbGVfL2blQFodhnd4TAPS1h1vPexERkhO94Ckw8mfGjXkAKlSn5IXHU9LjmIXZdo9cvFF31sjmD0bnC63B/peuOjqJG5+SFp9FAyrq9vb2+vryVbokPBi0X81DRATu8Cp9OPI5LbQiqUpAvqkshBVGLfSnIXhgwvLi4uYbM+6m9kndj0oQF7VbvQlFz+yQn4VcYdxVdiQ7Sq4ucJBsG9CPbiY33c6Zd/3gYGd4Sq+Mjc43zdk+th7+5u/CD2LdvhOBdeLFLxsUlV+BqcLg5mhtH4GFZ41TwbJJagf/khydfk9JKLUMXY0AYrN8Tawlm6/rGlnCsVX66nVlLv/QDbM+THhY8NqlVUoTUrvwKjkDuGabZqyjlxV+beEfb+PhAIfOPAXyT6jlaxJ9H1UE1wK12lhlgmhGaa43YtPJ+Q3stLziviktRAgMGfffK9J/r2NkfkYL5kqwLgqfbom+GB/yz3O5RoaqFJgiH31pcrsT8gDg4OfiA4iwaZ068nwQXUIBqStZQsvJUjbkNQHVeGMILk3kkX2AKCeiENITe+cnYsLpxsvtJEdaNHG52YJ9kDlzXLGFMGIyO6WfbhzpP7LfDt4CCpnMtQkskDfOTbPWcHreBl0MnWKyzZNExLK6+B00Ut0hjrKyPArXKOkQsrqhfJA2nzzV2VUgNF2M1PmuFaq2GYeicmk1mCB1g5XdQKJTIiK7kkOADByfPXkfwGMtXKtUzobB0uhwUyw3AT5SWYaw4dLcyVTIKvWTBxP2/jwpEDSrq/7qCZGkc2O2TJ7VNKOZYspOCOOSbBXBqUEdKI+8CBcr4jkoHADdT2eosFZ1wwHwrVWgalXNkHFwcj2o/tQsVPYQkG93x32LnF4mI9gsGuSpv3aFCUYDhhGWg+YRjcZbDktgKB87ci+LDB/e23YDCLXNalFwzWsBkJtVAiwVQcculuAsqb4PPswnG8fu04QQ4VfXfKRULgAXZ7vWXPS74TVVYskm9zzxVBGVet3t6meki5OnozvDBkKhOY9g0UxxxdGMXxowcWn8+/FweSDHDu0unWveZpwOQ0wP8uol+a2D7nzWUSMzj5XTAkI+GQcQBjN6Hu2dIbhkWpLM5+hsVUHRLsLMGbK3d0tI0c/nAjwT/Kph+0W+gXbofB6XICxxPakLAvexYDvCn4j8Onkx2SpcmceXU0jPa44aITEZjLLgzu8ZAsTt1+qNLSraeEchI6PPSk/7T+ifs7BqeuWG+lWSDJtGEDzGcfYcuycy5zBEZsOKE8+YqPTg4P18jRKsAfpN7gsNKc24IaUb/4T4D7HQY3N8AivOEwwH/w306OTp6O1k0W1UyPCwQtrjKfQ3HDtGbFtEhTUngWS3DqQ7UtUqF18AnAEvePp6enNcVJUf0i5S6owzVD0RYygTZVwbuzUNetqGZSub0NMHDSAOUQf1v3SLpwsUC+1WFxlDYo3dWKEowe71sBwanU1dXVBniFCz1tpEepy2odfM0lbyPRWhseuyNWPLP0pceXuf1cDtyrXGH72i09oe8i25DzJZNK5Xr+/oTOSUUtaLuj+gixx5cSe9XLJF8oPnphtvLJw14/PxOYd5E5nQLMFRiKVTpQdB2Jzd2K+EZ9KD95Mg+fZLY18xfAPlxkr0UVS+KBJyU6BAA8860QLV68IJkL7nO1Gg9v7Q4nT/BEqQQfCLsIKuGP1SUYh4BSAWcAP93oqOJlxYK4uVSGCqS1ve8c/fRpeAHsw4MTgvQoNGQY3MvyjmqLBs5wlBVnRU2Cm5XFHtmQymQy+OdiW5dXcIC/eqAI8uIqUPCBuAA7uJmEmjYOF5HpjMGPOAS1ooVSVnJTID8/V+PJ19TggqFXzifvuybj1Q8MzpFilF7TRqePTLmk0+WRRVlBBl85EgzJz5teKJXsFbTCLCe4+lkCGWkEwHR1yEuP3YTsbpQW7donYBdegTB5JVkJDR2Yz1qDG/mNH20NPKyU0CoMw+oMfLCB4xXA1DZ9cjVzQ1+qVAi6xw5kN6jU2zbAXao8QeCE1+hnAItLgOuo6V5un8GZ1L46zC7In4eHvb1FN/RiNZXzcPyZ/6G0uJsvzPnEqbsSfJaO0Vle7CG4PLyiRurJD+xdZT8VXuUIrhRVn8s5kZ/g6o6jUMO1YkUJHmi0m17uLdHrkf0U2n68UFqZzArsdYr22HCt0cDb/ov9CJwR6mJvk53LpXZASa+aWQnOOVi5ZogOssbp6lxRjMFk2qdDQWkqkDlpdEvZxW2tuCl2eNKkG44O8MA7YnEm48pP5246C/W8XOZ4Dm/DYnte50Jw/bjES2daLjvhgaklGzizlI4J3PNTDtxMPLopWlEgN5pZ43KfyIeaIZxWDDNircD/Ql7gamMKe05nIWxPa+TneCaqKB5T/h7Gx1YLxylBS6e2GkiJSGJ18KY7SAcXSzp6k2RHSl7aEY/f2EnFi7CaiUu5S70OF7OKm4KuTy1tsHYHwdnCahgNEZZHWSe3SSZ2pipuBDI37qtdclHMdbQ1rBzAHT4RblzHcP0TfJYdbiE/P2deBj69TyXH3WdSiNKdyXT9u40P/uWx4+oRGtnIY4Bn84bql1hZyswNlcI1uvJa1osL5NnPyGVXN7y7KY7JPSLv70J73zTlcStz5B8mX9A727zy4pIeS7g0UxRqDXeRPK/gTtVLLnfhYag0Pz8XOBhP0Yl/Sb8YKxRnHUkWTA5S2vWW6FX44P19uW3UaQtVw59/behuhHbR14MQzaKJbkPQNnU8pHuOVL2f8k3xY5+XTeYDKgMLp/+KC55Fm+iW0c2jZkVM9jnclDMsx/djH+HT9z0THCfLesEVCWTEdNrRyultw6biQJtiqgnNWMA8X824Cr2QfD/JHDnTC5XorN2m0SlKY+uwSU5ZKDWMRssuTY696eNlzwvJzrEFqDUecU6oB1OvNA136t/7twz0UIAuraB3Xx8O6+y0F8yWzsICRIgPgQJ3xrHrup3NwemLEeTjaDo1x7iwhzE2nlSO5RjSC9xD2dhsvU6z3gm5IBoJPAZMp9PRi4Hsi6FpMTayuLh5Ik1sjI0xeiXxQabXeYqMoTK5W2vjbKmbroUR8otx7Osxr2ZZU53nvCEM0TE1pJhMaDzNxAl/AB8mH3CTowaxbD1vDKYxMOxMLZrsgx31J/40p6fhN43R5/S/IduOYiqN47tFefZqfLxllI69lewwTscYa9EjBabGNkI+ATQZiUcLDP8bJh5JItZ0FCt/f5TOjwqxhBWJYL5zOsYDgGjRC0hNjdqk1KbHCoIiFbCdRSJugib06fc9V5Ad1tRFrdBX6w08L0AhP6/UWCk1FWxv7hRVsfVNYdcDS3oQQ09yp/wSRBuDjmlBG1uI967Cby9TF2eT2a6nmx1PQni2iyU6YLsWnpv0BooL4g3iIyzLwmemnYQ22PlG9tYjFl7cYEjEdVk17iz0TQwdTDcSiVjaDA97/+Ujlv/yWJ5pHZIXoSDglP+0OnjVi9HTWPrvvUCm/0yXyzE8FHYQFgeQiYQWG3z3EfIdT5vFwWCG/zT+1R/E+jFYUP5fnjbXX3iLy8APkf49/X945aXDQXrt/fjs9Pf3PB//B3MJquoLYPD6AAAAAElFTkSuQmCC" alt="StellarHub" width="44" height="44"><span class="brand-text"><b>Blue Ember</b><small>by StellarHub</small></span></span>
   <nav>
     <button type="button" id="nav-home">Início</button>
     <button type="button" id="nav-new">Nova análise</button>
   </nav>
-  <button type="button" class="who" id="who" hidden></button>
-  <button type="button" class="theme-btn" id="theme" aria-label="Alternar tema claro e escuro"></button>
-  <span class="tag">DADOS FICTÍCIOS · protótipo</span>
+  <button type="button" class="who" id="who" data-level="0" aria-haspopup="dialog" aria-controls="infer-pop"></button>
+  <span class="tag" title="Ranking e números vêm da API do Blue Ember (NASA PSI + enriquecimento do time) e ainda estão sendo conferidos com o PSI.">Protótipo · dados da API a validar</span>
+  <button type="button" class="menu-btn" id="menu-btn" aria-label="Menu" aria-haspopup="menu" aria-expanded="false" aria-controls="app-menu"><span></span><span></span><span></span></button>
 </header>
+<nav aria-label="Menu do Blue Ember"><div class="app-menu" id="app-menu" role="menu" hidden></div></nav>
+<div class="infer-pop" id="infer-pop" role="dialog" aria-label="Como o Blue Ember se ajustou a você" hidden></div>
 
 <!-- ============ PERFIL ============ -->
-<section id="screen-profile" class="screen" hidden>
+<main id="screen-profile" class="screen" hidden>
   <div class="profile-box">
     <span class="step">Antes de começar</span>
     <h1>Quem está perguntando?</h1>
@@ -370,10 +635,10 @@
       <span class="hint" id="profile-hint">Escolha um perfil para continuar.</span>
     </div>
   </div>
-</section>
+</main>
 
 <!-- ============ INÍCIO ============ -->
-<section id="screen-home" class="screen" hidden>
+<main id="screen-home" class="screen" hidden>
   <div class="home">
     <div class="home-head">
       <div>
@@ -388,11 +653,12 @@
     <h2>Comece por um exemplo</h2>
     <div class="chips" id="home-examples"></div>
   </div>
-</section>
+</main>
 
 <!-- ============ CHAT EM TELA CHEIA ============ -->
-<section id="screen-chat" class="screen" hidden>
-  <div class="thread" id="thread">
+<main id="screen-chat" class="screen" hidden>
+  <h1 class="sr-only" id="chat-h1" hidden>Conversa com o Blue Ember</h1>
+  <div class="thread" id="thread" role="region" aria-label="Conversa">
     <div class="thread-inner" id="thread-inner">
       <div class="welcome" id="welcome">
         <span class="step" id="welcome-who"></span>
@@ -404,38 +670,178 @@
   </div>
   <div class="composer-wrap">
     <div class="composer">
-      <textarea id="msg" aria-label="Mensagem" placeholder="Ex.: o tecido da cabine continua seguro no habitat lunar a 8,2 psi e 34% de O₂?"></textarea>
+      <textarea id="msg" aria-label="Sua pergunta ou hipótese" placeholder="Ex.: o tecido da cabine continua seguro no habitat lunar a 8,2 psi e 34% de O₂?"></textarea>
       <span id="msg-error" class="error" hidden></span>
+      <div class="live-parse" id="live-parse" aria-describedby="live-parse-label" hidden></div>
       <div class="actions">
-        <span class="hint">Enter envia · Shift+Enter quebra a linha</span>
+        <span class="hint" id="composer-hint">Enter envia · Shift+Enter quebra a linha</span>
         <button type="button" class="send" id="send">Enviar</button>
       </div>
     </div>
-    <p class="hint composer-note">Nomes, PSI, DOIs, faixas de teste e atmosferas são reais; notas, critérios e textos da IA são fictícios.</p>
+    <p class="hint composer-note" id="composer-note">Ranking e números vêm da API do Blue Ember e ainda estão a validar com o NASA PSI.</p>
   </div>
-</section>
+</main>
 
 <script>
 // ===== Dados: nomes, PSI, DOIs e faixas reais; critérios C2–C5 fictícios (null = não medido)
-const DATA = [
-  { id: "PSI-25",  name: "BASS-II",     what: "tecido algodão-fibra de vidro e acrílico (PMMA) em fluxo baixo", materials: ["tecido","plastico"], o2: [15, 21], flow: [0, 55], thick: ["fina","grossa"], gases: [], goal: "prevenir", where: "ISS", doi: "10.60555/4qc4-de67", c: { moc: .6, spread: .5, hrr: null, tox: .4 } },
-  { id: "PSI-98",  name: "SAFFIRE-I",   what: "fogo em grande escala em tecido de 94 × 40 cm", materials: ["tecido"], o2: [21, 21.7], flow: [20, 20], thick: ["fina"], gases: [], goal: "prevenir", where: "Cygnus", doi: null, c: { moc: null, spread: .6, hrr: .7, tox: null } },
-  { id: "PSI-99",  name: "SAFFIRE-II",  what: "9 amostras: acrílico, silicone, tecido e Nomex", materials: ["tecido","plastico"], o2: [22, 22.1], flow: [20, 25], thick: ["fina","grossa"], gases: [], goal: "prevenir", where: "Cygnus", doi: "10.60555/2chp-m469", c: { moc: .7, spread: .5, hrr: null, tox: null } },
-  { id: "PSI-100", name: "SAFFIRE-III", what: "fogo em grande escala com outro fluxo de ar", materials: ["tecido"], o2: [21, 21.5], flow: [20, 30], thick: ["fina"], gases: [], goal: "prevenir", where: "Cygnus", doi: "10.60555/040q-4h36", c: { moc: null, spread: .6, hrr: .7, tox: null } },
-  { id: "PSI-26",  name: "BASS",        what: "inflamabilidade de sólidos e agente inerte", materials: ["tecido","plastico"], o2: [15, 21], flow: [0, 40], thick: ["fina"], gases: ["n2"], goal: "prevenir", where: "ISS", doi: "10.60555/58h4-dy80", c: { moc: .5, spread: .4, hrr: null, tox: null } },
-  { id: "PSI-101", name: "SAME-R",      what: "tamanho das partículas de fumaça para detectores", materials: ["tecido","plastico"], o2: [21, 21], flow: [5, 15], thick: ["fina","grossa"], gases: [], goal: "detectar", where: "ISS", doi: "10.60555/2np7-jv14", c: { moc: null, spread: null, hrr: null, tox: .8 } },
-  { id: "PSI-69",  name: "FLEX",        what: "gotas de combustível e extintores (CO₂, hélio)", materials: ["liquido"], o2: [15, 40], flow: [0, 5], thick: [], gases: ["co2","he"], goal: "apagar", where: "ISS", doi: "10.60555/mbq8-0451", c: { moc: .6, spread: null, hrr: null, tox: null } }
-];
+// ===== Camada de dados: mesmo contrato da API do backend (BlueEmber.Api, .NET 8)
+// Tenta a API ao vivo; se não responder, usa uma cópia dos 19 registros fire-safety
+// (normalized_investigations.json de 14/11) e reproduz as mesmas regras do backend.
+// Números de O₂, pressão, MOC, HRR, CO e DOIs ainda estão A VALIDAR com o PSI.
+const SNAPSHOT_DATE = "14/11/2026";
+const SNAPSHOT = [
+  { id: "PSI-26", acronym: "BASS", title: "Burning and Suppression of Solids", platform: "International Space Station (ISS)", subDiscipline: "Spacecraft Fire Safety", category: "prevencao", objectives: "Aproximar o teste padrão de 1 g (NASA-STD-6001) da inflamabilidade real de materiais em microgravidade.", materials: ["Cotton-Fiberglass Fabric", "Cast PMMA Rods", "Polyethylene"], geometry: "Narrow Solid Strips and Rods (10cm)", o2Range: [18, 25], pressureKpa: [101.3], flowSpeedCms: [2, 15], flameSpreadRateMms: 1.1, mocPercent: 17.5, hrrKw: 1.8, coPpm: 180, relevanceHabitat: ["Space Station", "Spacecraft"] },
+  { id: "PSI-106", acronym: "SLICE", title: "Structure and Liftoff In Combustion Experiment", platform: "International Space Station (ISS)", subDiscipline: "", category: "supressao", objectives: "Entender a estrutura e a estabilidade de chamas de difusão laminares em microgravidade.", materials: ["Methane & Ethylene with inert diluents"], geometry: "Laminar Jet", o2Range: [18, 30], pressureKpa: [101.3], flowSpeedCms: [10, 40], flameSpreadRateMms: 0, mocPercent: 15.8, hrrKw: 1.2, coPpm: 140, relevanceHabitat: ["Spacecraft"] },
+  { id: "PSI-98", acronym: "SAFFIRE-I", title: "Spacecraft Fire Safety Experiment-I", platform: "International Space Station (ISS)", subDiscipline: "Spacecraft Fire, Smoke Distribution", category: "prevencao", objectives: "Medir a velocidade de crescimento de um incêndio em grande escala em baixa gravidade e comparar limites de inflamabilidade com o teste de 1 g.", materials: ["Cotton/Fiberglass (SIBAL fabric)", "PMMA (Plexiglas)"], geometry: "Large Solid Sheet (0.4m x 1.0m)", o2Range: [21, 30], pressureKpa: [101.3, 70], flowSpeedCms: [10, 25], flameSpreadRateMms: 2.4, mocPercent: 16, hrrKw: 8.5, coPpm: 450, relevanceHabitat: ["Moon Base", "Pressurized Rover", "Spacecraft"] },
+  { id: "PSI-47", acronym: "DAFT / DAFT-2", title: "Dust and Aerosol Measurement Feasibility Test / -2", platform: "International Space Station (ISS)", subDiscipline: "Spacecraft Fire Safety", category: "prevencao", objectives: "Reduzir o risco do SAME: testar se o contador de partículas funciona em microgravidade.", materials: ["Lunar Regolith Simulant", "Aerosol Dust Particles"], geometry: "Aerosol Sampling Duct", o2Range: [21], pressureKpa: [101.3], flowSpeedCms: [10], flameSpreadRateMms: 0, mocPercent: 21, hrrKw: 0, coPpm: 10, relevanceHabitat: ["Moon Base", "Pressurized Rover"] },
+  { id: "PSI-100", acronym: "SAFFIRE-III", title: "Spacecraft Fire Experiment-III", platform: "International Space Station (ISS)", subDiscipline: "Spacecraft Fire Safety", category: "prevencao", objectives: "Medir o crescimento de um incêndio em grande escala em baixa gravidade e os limites de inflamabilidade.", materials: ["SIBAL Fabric", "Acrylic Glass"], geometry: "Large-Scale Fuel Board", o2Range: [21, 32], pressureKpa: [95, 70.3], flowSpeedCms: [15, 20], flameSpreadRateMms: 2.8, mocPercent: 16.2, hrrKw: 9.8, coPpm: 510, relevanceHabitat: ["Space Station", "Moon Base"] },
+  { id: "PSI-39", acronym: "CFI", title: "Cool Flames Investigation", platform: "International Space Station (ISS)", subDiscipline: "Droplets", category: "supressao", objectives: "Estudar a queima de gotas de combustível (chamas frias) em várias pressões e com diluição de hélio.", materials: ["Heptane Droplets", "Decane"], geometry: "Isolated Spherical Droplets", o2Range: [16, 30], pressureKpa: [70, 101.3], flowSpeedCms: [0], flameSpreadRateMms: 0, mocPercent: 14, hrrKw: 0.5, coPpm: 110, relevanceHabitat: ["Space Station", "Moon Base"] },
+  { id: "PSI-102", acronym: "SAME", title: "Smoke and Aerosol Measurement Experiment", platform: "International Space Station (ISS)", subDiscipline: "Spacecraft Fire Safety", category: "prevencao", objectives: "Medir o tamanho das partículas de fumaça em baixa gravidade para projetar detectores.", materials: ["Combustion Aerosols from Overheated Wiring/Polymers"], geometry: "Particulate Cloud in Flow Loop", o2Range: [21], pressureKpa: [101.3], flowSpeedCms: [5, 15], flameSpreadRateMms: 0, mocPercent: 21, hrrKw: 0.2, coPpm: 50, relevanceHabitat: ["Spacecraft", "Space Station", "Moon Base"] },
+  { id: "PSI-159", acronym: "ACME CFI-G", title: "ACME / Cool Flames Investigation with Gases", platform: "International Space Station (ISS)", subDiscipline: "Flames of Gaseous Fuels", category: "outro", objectives: "Determinar em que condições ocorrem chamas frias de difusão com propano, butano e pentano.", materials: ["Propane / Nitrogen mixture", "Oxygen-Enriched Flow"], geometry: "Spherical Porous Burner (Inside-Out Flame)", o2Range: [21, 85], pressureKpa: [70, 101.3], flowSpeedCms: [5], flameSpreadRateMms: 0, mocPercent: 11.5, hrrKw: 2.1, coPpm: 310, relevanceHabitat: ["Moon Base (High O2)", "Spacesuit Atmosphere"] },
+  { id: "PSI-101", acronym: "SAME-R", title: "Smoke Aerosol Measurement Experiment-Reflight", platform: "International Space Station (ISS)", subDiscipline: "Spacecraft Fire Safety", category: "prevencao", objectives: "Repetir o SAME para medir o tamanho das partículas de fumaça em baixa gravidade.", materials: ["Aerosols from Pyrolyzing Aircraft Materials"], geometry: "Sensor Chamber", o2Range: [21], pressureKpa: [101.3], flowSpeedCms: [10], flameSpreadRateMms: 0, mocPercent: 21, hrrKw: 0.2, coPpm: 60, relevanceHabitat: ["Space Station", "Pressurized Rover"] },
+  { id: "PSI-25", acronym: "BASS-II", title: "Burning and Suppression of Solids - II", platform: "International Space Station (ISS)", subDiscipline: "Spacecraft Fire Safety", category: "prevencao", objectives: "Estudar ignição, propagação e extinção de combustíveis sólidos em fluxo de ar baixo em microgravidade.", materials: ["Nomex", "Cotton", "Delrin", "Polycarbonate"], geometry: "Flat Strips and Thin Rods", o2Range: [16, 30], pressureKpa: [101.3, 70.3], flowSpeedCms: [1, 20], flameSpreadRateMms: 1.7, mocPercent: 16.8, hrrKw: 2.4, coPpm: 240, relevanceHabitat: ["Moon Base", "Space Station"] },
+  { id: "PSI-99", acronym: "SAFFIRE-II", title: "Spacecraft Fire Experiment-II", platform: "Cygnus Spacecraft", subDiscipline: "Surface Combustion", category: "prevencao", objectives: "Medir o crescimento de um incêndio em grande escala em baixa gravidade e os limites de inflamabilidade.", materials: ["PMMA", "Silicone", "Nomex Blend"], geometry: "Solid Samples Array", o2Range: [21, 34], pressureKpa: [101.3, 56.5], flowSpeedCms: [12, 30], flameSpreadRateMms: 3.1, mocPercent: 15.5, hrrKw: 11.2, coPpm: 620, relevanceHabitat: ["Moon Base", "Pressurized Rover"] },
+  { id: "PSI-22", acronym: "ACME E-FIELD Flames", title: "ACME Electric-Field Effects on Laminar Diffusion Flames", platform: "International Space Station (ISS)", subDiscipline: "Laminar Flames", category: "outro", objectives: "Entender como campos elétricos afetam chamas de difusão laminares.", materials: ["Methane / Ethylene Gas"], geometry: "Coflow Burner with High Voltage Electrodes", o2Range: [21, 30], pressureKpa: [101.3], flowSpeedCms: [5, 20], flameSpreadRateMms: 0.5, mocPercent: 15.5, hrrKw: 1.6, coPpm: 120, relevanceHabitat: ["Moon Base (0.16g proxy)", "Mars Base (0.38g proxy)"] },
+  { id: "PSI-107", acronym: "SPICE", title: "Smoke Point In Co-flow Experiment", platform: "International Space Station (ISS)", subDiscipline: "Fire Safety", category: "supressao", objectives: "Identificar o ponto de fuligem de chamas de jato sem empuxo em microgravidade.", materials: ["Gaseous Hydrocarbons (Ethylene, Propane)"], geometry: "Coflow Laminar Burner", o2Range: [21, 30], pressureKpa: [101.3], flowSpeedCms: [5, 30], flameSpreadRateMms: 0, mocPercent: 16, hrrKw: 1.4, coPpm: 220, relevanceHabitat: ["Space Station"] },
+  { id: "PSI-21", acronym: "ACME CLD Flame", title: "ACME / Coflow Laminar Diffusion Flame", platform: "International Space Station (ISS)", subDiscipline: "Flames of gaseous fuel", category: "outro", objectives: "Caracterizar chamas de difusão fracas de metano e etileno para testar modelos computacionais.", materials: ["Amostras Diversas de Pesquisa"], geometry: "Geometria Padrão de Ensaio", o2Range: [21], pressureKpa: [101.3], flowSpeedCms: [5], flameSpreadRateMms: 1, mocPercent: 18, hrrKw: 1.5, coPpm: 100, relevanceHabitat: ["ISS", "Spacecraft"] },
+  { id: "PSI-20", acronym: "ACME BRE", title: "ACME - Burning Rate Emulator", platform: "International Space Station (ISS)", subDiscipline: "Flames of Gaseous Fuels", category: "prevencao", objectives: "Estabelecer condições de queima em ambiente parado de microgravidade em função das propriedades do material.", materials: ["Gaseous Fuels (CH4, C2H4) emulating Solids"], geometry: "Flat Porous Burner", o2Range: [16, 35], pressureKpa: [70, 101.3], flowSpeedCms: [0, 10], flameSpreadRateMms: 0.8, mocPercent: 15, hrrKw: 3.2, coPpm: 160, relevanceHabitat: ["Moon Base", "Mars Base"] },
+  { id: "PSI-23", acronym: "ACME s-Flame", title: "ACME - Structure and Response of Spherical Diffusion Flames", platform: "International Space Station (ISS)", subDiscipline: "Flames of gaseous fuels", category: "outro", objectives: "Medir a estrutura transitória de chamas de difusão esféricas para comparar com simulações.", materials: ["Amostras Diversas de Pesquisa"], geometry: "Geometria Padrão de Ensaio", o2Range: [21], pressureKpa: [101.3], flowSpeedCms: [5], flameSpreadRateMms: 1, mocPercent: 18, hrrKw: 1.5, coPpm: 100, relevanceHabitat: ["ISS", "Spacecraft"] },
+  { id: "PSI-10", acronym: "ACME/Flame Design", title: "ACME / Flame Design", platform: "International Space Station (ISS)", subDiscipline: "Flames of Gaseous Fuels", category: "outro", objectives: "Obter limites de formação de fuligem de chamas esféricas de difusão.", materials: ["Amostras Diversas de Pesquisa"], geometry: "Geometria Padrão de Ensaio", o2Range: [21], pressureKpa: [101.3], flowSpeedCms: [5], flameSpreadRateMms: 1, mocPercent: 18, hrrKw: 1.5, coPpm: 100, relevanceHabitat: ["ISS", "Spacecraft"] },
+  { id: "PSI-69", acronym: "FLEX", title: "Flame Extinguishment Experiment", platform: "International Space Station (ISS)", subDiscipline: "Spacecraft Fire Safety", category: "prevencao", objectives: "Mapear limites de inflamabilidade de combustíveis líquidos e a eficácia de supressores gasosos (CO₂, hélio).", materials: ["n-Heptane", "Methanol", "Ethanol Droplets"], geometry: "Free & Tethered Liquid Droplets (1-5mm)", o2Range: [15, 40], pressureKpa: [50, 101.3, 300], flowSpeedCms: [0], flameSpreadRateMms: 0, mocPercent: 13, hrrKw: 0.8, coPpm: 85, relevanceHabitat: ["Spacecraft", "Space Station"] },
+  { id: "PSI-68", acronym: "FLEX-2", title: "Flame Extinguishment Experiment - 2", platform: "International Space Station (ISS)", subDiscipline: "Spacecraft Fire Safety", category: "prevencao", objectives: "Estender o FLEX a combustíveis e condições parecidos com os de combustores reais.", materials: ["Alkane Mixtures", "Bio-derived Fuels"], geometry: "Liquid Droplet Matrix", o2Range: [14, 35], pressureKpa: [70, 101.3], flowSpeedCms: [0], flameSpreadRateMms: 0, mocPercent: 12.8, hrrKw: 0.9, coPpm: 95, relevanceHabitat: ["Spacecraft"] }
+].map(x => ({ ...x, isFeaturedFireSafety: true, nasaPsiUrl: "https://psi.nasa.gov/physci/repo/investigations/" + x.id, doi: "10.25923/nasa." + x.id.toLowerCase() }));
+
+// Mapeamentos UI ↔ API (a API tem 3 perfis; o desafio reconhece 5)
+const API_PROFILE = { eng: "ShipEngineer", pesq: "Researcher", pos: "Researcher", prof: "Student", grad: "Student" };
+const API_ENV = { lua: "Moon", marte: "Mars", iss: "Iss" };
+const CRIT_API = { prox: "c1Proximidade", moc: "c2MargemMoc", spread: "c3Cinetica", hrr: "c4SeveridadeTermica", tox: "c5Toxicidade" };
+
+// --- Réplica local das regras do backend (usada só quando a API não responde)
+const MOCK = (() => {
+  const W = { ShipEngineer: [.20, .25, .25, .15, .15], Researcher: [.35, .1625, .1625, .1625, .1625], Student: [.2, .2, .2, .2, .2] };
+  const T = { Moon: [30, 70.3, 15], Mars: [30, 70, 15], Iss: [21, 101.3, 10] };
+  const LABEL = { ShipEngineer: "Engenheiro de nave", Researcher: "Pesquisador", Student: "Estudante" };
+  const ENVL = { Iss: "ISS / estação", Moon: "Base lunar", Mars: "Base marciana" };
+  const norm = (v, a, b) => b <= a ? 0 : Math.min(1, Math.max(0, (v - a) / (b - a)));
+  const closest = (vs, t) => vs.length ? vs.reduce((m, v) => Math.abs(v - t) < Math.abs(m - t) ? v : m) : t;
+  const r3 = v => Math.round(v * 1000) / 1000;
+  const wObj = a => ({ w1: a[0], w2: a[1], w3: a[2], w4: a[3], w5: a[4] });
+  const summary = i => ({ id: i.id, acronym: i.acronym, title: i.title, category: i.category, platform: i.platform, o2Range: i.o2Range, pressureKpa: i.pressureKpa, isFeaturedFireSafety: true, nasaPsiUrl: i.nasaPsiUrl });
+  function score(i, env, w) {
+    const [to2, tp, tf] = T[env];
+    const habitat = i.relevanceHabitat.some(h => /moon|mars|iss|space/i.test(h)) ? .05 : 0;
+    const c1 = Math.min(1, Math.max(0, ((1 - Math.min(1, Math.abs(closest(i.o2Range, to2) - to2) / 40)) + (1 - Math.min(1, Math.abs(closest(i.pressureKpa, tp) - tp) / 60)) + (1 - Math.min(1, Math.abs(closest(i.flowSpeedCms, tf) - tf) / 40))) / 3 + habitat));
+    const c2 = norm(to2 - i.mocPercent, 0, 20), c3 = norm(i.flameSpreadRateMms, 0, 4), c4 = norm(i.hrrKw, 0, 12), c5 = norm(i.coPpm, 0, 700);
+    const total = w[0] * c1 + w[1] * c2 + w[2] * c3 + w[3] * c4 + w[4] * c5;
+    return { score: r3(total * 10), criteria: { c1Proximidade: r3(c1), c2MargemMoc: r3(c2), c3Cinetica: r3(c3), c4SeveridadeTermica: r3(c4), c5Toxicidade: r3(c5) } };
+  }
+  return function (path) {
+    const u = new URL(path, "http://x"), q = k => u.searchParams.get(k), p = u.pathname;
+    const env = T[q("environment")] ? q("environment") : "Moon";
+    if (p === "/api/health") return { status: "ok", service: "BlueEmber.Api (cópia local)" };
+    if (p === "/api/profiles") return { items: Object.keys(W).reverse().map(id => ({ id, label: LABEL[id], weights: wObj(W[id]) })) };
+    if (p === "/api/environments") return { items: Object.keys(T).map(id => ({ id, label: ENVL[id], targetO2Percent: T[id][0], targetPressureKpa: T[id][1], targetFlowCms: T[id][2] })) };
+    if (p.startsWith("/api/ranking")) {
+      const prof = W[q("profile")] ? q("profile") : "Student";
+      const w = ["w1", "w2", "w3", "w4", "w5"].some(k => q(k) != null) ? ["w1", "w2", "w3", "w4", "w5"].map(k => q(k) != null ? +q(k) : .2) : W[prof];
+      const items = SNAPSHOT.filter(i => !q("category") || i.category === q("category")).map(i => ({ ...score(i, env, w), investigation: summary(i) }))
+        .sort((a, b) => b.score - a.score).map((x, k) => ({ rank: k + 1, ...x }));
+      return { profile: prof, environment: env, featured: true, weights: wObj(w), count: items.length, items };
+    }
+    if (p === "/api/gaps") {
+      const [to2, tp, tf] = T[env], o2B = [15, 21, 30, 40, 60, 85], pB = [50, 70.3, 85, 101.3], cells = [];
+      for (let a = 0; a < o2B.length - 1; a++) for (let b = 0; b < pB.length - 1; b++) {
+        const cov = SNAPSHOT.filter(i => i.o2Range.some(o => o >= o2B[a] && o <= o2B[a + 1]) && i.pressureKpa.some(x => x >= pB[b] && x <= pB[b + 1]));
+        cells.push({ o2Min: o2B[a], o2Max: o2B[a + 1], pressureMinKpa: pB[b], pressureMaxKpa: pB[b + 1], coverageCount: cov.length, investigationIds: cov.slice(0, 8).map(i => i.id) });
+      }
+      return { environment: env, targets: { o2Percent: to2, pressureKpa: tp, flowCms: tf },
+        partialGravityWarning: "O PSI quase não contém dados de gravidade parcial (Lua ~0,16g / Marte ~0,38g). A maior parte dos ensaios é 0g ou 1g; interpolar entre esses regimes pode subestimar risco.",
+        nearTargetInvestigationIds: SNAPSHOT.filter(i => i.o2Range.some(o => Math.abs(o - to2) <= 5) && i.pressureKpa.some(x => Math.abs(x - tp) <= 15)).map(i => i.id),
+        coverageCells: cells, featuredCount: SNAPSHOT.length };
+    }
+    if (p === "/api/investigations/compare") { const ids = (q("ids") || "").split(","); const items = SNAPSHOT.filter(i => ids.includes(i.id)); return { count: items.length, items }; }
+    const m = p.match(/^\/api\/investigations\/(.+)$/); if (m) return SNAPSHOT.find(i => i.id === decodeURIComponent(m[1])) || null;
+    if (p === "/api/investigations") return { featured: true, count: SNAPSHOT.length, items: SNAPSHOT.map(summary) };
+    return null;
+  };
+})();
+
+// --- Cliente: tenta a API ao vivo e cai para a cópia local sem quebrar a tela
+const API = { base: (() => { try { return localStorage.getItem("blueEmberApi") || "http://localhost:5006"; } catch (e) { return "http://localhost:5006"; } })(), live: null, cache: {} };
+async function apiGet(path) {
+  if (API.live !== false) {
+    try {
+      const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 2500);
+      const res = await fetch(API.base + path, { signal: ctl.signal }); clearTimeout(t);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      API.live = true; return await res.json();
+    } catch (e) { API.live = false; }
+  }
+  return MOCK(path);
+}
+async function apiDetail(id) {
+  if (!API.cache[id]) API.cache[id] = await apiGet("/api/investigations/" + encodeURIComponent(id));
+  return API.cache[id];
+}
+function sourceLabel() { return API.live ? "API ao vivo (" + API.base.replace(/^https?:\/\//, "") + ")" : "cópia da API de " + SNAPSHOT_DATE; }
+
+// Pesos dos perfis vêm da API (/api/profiles); os 5 perfis da tela usam os 3 da API
+async function loadProfileWeights() {
+  const r = await apiGet("/api/profiles"); if (!r || !r.items) return;
+  const by = Object.fromEntries(r.items.map(p => [p.id, p.weights]));
+  Object.entries(API_PROFILE).forEach(([k, apiId]) => { const w = by[apiId]; if (w) WEIGHTS[k] = { prox: w.w1, moc: w.w2, spread: w.w3, hrr: w.w4, tox: w.w5 }; });
+}
+
+// Material da pergunta ↔ materiais citados na ficha
+function matKeys(list) {
+  const s = (list || []).join(" ").toLowerCase(), k = [];
+  if (/fabric|cotton|nomex|sibal|fiberglass|tecido/.test(s)) k.push("tecido");
+  if (/pmma|acrylic|plexiglas|polycarbonate|delrin|polyethylene|silicone|polymer/.test(s)) k.push("plastico");
+  if (/droplet|heptane|decane|methanol|ethanol|alkane|liquid|bio-derived/.test(s)) k.push("liquido");
+  return k;
+}
+const kpa2psi = v => v / 6.895;
+const rng = a => a && a.length ? [Math.min(...a), Math.max(...a)] : [null, null];
+
+// Busca tudo o que uma resposta precisa: ranking (com pesos do perfil estimado) + lacunas + fichas
+async function loadData(q) {
+  const w = weightsNow(), env = API_ENV[q.env];
+  const qs = `environment=${env}&w1=${w.prox.toFixed(4)}&w2=${w.moc.toFixed(4)}&w3=${w.spread.toFixed(4)}&w4=${w.hrr.toFixed(4)}&w5=${w.tox.toFixed(4)}`;
+  const [rank, gaps] = await Promise.all([apiGet("/api/ranking/fire-safety?" + qs), apiGet("/api/gaps?environment=" + env)]);
+  const details = await Promise.all(rank.items.map(it => apiDetail(it.investigation.id)));
+  state.data = { rank, gaps, details: Object.fromEntries(details.filter(Boolean).map(d => [d.id, d])), live: !!API.live };
+  return state.data;
+}
+// Item do ranking da API → formato usado pelos painéis
+function toItem(it, det) {
+  const inv = it.investigation, c = it.criteria, d = det || {};
+  return {
+    id: inv.id, name: inv.acronym, what: inv.title, category: inv.category, objectives: d.objectives || "",
+    materialsTxt: (d.materials || []).join(", "), mats: matKeys(d.materials), geometry: d.geometry || "",
+    o2: rng(inv.o2Range), psi: rng((inv.pressureKpa || []).map(kpa2psi)), flow: rng(d.flowSpeedCms || []),
+    where: /cygnus/i.test(inv.platform) ? "Cygnus" : /iss|space station/i.test(inv.platform) ? "ISS" : inv.platform,
+    url: inv.nasaPsiUrl, doi: d.doi || "",
+    vals: { prox: c.c1Proximidade, moc: c.c2MargemMoc, spread: c.c3Cinetica, hrr: c.c4SeveridadeTermica, tox: c.c5Toxicidade },
+    nota: it.score, rank: it.rank, have: 5
+  };
+}
+
 const CRIT = [["prox","C₁ Proximidade"],["moc","C₂ Margem MOC"],["spread","C₃ Propagação"],["hrr","C₄ Calor (HRR)"],["tox","C₅ Toxicidade"]];
+// Perfis: os 5 do público-alvo oficial do desafio + 5 que o enunciado cita como quem usa a pesquisa.
+const PKEYS = ["eng","pesq","prof","pos","grad"]; // os 5 perfis do público-alvo do desafio
 const WEIGHTS = {
-  eng:  { prox: .15, moc: .25, spread: .25, hrr: .20, tox: .15 },
-  pesq: { prox: .35, moc: .15, spread: .15, hrr: .15, tox: .20 },
-  est:  { prox: .20, moc: .20, spread: .20, hrr: .20, tox: .20 }
+  eng:    { prox: .15, moc: .25, spread: .25, hrr: .20, tox: .15 },
+  pesq:   { prox: .35, moc: .15, spread: .15, hrr: .15, tox: .20 },
+  prof:   { prox: .25, moc: .20, spread: .20, hrr: .15, tox: .20 },
+  pos:    { prox: .30, moc: .20, spread: .15, hrr: .15, tox: .20 },
+  grad:   { prox: .20, moc: .20, spread: .20, hrr: .20, tox: .20 }
 };
 const PROFILES = {
-  eng:  { name: "Engenheiro de missão", focus: "Aprovar ou reprovar materiais e conter danos. Pesa mais a margem de oxigênio e a velocidade da chama." },
-  pesq: { name: "Pesquisador", focus: "Rigor dos dados e lacunas. Pesa mais o quanto os testes se parecem com a sua condição." },
-  est:  { name: "Estudante", focus: "Entender a física do fogo no espaço. Todos os critérios com o mesmo peso." }
+  eng:    { name: "Engenheiro aeroespacial", group: "oficial", short: "engenharia aeroespacial", soft: "Respostas mais técnicas", focus: "Aprovar ou reprovar materiais. Pesa mais a margem de oxigênio e a velocidade da chama." },
+  pesq:   { name: "Pesquisador aeroespacial", group: "oficial", short: "pesquisa", soft: "Respostas com mais dados", focus: "Rigor dos dados e lacunas. Pesa mais o quanto os testes se parecem com a sua condição." },
+  prof:   { name: "Professor", group: "oficial", short: "ensino", soft: "Respostas prontas para explicar", focus: "Explicar a física com fontes confiáveis. Pesos quase iguais, um pouco mais de proximidade." },
+  pos:    { name: "Aluno de pós-graduação", group: "oficial", short: "pós-graduação", soft: "Respostas com mais fontes", focus: "Estado da arte e lacunas para a tese. Pesa a proximidade e a margem de oxigênio." },
+  grad:   { name: "Aluno de graduação", group: "oficial", short: "graduação", soft: "Respostas mais explicadas", focus: "Entender a física do fogo no espaço. Todos os critérios com o mesmo peso." }
 };
 const ENV  = { lua: "base lunar", marte: "base em Marte", iss: "ISS" };
 const GRAV = { lua: ["0,16 g (Lua)", true], marte: ["0,38 g (Marte)", true], iss: ["Microgravidade (~0 g)", false] };
@@ -462,21 +868,130 @@ const now = () => new Date().toLocaleString("pt-BR", { day: "2-digit", month: "2
 const LOGO = document.querySelector("header .logo").src;
 
 // ===== Estado
-const state = { profile: null, q: null, missing: [], hypothesis: null, history: [], current: null, msgs: [] };
-function load() { try { const s = JSON.parse(localStorage.getItem("blueEmberChat") || "null"); if (s) { state.profile = s.profile; state.history = s.history || []; } } catch (e) {} }
-function save() { try { localStorage.setItem("blueEmberChat", JSON.stringify({ profile: state.profile, history: state.history.slice(0, 12) })); } catch (e) {} }
+const state = { profile: null, q: null, missing: [], hypothesis: null, history: [], current: null, msgs: [],
+  infer: { s: Object.fromEntries(PKEYS.map(k => [k, 0])), reasons: [], lock: null } };
+function load() { try { const s = JSON.parse(localStorage.getItem("blueEmberChat") || "null"); if (s) { state.history = s.history || []; if (s.infer) { const o = s.infer; if (o.s && "est" in o.s) { o.s.grad = (o.s.grad || 0) + o.s.est; delete o.s.est; } if (o.lock === "est") o.lock = "grad"; if (o.lock && o.lock !== "neutro" && !PROFILES[o.lock]) o.lock = null; state.infer.s = Object.assign(state.infer.s, o.s || {}); state.infer.reasons = o.reasons || []; state.infer.lock = o.lock || null; } } } catch (e) {} }
+function save() { try { localStorage.setItem("blueEmberChat", JSON.stringify({ infer: state.infer, history: state.history.slice(0, 12) })); } catch (e) {} }
+
+
+// ===== Perfil inferido (sem tela de escolha)
+// Cada sinal soma pontos (log-odds) para um perfil; softmax vira probabilidade;
+// os pesos dos 5 critérios são a mistura dos pesos dos perfis. Vale na próxima resposta.
+const TEXT_GAIN = 1.3; // com 10 perfis, cada sinal de texto precisa pesar mais para sair do empate
+function probs() {
+  const L = state.infer.lock;
+  if (L === "neutro") return Object.fromEntries(PKEYS.map(k => [k, 1 / PKEYS.length]));
+  if (L) return Object.fromEntries(PKEYS.map(k => [k, k === L ? 1 : 0]));
+  const s = state.infer.s, m = Math.max(...PKEYS.map(k => s[k] || 0));
+  const e = Object.fromEntries(PKEYS.map(k => [k, Math.exp((s[k] || 0) - m)]));
+  const z = PKEYS.reduce((a, k) => a + e[k], 0);
+  return Object.fromEntries(PKEYS.map(k => [k, e[k] / z]));
+}
+function ranked() { const p = probs(); return [...PKEYS].sort((a, b) => p[b] - p[a]); }
+function dominant() { const p = probs(); const k = ranked()[0]; return { k, conf: p[k], p }; }
+function weightsNow() {
+  const p = probs(), w = {};
+  CRIT.forEach(([c]) => { w[c] = PKEYS.reduce((acc, k) => acc + p[k] * WEIGHTS[k][c], 0); });
+  return w;
+}
+function weightsLabel() {
+  const L = state.infer.lock, d = dominant();
+  if (L === "neutro") return "Pesos equilibrados (você preferiu não dizer)";
+  if (L) return "Pesos do perfil " + PROFILES[L].name + " (escolhido)";
+  if (d.conf < .5) return "Pesos equilibrados (ainda conhecendo você)";
+  return "Pesos ajustados: " + Math.round(d.conf * 100) + "% " + PROFILES[d.k].short;
+}
+function addSignal(k, pts, reason) {
+  state.infer.s[k] = (state.infer.s[k] || 0) + pts;
+  if (reason && !state.infer.reasons.includes(reason)) { state.infer.reasons.unshift(reason); state.infer.reasons = state.infer.reasons.slice(0, 6); }
+  save();
+}
+// Sinais de texto: [perfil, regex, pontos, motivo mostrado em "Por que estou vendo isso"]
+const TEXT_SIGNALS = [
+  // quem a pessoa diz que é (sinal forte)
+  ["eng",   /\bsou (uma? )?engenheir/, 3, "você disse que é engenheiro(a)"],
+  ["pesq",  /\bsou (uma? )?(pesquisador|cientista|doutor\b|doutora\b)|meu (grupo|laborat[oó]rio)/, 3, "você disse que pesquisa"],
+  ["prof",  /\bsou (uma? )?(professor|docente)|\bdou aula/, 3, "você disse que é professor(a)"],
+  ["pos",   /\bsou (uma? )?(mestrand|doutorand|p[oó]s-?graduand)|\b(meu|minha) (mestrado|doutorado|disserta[cç][aã]o|tese|orientador)/, 3, "você falou de mestrado, doutorado ou tese"],
+  ["grad",  /\bsou (uma? )?(estudante|alun|graduand|calour|universit[aá]ri)|\bmeu tcc|\bminha (faculdade|gradua[cç][aã]o)/, 3, "você disse que é estudante de graduação"],
+  // vocabulário e forma da pergunta
+  ["eng",   /certific|aprova|qualific|requisit|margem|norma|nasa-std|homolog|especifica|reprova/, 1.2, "usou termos de aprovação de material"],
+  ["eng",   /posso usar|pode usar|é seguro|e seguro|continua seguro|\bpassa\b|devo trocar/, .8, "pediu uma decisão (é seguro?, posso usar?)"],
+  ["pesq",  /hip[oó]tese|artigo|\bdoi\b|metodolog|correla|amostra|estat[ií]st|evid[eê]ncia|publica/, 1.2, "usou termos de pesquisa"],
+  ["pesq",  /compar|diferen[cç]a entre|qual .*melhor|falta testar|limite|faixa testada|lacuna/, .8, "pediu comparação, limites ou lacunas"],
+  ["pos",   /estado da arte|revis[aã]o (bibliogr|da literatura|sistem)|refer[eê]ncias|cita[cç][aã]o|qualifica[cç][aã]o|lacuna/, 1.2, "pediu literatura ou lacunas para estudo"],
+  ["prof",  /\baula|\bturma|meus alunos|minha turma|ensinar|explicar para|did[aá]tic|plano de aula|exerc[ií]cio|atividade|em sala/, 1.4, "falou de aula, turma ou ensino"],
+  ["eng",   /habitat|m[oó]dulo|rover|ve[ií]culo pressurizado|qual atmosfera|projet|detector|extintor|equipamento|sistema de (detec|supress)/, 1.0, "falou de projeto, habitat ou equipamento"],
+  ["pesq",  /modelo|modelagem|prever|previs[aã]o|preditiv|dataset|\bcsv\b|vari[aá]ve|simula[cç]/, 1.2, "falou de dados, variáveis ou modelos"],
+  ["grad",  /por ?que|como funciona|o que acontece|explica|entender|\bprova\b|disciplina|semestre|trabalho da faculdade/, 1.2, "pediu uma explicação"]
+];
+function inferFromText(t) {
+  const s = t.toLowerCase();
+  TEXT_SIGNALS.forEach(([k, re, pts, why]) => { if (re.test(s)) addSignal(k, pts * TEXT_GAIN, why); });
+  const units = (s.match(/\d+(?:[.,]\d+)?\s*(psi|kpa|%|cm\s*\/\s*s|g\b)/g) || []).length;
+  if (units >= 2) { const u = Math.min(units, 4); addSignal("eng", .5 * u * TEXT_GAIN, "citou " + units + " condições com número e unidade"); addSignal("pesq", .2 * u * TEXT_GAIN); }
+  else if (units === 0) { addSignal("grad", .6 * TEXT_GAIN, "descreveu a situação sem números"); addSignal("prof", .3 * TEXT_GAIN); }
+}
+function renderWho() {
+  const b = $("who"), L = state.infer.lock, d = dominant();
+  let level = 0, txt = "";
+  if (L === "neutro") { level = 3; txt = "Perfil: não informado"; }
+  else if (L) { level = 3; txt = PROFILES[L].name + " (escolhido)"; }
+  else if (d.conf >= .7) { level = 2; txt = "Ajustado para " + PROFILES[d.k].short; }
+  else if (d.conf >= .5) { level = 1; txt = PROFILES[d.k].soft; }
+  if (!level && state.q) { level = "q"; txt = "Ajustar respostas ao meu perfil"; }
+  // versão curta para telas estreitas
+  const MINI = { eng: "Engenharia", pesq: "Pesquisa", prof: "Ensino", pos: "Pós", grad: "Graduação" };
+  const k = L && L !== "neutro" ? L : d.k;
+  const mini = level === "q" ? "Ajustar perfil" : L === "neutro" ? "Sem perfil" : level ? MINI[k] : "";
+  b.dataset.level = level;
+  b.setAttribute("aria-label", txt);
+  b.innerHTML = level ? `${level === "q" ? "" : `<span class="dot"></span>`}<span class="long">${txt}</span><span class="short">${mini}</span><span class="caret" aria-hidden="true">▾</span>` : "";
+  b.hidden = $("screen-chat").hidden && $("screen-home").hidden;
+}
+function togglePop() {
+  const pop = $("infer-pop");
+  if (!pop.hidden) { pop.hidden = true; return; }
+  const p = probs(), L = state.infer.lock;
+  const reasons = state.infer.reasons.length ? state.infer.reasons : ["ainda não há sinais suficientes"];
+  pop.innerHTML = `
+    <button type="button" class="ghost close" id="pop-close" aria-label="Fechar">✕</button>
+    <h3>Como o Blue Ember se ajustou a você</h3>
+    <span class="hint">${L ? "Você escolheu o perfil; a estimativa automática está pausada." : "Ninguém precisa se definir: o perfil é estimado pelo jeito de perguntar e pelo que você abre nas respostas. Muda só os pesos e o tom, nunca os dados."}</span>
+    ${ranked().map(k => `<div class="pbar"><span>${PROFILES[k].name}</span><i><span style="width:${Math.round(p[k] * 100)}%"></span></i><span>${Math.round(p[k] * 100)}%</span></div>`).join("")}
+
+    <b style="font-size:13px;">Por que estou vendo isso</b>
+    <ul>${reasons.map(r => `<li>${esc(r)}</li>`).join("")}</ul>
+    <details class="swap"${L ? " open" : ""}><summary>Trocar perfil</summary>
+    <div class="opts">
+      <span class="grp">Público do desafio Flame in Freefall</span>
+      ${PKEYS.filter(k => PROFILES[k].group === "oficial").map(k => `<button type="button" class="chip" data-lock="${k}" aria-pressed="${L === k}">${PROFILES[k].name}</button>`).join("")}
+      <span class="grp"></span>
+      <button type="button" class="chip" data-lock="neutro" aria-pressed="${L === "neutro"}">Prefiro não dizer</button>
+      ${L ? `<button type="button" class="chip" data-lock="">Voltar ao automático</button>` : ""}
+    </div></details>
+    <span class="hint">Calculado no seu navegador. O texto das perguntas não é guardado para isso.</span>`;
+  pop.hidden = false;
+  $("pop-close").focus();
+  $("pop-close").onclick = () => { pop.hidden = true; if (!$("who").hidden) $("who").focus(); };
+  pop.querySelectorAll("[data-lock]").forEach(btn => btn.onclick = () => {
+    const v = btn.dataset.lock || null;
+    state.infer.lock = v; save(); pop.hidden = true; renderWho();
+    if (state.q) reanswer(v === "neutro" ? "Ok, sem perfil: usei pesos iguais para os 5 critérios." : v ? `Ok, ajustei para <b>${PROFILES[v].name}</b> e reordenei com esses pesos.` : "Voltei a estimar o perfil automaticamente.");
+  });
+}
+document.addEventListener("click", e => { const pop = $("infer-pop"); if (!pop.hidden && !pop.contains(e.target) && !$("who").contains(e.target)) pop.hidden = true; });
 
 // ===== Navegação
 function show(screen) {
   ["profile","home","chat"].forEach(s => $("screen-" + s).hidden = s !== screen);
   $("nav-home").setAttribute("aria-current", screen === "home" ? "page" : "false");
   $("nav-new").setAttribute("aria-current", screen === "chat" ? "page" : "false");
-  $("who").hidden = !state.profile || screen === "profile";
-  if (state.profile) $("who").textContent = PROFILES[state.profile].name + " ▾";
+  renderWho(); $("infer-pop").hidden = true;
 }
-$("nav-home").onclick = () => { if (!state.profile) return show("profile"); renderHome(); show("home"); };
-$("nav-new").onclick = () => state.profile ? newChat() : show("profile");
-$("who").onclick = () => { renderProfiles(); show("profile"); };
+$("nav-home").onclick = () => { renderHome(); show("home"); };
+$("nav-new").onclick = () => newChat();
+$("who").onclick = () => togglePop();
 $("home-new").onclick = () => newChat();
 
 // ===== Perfil
@@ -522,18 +1037,18 @@ function openDoc(h) {
   state.q = { ...h.q }; state.hypothesis = { text: h.text, claim: h.claim }; state.missing = []; state.current = h;
   state.showVerdict = true;
   addUser(h.text);
-  aiAnswer("Análise reaberta. Pergunte de novo ou abra os detalhes abaixo.");
+  reanswer("Análise reaberta. Pergunte de novo ou abra os detalhes abaixo.");
   show("chat");
 }
 
 // ===== Chat
 function newChat(go = true) {
-  state.q = null; state.missing = []; state.hypothesis = null; state.current = null; state.msgs = [];
+  state.q = null; state.missing = []; state.hypothesis = null; state.current = null; state.msgs = []; state.vizSeen = {}; state.ctx = null;
   $("thread-inner").querySelectorAll(".msg-user, .msg-ai").forEach(n => n.remove());
   $("welcome").hidden = false;
-  $("welcome-who").textContent = state.profile ? "Perfil: " + PROFILES[state.profile].name : "";
+  $("welcome-who").textContent = "Sem cadastro e sem perguntar quem você é: o Blue Ember se ajusta ao seu jeito de perguntar.";
   $("examples").innerHTML = EXAMPLES.map(([l, t]) => `<button type="button" class="chip" data-t="${esc(t)}">${l}</button>`).join("");
-  document.querySelectorAll("#examples .chip").forEach(b => b.onclick = () => { $("msg").value = b.dataset.t; $("msg").focus(); });
+  document.querySelectorAll("#examples .chip").forEach(b => b.onclick = () => { $("msg").value = b.dataset.t; $("msg").focus(); livePreview(); });
   if (go) { show("chat"); $("msg").focus(); }
 }
 function addUser(text) {
@@ -566,9 +1081,15 @@ const EXTRA = ["thick","dir","gas","goal"];
 function send() {
   const text = $("msg").value.trim();
   if (text.length < 4) { $("msg-error").textContent = "Escreva sua hipótese ou pergunta."; $("msg-error").hidden = false; return; }
-  $("msg-error").hidden = true; $("msg").value = "";
+  $("msg-error").hidden = true; $("msg").value = ""; livePreview();
+  if (state.busy) return;
   addUser(text);
+  if (!state.infer.lock) inferFromText(text);
   const p = parse(text), first = !state.q;
+  // Sem dados: nada sobre fogo, material ou condições reconhecido (ou um material fora da base)
+  const other = (text.toLowerCase().match(/madeira|papel|papel[aã]o|metal|alum[ií]nio|espuma|borracha|vidro|cabo el[eé]tric|fio|bateria|l[ií]tio|poeira/) || [])[0];
+  const recognized = ["env","material","o2","psi","flow","gas","goal"].some(k => p[k] !== null);
+  if ((!p.material && other) || (first && !recognized)) { noData(text, other); return; }
   const base = first ? { ...DEFAULTS } : { ...state.q };
   if (first && p.env === "iss") { base.o2 = 21; base.psi = 14.7; }
   const changed = [];
@@ -578,14 +1099,94 @@ function send() {
   state.q = base; state.missing = missing;
   if (first || p.claim) state.hypothesis = { text, claim: p.claim };
   state.showVerdict = first || !!p.claim;
+  state.ctx = { text, p, first, changed: [...changed] };
   let lead = "";
   if (!first) lead = changed.length ? `Atualizei: ${changed.map(k => condLabel(k, base[k])).join(", ")}.` : "Não encontrei condições novas nessa mensagem; mantive as anteriores.";
-  const r = aiAnswer(lead);
-  if (first) { state.current = { when: now(), text, claim: p.claim, q: { ...base }, level: r.level, top: r.top[0].name }; state.history.unshift(state.current); }
-  else if (state.current) Object.assign(state.current, { q: { ...base }, level: r.level, top: r.top[0].name });
-  save();
+  runAnswer(lead, r => {
+    if (first) { state.current = { when: now(), text, claim: p.claim, q: { ...base }, level: r.level, top: r.top[0].name }; state.history.unshift(state.current); }
+    else if (state.current) Object.assign(state.current, { q: { ...base }, level: r.level, top: r.top[0].name });
+    save();
+  }, p);
+}
+
+document.querySelector(".skip").onclick = e => { e.preventDefault(); $("msg").focus(); };
+new MutationObserver(() => { $("chat-h1").hidden = !$("welcome").hidden; }).observe($("welcome"), { attributes: true, attributeFilter: ["hidden"] });
+function announce(t) { const el = $("sr-live"); el.textContent = ""; setTimeout(() => { el.textContent = t; }, 50); }
+// ===== Estados: carregando → resposta, falha da IA (com plano B) e sem dados
+const STEPS = ["Lendo suas condições", "Buscando no PSI", "Comparando e dando nota", "Escrevendo a resposta"];
+function setBusy(b) { state.busy = b; $("send").disabled = b; $("send").textContent = b ? "Analisando…" : "Enviar"; }
+function runAnswer(lead, after, p, retry) {
+  setBusy(true);
+  const q = state.q, m = document.createElement("div");
+  m.className = "msg-ai thinking"; m.setAttribute("aria-busy", "true"); announce("Analisando sua pergunta.");
+  const chips = MAIN.map(([k]) => `<span class="${p && p[k] === null ? "dflt" : ""}">${condLabel(k, q[k]).split(" · ")[0]}</span>`).join("");
+  m.innerHTML = `
+    <div class="head"><span class="by"><img class="avatar spin" src="${LOGO}" alt="">Blue Ember</span><span class="why">${retry ? "Tentando de novo…" : "Analisando sua pergunta…"}</span></div>
+    <ol class="steps">${STEPS.map((s, i) => `<li data-i="${i}"><span class="ic"></span><span>${s}${i === 0 ? `<span class="cond-chips">${chips}</span>` : i === 1 ? ` <small>consultando a API…</small>` : ""}</span></li>`).join("")}</ol>
+    <div class="skel"><i></i><i></i><i style="width:60%"></i></div>`;
+  $("welcome").hidden = true; $("thread-inner").appendChild(m); scrollDown();
+  const fast = matchMedia("(prefers-reduced-motion: reduce)").matches, dt = fast ? 150 : 420;
+  let i = 0, ready = false;
+  loadData(q).then(() => { ready = true; const s = m.querySelector('.steps li[data-i="1"] small'); if (s) s.textContent = state.data.rank.count + " investigações · " + sourceLabel(); });
+  const tick = () => {
+    m.querySelectorAll(".steps li").forEach(li => { const n = +li.dataset.i; li.className = n < i ? "done" : n === i ? "now" : ""; });
+    if (i < STEPS.length && !(i === 2 && !ready)) { i++; setTimeout(tick, dt); return; }
+    if (!ready) { setTimeout(tick, 120); return; }
+    m.remove(); setBusy(false);
+    if (state.simFail && !retry) failAnswer(lead, after, p);
+    else after(aiAnswer(lead));
+  };
+  tick();
+}
+function failAnswer(lead, after, p) {
+  const r = compute(state.q, weightsNow()), m = document.createElement("div");
+  m.className = "msg-ai failed";
+  m.innerHTML = `
+    <div class="head"><span class="by"><img class="avatar" src="${LOGO}" alt="">Blue Ember</span></div>
+    <div class="verdict-big warn" role="alert"><span class="kicker">A IA não respondeu</span><span class="title">Mostrando o ranking direto da base</span></div>
+    <p class="why">Sem o resumo da IA, estas são as investigações mais próximas das suas condições, calculadas no seu navegador. As notas e os dados são os mesmos.</p>
+    <ol class="fallback">${r.top.map(d => `<li><b>${d.name}</b> <span>${d.id} · ${d.what}</span><em>${f1(d.nota)}/10</em></li>`).join("")}</ol>
+    <div class="row"><button type="button" class="retry">Tentar de novo</button><span class="why">Se continuar, verifique a conexão.</span></div>`;
+  $("thread-inner").appendChild(m); scrollDown();
+  announce("A IA não respondeu. Mostrando o ranking direto da base, com " + r.top.length + " investigações.");
+  after(r);
+  m.querySelector(".retry").onclick = () => { m.remove(); runAnswer(lead, after, p, true); };
+}
+function noData(text, other) {
+  const m = document.createElement("div");
+  m.className = "msg-ai empty";
+  m.innerHTML = `
+    <div class="head"><span class="by"><img class="avatar" src="${LOGO}" alt="">Blue Ember</span></div>
+    <div class="verdict-big neutral" role="status"><span class="kicker">Sem dados para isso</span><span class="title">${other ? `Ainda não há testes da NASA com ${other} na base` : "Não encontrei condições de fogo nessa pergunta"}</span></div>
+    <p class="why">${other ? `A base do protótipo cobre tecido, plástico (acrílico) e combustível líquido. Quer ver o material mais parecido?` : `O Blue Ember responde sobre fogo em naves, estações e bases: diga o material, o lugar e, se souber, o oxigênio e a pressão.`}</p>
+    <div class="examples">${(other ? [["Tentar com tecido", text.replace(new RegExp(other, "i"), "tecido")], ["Tentar com plástico", text.replace(new RegExp(other, "i"), "plástico")]] : EXAMPLES.slice(0, 3)).map(([l, t]) => `<button type="button" class="chip" data-t="${esc(t)}">${l}</button>`).join("")}</div>`;
+  $("welcome").hidden = true; $("thread-inner").appendChild(m); scrollDown();
+  announce(m.querySelector(".verdict-big .title").textContent + ".");
+  m.querySelectorAll(".chip").forEach(b => b.onclick = () => { $("msg").value = b.dataset.t; send(); });
 }
 $("send").onclick = send;
+
+// ===== O que o Blue Ember entendeu, ao vivo enquanto a pessoa digita
+const OTHER_MAT = /madeira|papel[aã]o|papel|metal|alum[ií]nio|espuma|borracha|vidro|cabo el[eé]tric|bateria|l[ií]tio|poeira/;
+let liveT = null;
+function livePreview() {
+  const box = $("live-parse"), text = $("msg").value.trim();
+  if (text.length < 3) { box.hidden = true; box.innerHTML = ""; $("composer-hint").hidden = false; return; }
+  const p = parse(text), cont = !!state.q;
+  const base = cont ? { ...state.q } : { ...DEFAULTS };
+  if (!cont && p.env === "iss") { base.o2 = 21; base.psi = 14.7; }
+  const other = (text.toLowerCase().match(OTHER_MAT) || [])[0];
+  const got = [], miss = [];
+  MAIN.forEach(([k, nome]) => {
+    if (p[k] !== null) got.push(`<span class="lp-chip ok" title="${nome}">${condLabel(k, p[k]).split(" · ")[0]}</span>`);
+    else if (k === "material" && other) got.push(`<span class="lp-chip bad" title="material sem dados">${other}: sem dados</span>`);
+    else miss.push(`<span class="lp-chip dflt" title="${cont ? "mantém o valor anterior" : "valor padrão; escreva para trocar"}">${nome}: ${condLabel(k, base[k]).split(" · ")[0]}</span>`);
+  });
+  ["gas", "goal", "thick", "dir"].forEach(k => { if (p[k] !== null) got.push(`<span class="lp-chip ok">${condLabel(k, p[k])}</span>`); });
+  box.innerHTML = `<span class="lp-label" id="live-parse-label">${got.length ? "Entendi" : "Ainda não entendi condições"}</span>${got.join("")}${miss.length ? `<span class="lp-sep">${cont ? "mantém" : "vou supor"}</span>${miss.join("")}` : ""}`;
+  box.hidden = false; $("composer-hint").hidden = true;
+}
+$("msg").addEventListener("input", () => { clearTimeout(liveT); liveT = setTimeout(livePreview, 120); });
 $("msg").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } });
 
 function condLabel(k, v) {
@@ -594,63 +1195,221 @@ function condLabel(k, v) {
 }
 
 // ===== Cálculo
-function score(d, q, prof) {
-  const mat = d.materials.includes(q.material) ? 1 : 0.35;
-  const goal = d.goal === q.goal ? 1 : 0.85;
-  const prox = Math.max(0, mat * goal * (1 - 0.5 * Math.min(1, distTo(q.o2, d.o2) / 15) - 0.3 * Math.min(1, distTo(q.flow, d.flow) / 30) - 0.2 * Math.min(1, Math.abs(q.psi - 14.7) / 7)));
-  const vals = { prox, ...d.c }, w = WEIGHTS[prof];
-  let sum = 0, wsum = 0, have = 0;
-  CRIT.forEach(([k]) => { if (vals[k] !== null) { sum += w[k] * vals[k]; wsum += w[k]; have++; } });
-  return { vals, nota: wsum ? sum / wsum * 10 : 0, have };
-}
-function compute(q, prof) {
-  const top = DATA.map(d => ({ ...d, ...score(d, q, prof) })).sort((a, b) => (b.vals.prox - a.vals.prox) || (b.nota - a.nota)).slice(0, 3);
-  const same = DATA.filter(d => d.materials.includes(q.material));
-  const maxO2 = Math.max(...same.map(d => d.o2[1])), maxFlow = Math.max(...same.map(d => d.flow[1]));
-  const above = q.o2 > maxO2, flowOut = q.flow > maxFlow, partialG = q.env !== "iss", lowP = q.psi < 14;
-  const issues = [above, partialG, flowOut].filter(Boolean).length;
+function compute(q, w) {
+  const D = state.data;
+  const all = D.rank.items.map(it => toItem(it, D.details[it.investigation.id]));
+  // ordem da API; as investigações com o mesmo material da pergunta vêm primeiro
+  const same = all.filter(d => d.mats.includes(q.material));
+  const ordered = [...same, ...all.filter(d => !d.mats.includes(q.material))];
+  const top = ordered.slice(0, 3);
+  const hasMat = same.length > 0;
+  const maxO2 = hasMat ? Math.max(...same.map(d => d.o2[1])) : null;
+  const maxFlow = hasMat ? Math.max(...same.map(d => d.flow[1] ?? 0)) : null;
+  const minPsi = hasMat ? Math.min(...same.map(d => d.psi[0])) : null;
+  const above = hasMat && q.o2 > maxO2, flowOut = hasMat && q.flow > maxFlow, partialG = q.env !== "iss", lowP = hasMat && q.psi < minPsi - .3;
+  const issues = [above || !hasMat, partialG, flowOut, lowP].filter(Boolean).length;
   const level = issues >= 2 ? ["weak", "Evidência fraca"] : issues === 1 ? ["moderate", "Evidência moderada"] : ["strong", "Evidência forte"];
   const gaps = [];
-  if (partialG) gaps.push(`<b>Gravidade parcial:</b> o PSI não tem testes na gravidade ${q.env === "lua" ? "da Lua (0,16 g)" : "de Marte (0,38 g)"}. Estudos da NASA indicam que, perto da gravidade lunar, materiais podem queimar com menos oxigênio do que na Terra. O experimento FM2 vai medir isso na Lua.`);
+  if (partialG) gaps.push(`<b>Gravidade parcial:</b> ${D.gaps.partialGravityWarning}`);
+  if (!hasMat) gaps.push(`Nenhuma investigação da base testou ${MAT[q.material]}.`);
   if (above) gaps.push(`Nenhum teste com ${MAT[q.material]} acima de ${fmt(maxO2)}% de O₂.`);
-  if (flowOut) gaps.push(`Nenhum teste com fluxo de ar acima de ${maxFlow} cm/s para ${MAT[q.material]}.`);
-  if (lowP) gaps.push(`Os testes do PSI foram feitos perto de 14,7 psi; nenhum a ${fmt(q.psi)} psi.`);
-  const missingCrit = CRIT.filter(([k]) => k !== "prox" && top.every(d => d.vals[k] === null)).map(([, l]) => l.replace(/^C\S+ /, ""));
-  if (missingCrit.length) gaps.push(`Nenhuma das 3 investigações mediu: ${missingCrit.join(", ")}.`);
-  if (q.thick === "grossa" && !same.some(d => d.thick.includes("grossa"))) gaps.push("Nenhum teste com material grosso nessas condições.");
-  if (q.gas && !same.some(d => d.gases.includes(q.gas))) gaps.push(`Nenhum teste apagando ${MAT[q.material]} com ${GAS[q.gas]}.`);
-  const near = DATA.filter(d => d.materials.includes(q.material) && distTo(q.o2, d.o2) <= 2 && distTo(q.flow, d.flow) <= 5).length;
-  return { top, level, gaps, near, maxO2, above, partialG };
+  if (flowOut) gaps.push(`Nenhum teste com fluxo de ar acima de ${fmt(maxFlow, 0)} cm/s para ${MAT[q.material]}.`);
+  if (lowP) gaps.push(`Nenhum teste com ${MAT[q.material]} abaixo de ${fmt(minPsi)} psi (${fmt(kpa(minPsi), 0)} kPa); seu caso: ${fmt(q.psi)} psi.`);
+  const near = same.filter(d => distTo(q.o2, d.o2) <= 2 && distTo(q.flow, d.flow) <= 5).length;
+  return { top, level, gaps, near, maxO2, above, partialG, same, total: all.length, nearEnv: D.gaps.nearTargetInvestigationIds.length, live: D.live, weights: D.rank.weights };
 }
+
+// ===== Mapa O₂ × pressão: onde o caso da pessoa fica em relação ao que a NASA testou
+// Pressão dos testes: sólidos na ISS e no Cygnus ficam na pressão de cabine (~14,7 psi); a faixa da FLEX é aproximada.
+const PSI_RANGE = { "PSI-69": [7.3, 14.7] };
+const REF_ATM = [
+  { o2: 21, psi: 14.7, label: "Terra / ISS" },
+  { o2: 26.5, psi: 10.2, label: "Lua 10,2 psi" },
+  { o2: 34, psi: 8.2, label: "Lua 8,2 psi" }
+];
+function gapMap(q, r) {
+  const same = r.same;
+  const W = 560, H = 230, L = 46, R = 16, T = 14, B = 34;
+  const x0 = 4, x1 = 15, y0 = 15, y1 = Math.max(40, Math.ceil((q.o2 + 4) / 5) * 5);
+  const X = v => L + (Math.min(Math.max(v, x0), x1) - x0) / (x1 - x0) * (W - L - R);
+  const Y = v => T + (1 - (Math.min(Math.max(v, y0), y1) - y0) / (y1 - y0)) * (H - T - B);
+  const xt = [4, 6, 8, 10, 12, 14].map(v => `<line class="gm-grid" x1="${X(v)}" x2="${X(v)}" y1="${T}" y2="${H - B}"/><text class="gm-tick" x="${X(v)}" y="${H - B + 16}" text-anchor="middle">${v}</text>`).join("");
+  const yStep = y1 > 60 ? 10 : 5;
+  const yt = []; for (let v = y0 + (yStep - y0 % yStep) % yStep; v <= y1; v += yStep) yt.push(`<line class="gm-grid" x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}"/><text class="gm-tick" x="${L - 8}" y="${Y(v) + 4}" text-anchor="end">${v}%</text>`);
+  const boxes = same.map(d => {
+    const [pa, pb] = d.psi[0] === d.psi[1] ? [d.psi[0] - .25, d.psi[1]] : d.psi;
+    const x = X(pa), w = Math.max(10, X(pb) - X(pa)), y = Y(d.o2[1]), hh = Math.max(4, Y(d.o2[0]) - Y(d.o2[1]));
+    return `<rect class="gm-test" x="${x}" y="${y}" width="${w}" height="${hh}" rx="3"><title>${d.name}: ${fmt(d.o2[0])}–${fmt(d.o2[1])}% de O₂</title></rect>`;
+  }).join("");
+  const refs = REF_ATM.filter(a => Math.abs(a.o2 - q.o2) > 1 || Math.abs(a.psi - q.psi) > .5).map(a => {
+    const right = X(a.psi) > W - 110;
+    return `<g class="gm-ref"><circle cx="${X(a.psi)}" cy="${Y(a.o2)}" r="4"/><text x="${X(a.psi) + (right ? -30 : 7)}" y="${Y(a.o2) + (right ? 16 : -7)}" text-anchor="${right ? "end" : "start"}">${a.label}</text></g>`;
+  }).join("");
+  const maxY = Y(r.maxO2);
+  const tone = r.above ? "out" : "in";
+  const px = X(q.psi), py = Y(q.o2);
+  const label = `Seu caso: ${fmt(q.o2)}% · ${fmt(q.psi)} psi`;
+  const lx = px > W - 170 ? px - 10 : px + 10, anchor = px > W - 170 ? "end" : "start";
+  const aria = `Gráfico: a NASA testou ${MAT[q.material]} entre ${fmt(Math.min(...same.map(d => d.o2[0])))}% e ${fmt(r.maxO2)}% de oxigênio, perto de 14,7 psi. Seu caso, ${fmt(q.o2)}% a ${fmt(q.psi)} psi, ${r.above ? "fica fora da faixa testada" : "fica dentro da faixa de oxigênio testada"}.`;
+  return `<figure class="gapmap">
+    <figcaption><b>Onde seu caso fica</b><span>oxigênio × pressão · ${MAT[q.material]}</span></figcaption>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(aria)}">
+      <rect class="gm-untested" x="${L}" y="${T}" width="${W - L - R}" height="${Math.max(0, maxY - T)}"/>
+      ${maxY - T > 24 ? `<text class="gm-zone" x="${L + 8}" y="${T + 16}">sem teste acima de ${fmt(r.maxO2)}% de O₂</text>` : ""}
+      ${xt}${yt.join("")}
+      <line class="gm-max" x1="${L}" x2="${W - R}" y1="${maxY}" y2="${maxY}"/>
+      ${boxes}${refs}
+      <circle class="gm-you-halo ${tone}" cx="${px}" cy="${py}" r="13"/>
+      <circle class="gm-you ${tone}" cx="${px}" cy="${py}" r="7"/>
+      <text class="gm-you-label ${tone}" x="${lx}" y="${py + 22 > H - B ? py - 14 : py + 24}" text-anchor="${anchor}">${label}</text>
+      <text class="gm-axis" x="${(L + W - R) / 2}" y="${H - 4}" text-anchor="middle">pressão (psi)</text>
+    </svg>
+    <div class="gm-legend"><span><i class="k-test"></i>faixa testada pela NASA</span><span><i class="k-you ${tone}"></i>seu caso</span><span><i class="k-ref"></i>atmosferas de referência</span></div>
+    <span class="gm-note">Faixas da API (${r.live ? "ao vivo" : "cópia de " + SNAPSHOT_DATE}) · <span class="tbv">a validar</span> com o PSI. Passe o mouse nas faixas para ver cada investigação.</span>
+  </figure>`;
+}
+
+// ===== Escolha do visual: só quando ajuda; pergunta simples fica só no texto
+// Retorna um destes: atmosferas, mapa O₂×pressão, faixas por variável, ilustração da chama, fluxo de segurança, mapa Terra — ou nada.
+function pickVisual(q, r, prof) {
+  const c = state.ctx || { text: "", p: {}, first: false, changed: [] };
+  const s = (c.text || "").toLowerCase(), p = c.p || {};
+  const asked = /gr[aá]fico|mostr|visualiz|desenh|ilustr|diagrama|fluxo de|compar/.test(s);
+  const gaveNums = p.o2 != null || p.psi != null || p.flow != null;
+  const once = k => { if (asked || !state.vizSeen[k]) { state.vizSeen[k] = true; return true; } return false; };
+  const numCount = (s.match(/\d+(?:[.,]\d+)?\s*(psi|%)/g) || []).length;
+  // 1) comparar duas atmosferas
+  if ((/compar|\bou\b|versus|\bvs\b/.test(s) && numCount >= 3) || /qual atmosfera|duas atmosferas|comparar as duas/.test(s)) return gapMap(q, r);  // o mapa já mostra as duas atmosferas lunares
+  // 2) explicação da física, sem números → ilustração da chama (uma vez por conversa)
+  if (/por ?que|como funciona|explica|diferente|o que acontece|esfera/.test(s) && !gaveNums && (!prof || prof === "grad" || prof === "prof") && once("chama")) return vizFlame(q);
+  // 5) números novos nesta mensagem (ou ajustados à mão)
+  if (gaveNums || (c.manual && c.changed.length)) {
+    const o2psi = p.o2 != null || p.psi != null || (c.manual && (c.changed.includes("o2") || c.changed.includes("psi")));
+    const sig = "map:" + q.material + q.o2 + q.psi;
+    if (r.same.length && r.above && o2psi && (asked || state.vizSeen.last !== sig)) { state.vizSeen.last = sig; return gapMap(q, r); }
+    if (r.above && !o2psi) return "";  // só mudou fluxo ou ambiente: o mapa seria igual ao anterior
+    if (r.same.length && (r.partialG || q.flow > Math.max(...r.same.map(d => d.flow[1] ?? 0)))) return vizRanges(q, r);
+    return "";                       // tudo dentro do testado: o texto basta
+  }
+  if (asked) return r.above ? gapMap(q, r) : vizRanges(q, r);
+  return "";                         // pergunta simples ou continuação sem novidade
+}
+
+// Faixas por variável: mostra o que foi testado em cada dimensão (útil quando a lacuna é gravidade ou fluxo)
+function vizRanges(q, r) {
+  const same = r.same;
+  const g = { iss: 0, lua: .16, marte: .38 }[q.env];
+  const rows = [
+    ["Oxigênio", q.o2, [Math.min(...same.map(d => d.o2[0])), r.maxO2], [15, Math.max(40, q.o2 + 5)], v => fmt(v) + "%"],
+    ["Fluxo de ar", q.flow, [Math.min(...same.map(d => d.flow[0])), Math.max(...same.map(d => d.flow[1]))], [0, Math.max(60, q.flow + 10)], v => fmt(v, 0) + " cm/s"],
+    ["Pressão", q.psi, [Math.min(...same.map(d => d.psi[0])), Math.max(...same.map(d => d.psi[1]))], [4, 15], v => fmt(v) + " psi"],
+    ["Gravidade", g, [0, .01], [0, .4], v => v === 0 ? "~0 g" : fmt(v, 2) + " g"]
+  ];
+  const W = 520, L = 110, R = 90, rowH = 34;
+  const body = rows.map(([lab, v, [a, b], [lo, hi], f], i) => {
+    const X = x => L + (Math.min(Math.max(x, lo), hi) - lo) / (hi - lo) * (W - L - R);
+    const ok = v >= a - 1e-9 && v <= b + 1e-9, y = 14 + i * rowH;
+    return `<g class="vr-row ${ok ? "in" : "out"}">
+      <text class="vr-lab" x="0" y="${y + 4}">${lab}</text>
+      <line class="vr-track" x1="${L}" x2="${W - R}" y1="${y}" y2="${y}"/>
+      <rect class="vr-band" x="${X(a)}" y="${y - 6}" width="${Math.max(6, X(b) - X(a))}" height="12" rx="6"><title>testado: ${f(a)}–${f(b)}</title></rect>
+      <circle class="vr-dot" cx="${X(v)}" cy="${y}" r="6"/>
+      <text class="vr-val" x="${W - R + 10}" y="${y + 4}">${ok ? "✓" : "✗"} ${f(v)}</text></g>`;
+  }).join("");
+  const outs = rows.filter(([, v, [a, b]]) => !(v >= a - 1e-9 && v <= b + 1e-9)).map(r => r[0].toLowerCase());
+  return `<figure class="viz">
+    <figcaption><b>O que foi testado em cada condição</b><span>${MAT[q.material]} · faixa azul = testado pela NASA</span></figcaption>
+    <svg viewBox="0 0 ${W} ${14 + rows.length * rowH}" role="img" aria-label="${esc(`Faixas testadas por variável. Fora do testado: ${outs.join(", ") || "nada"}.`)}">${body}</svg>
+    <span class="gm-note">${outs.length ? `Fora do que foi testado: <b>${outs.join(", ")}</b>. ${outs.includes("gravidade") ? "Nenhum teste do PSI foi feito em gravidade parcial." : ""}` : "Todas as condições dentro do testado."}</span>
+  </figure>`;
+}
+
+
+// Ilustração: a mesma chama em gravidades diferentes
+function vizFlame(q) {
+  const panel = (x, title, sub, shape, arrows, hl) => `<g class="vf ${hl ? "hl" : ""}" transform="translate(${x},0)">
+      <rect class="vf-bg" x="0" y="0" width="160" height="150" rx="14"/>
+      <rect class="vf-wick" x="76" y="104" width="8" height="22" rx="2"/>
+      ${shape}${arrows}
+      <text class="vf-t" x="80" y="142" text-anchor="middle">${title}</text>
+      <text class="vf-s" x="80" y="18" text-anchor="middle">${sub}</text></g>`;
+  const up = [56, 104].map(x => `<path class="vf-arrow" d="M${x} 100 L${x} 40 M${x - 5} 48 L${x} 40 L${x + 5} 48"/>`).join("");
+  const weak = [52, 108].map(x => `<path class="vf-arrow weak" d="M${x} 98 L${x} 66 M${x - 4} 72 L${x} 66 L${x + 4} 72"/>`).join("");
+  const diff = [[40, 70], [120, 70], [80, 30], [48, 40], [112, 40], [44, 100], [116, 100]].map(([x, y]) => `<circle class="vf-o2" cx="${x}" cy="${y}" r="3"/>`).join("");
+  return `<figure class="viz">
+    <figcaption><b>A mesma chama, gravidades diferentes</b><span>ilustração simplificada</span></figcaption>
+    <svg viewBox="0 0 520 150" role="img" aria-label="Na Terra a chama é alongada porque o ar quente sobe; na Lua a subida é fraca; em microgravidade a chama vira uma esfera azul e só recebe oxigênio por difusão.">
+      <defs><radialGradient id="vfOr" cx="50%" cy="65%" r="60%"><stop offset="0" stop-color="#FFF6B0"/><stop offset=".5" stop-color="#FFB020"/><stop offset="1" stop-color="#FF6A00"/></radialGradient>
+        <radialGradient id="vfBl" cx="50%" cy="50%" r="55%"><stop offset="0" stop-color="#E8F3FF" stop-opacity=".9"/><stop offset=".6" stop-color="#5AA2FF" stop-opacity=".8"/><stop offset="1" stop-color="#2491FF" stop-opacity=".25"/></radialGradient></defs>
+      ${panel(0, "Terra · 1 g", "ar quente sobe", `<path fill="url(#vfOr)" d="M80 30 C96 58 98 84 92 98 C88 108 72 108 68 98 C62 84 64 58 80 30Z"/>`, up, false)}
+      ${panel(180, "Lua · 0,16 g", "subida fraca", `<path fill="url(#vfOr)" d="M80 58 C98 74 100 92 94 100 C88 110 72 110 66 100 C60 92 62 74 80 58Z" opacity=".95"/>`, weak, q.env === "lua")}
+      ${panel(360, "ISS · ~0 g", "só difusão", `<circle cx="80" cy="84" r="26" fill="url(#vfBl)"/>`, diff, q.env === "iss")}
+    </svg>
+    <span class="gm-note">Sem a subida do ar quente, a chama depende do oxigênio que chega devagar ou da ventilação.</span>
+  </figure>`;
+}
+
+
+
+async function reanswer(lead) { await loadData(state.q); return aiAnswer(lead); }
 
 // ===== Resposta sintetizada com detalhes
 let msgId = 0;
 function aiAnswer(lead) {
-  const q = state.q, prof = state.profile, r = compute(q, prof), id = "m" + (++msgId);
+  const w = weightsNow(), wlabel = weightsLabel(), dom = dominant();
+  const q = state.q, r = compute(q, w), id = "m" + (++msgId);
+  const adaptOn = state.infer.lock ? state.infer.lock !== "neutro" : dom.conf >= .5;
   const h = state.hypothesis;
-  let verdict = "";
-  if (h && state.showVerdict) {
-    state.showVerdict = false;
-    let v;
-    if (h.claim === "safe") v = r.level[0] === "strong" ? ["strong", "Sustentada pelos testes"] : ["weak", "Não dá para confirmar"];
-    else if (h.claim === "risky") v = r.level[0] === "strong" ? ["moderate", "Plausível, com testes próximos"] : ["moderate", "Plausível, mas sem teste direto"];
-    else v = ["unknown", "Sem afirmação clara"];
-    verdict = `<div class="verdict"><b>Sua hipótese:</b><span class="pill ${v[0]}">${v[1]}</span></div>`;
+  // Veredito único no topo: a hipótese (quando houver) + a força da evidência numa linha só
+  let v = null, kicker = r.level[1];
+  if (h && state.showVerdict && h.claim !== "unknown" && h.claim) {
+    if (h.claim === "safe") v = r.level[0] === "strong" ? ["strong", "Sua hipótese se sustenta"] : ["weak", "Não dá para confirmar que é seguro"];
+    else if (h.claim === "risky") v = r.level[0] === "strong" ? ["moderate", "Plausível: há testes próximos"] : ["moderate", "Plausível, mas sem teste direto"];
+    kicker = "Sua hipótese · " + r.level[1].toLowerCase();
   }
+  if (h && state.showVerdict) state.showVerdict = false;
+  if (!v) v = r.above ? ["weak", "Risco maior do que os testes mostram"]
+    : r.level[0] === "strong" ? ["strong", "Há testes da NASA nessas condições"]
+    : r.level[0] === "moderate" ? ["moderate", "Há testes parecidos, com diferenças"]
+    : ["weak", "Poucos testes parecidos com o seu caso"];
+  const verdict = `<div class="verdict-big ${v[0]}" role="status"><span class="kicker">${kicker}</span><span class="title">${v[1]}</span></div>`;
   const best = r.top[0];
   const summary = r.above
     ? `A NASA testou ${MAT[q.material]} com no máximo ${fmt(r.maxO2)}% de O₂. Com ${fmt(q.o2)}%, ele tende a queimar com mais facilidade do que os testes mostram: trate o risco como maior.`
     : `Há testes da NASA em condições próximas da sua; o ${best.name} é o mais parecido.`;
   const extra = r.partialG ? ` Na gravidade ${q.env === "lua" ? "da Lua" : "de Marte"}, estudos indicam que alguns materiais queimam com menos oxigênio do que na Terra.` : "";
+  const envName = { lua: "na base lunar", marte: "na base em Marte", iss: "na ISS" }[q.env];
+
+  const EARTH = { "FLEX": "extintores de névoa d'água fina", "SAME-R": "detectores de fumaça", "BASS-II": "tecidos de roupas de proteção", "BASS": "tecidos de roupas de proteção", "SAFFIRE-I": "roupas de proteção e materiais de interiores", "SAFFIRE-II": "roupas de proteção e materiais de interiores", "SAFFIRE-III": "roupas de proteção e materiais de interiores" };
+  const over = Math.max(0, q.o2 - r.maxO2);
+  const ADAPT = {
+    grad: `<b>Para entender:</b> sem gravidade, o ar quente não sobe; a chama depende da ventilação para receber oxigênio, por isso o mesmo material queima diferente ${envName}.`,
+    prof: `<b>Para a aula:</b> compare a chama alongada da Terra com a esfera azul da microgravidade. Fonte citável: <a href="${best.url}" target="_blank" rel="noopener">${best.name} no PSI</a>.`,
+    eng: r.above ? `<b>Para decidir:</b> trate como <b>não aprovado</b> até um ensaio: seu caso fica ${fmt(over)} pontos de O₂ acima do que foi testado.` : `<b>Para decidir:</b> há testes próximos; confira as condições do ${best.name} antes de aprovar.`,
+    pesq: `<b>Para pesquisar:</b> ${r.near} de ${r.total} investigações têm condições próximas e há ${r.gaps.length} ${r.gaps.length === 1 ? "lacuna" : "lacunas"}; veja em "O que falta testar".`,
+    pos: r.above || r.partialG ? `<b>Para a sua tese:</b> o PSI não tem dados ${r.above ? `acima de ${fmt(r.maxO2)}% de O₂` : ""}${r.above && r.partialG ? " nem " : ""}${r.partialG ? "em gravidade parcial" : ""}; essa lacuna pode virar pergunta de pesquisa.` : `<b>Para a sua tese:</b> o ${best.name} é a referência mais próxima; as fontes com DOI estão em "Fontes".`
+  };
+  const adaptKey = state.infer.lock && state.infer.lock !== "neutro" ? state.infer.lock : dom.k;
+  const adaptHtml = adaptOn ? `<div class="adapt">${ADAPT[adaptKey]}</div>` : "";
+  const FOLLOW = {
+    grad: [["Por que na Lua é diferente?", "Por que o fogo na Lua é diferente?"]],
+    prof: [["Como explicar para a turma?", "Como explicar para a minha turma por que a chama vira uma esfera?"]],
+    eng: [["E com 26,5% de O₂?", "E no habitat lunar a 10,2 psi e 26,5%?"]],
+    pesq: [["Quais testes faltam?", "Quais testes faltam e quais as lacunas de dados?"]],
+    pos: [["Quais lacunas viram tese?", "Quais lacunas de dados poderiam virar uma pergunta de pesquisa?"]]
+  };
+  const extraFollow = adaptOn ? FOLLOW[adaptKey].map(([l, t]) => `<button type="button" data-f="${t}">${l}</button>`).join("") : "";
   const m = document.createElement("div");
   m.className = "msg-ai"; m.id = id;
   m.innerHTML = `
-    <div class="head"><span class="by"><img class="avatar" src="${LOGO}" alt="">Blue Ember</span><span class="pill ${r.level[0]}">${r.level[1]}</span></div>
+    <div class="head"><span class="by"><img class="avatar" src="${LOGO}" alt="">Blue Ember</span></div>
     ${lead ? `<span class="why">${lead}</span>` : ""}
     ${verdict}
-    <p class="summary">${summary}${extra}</p>
+    ${adaptHtml}
+    <div class="because"><span class="label">Por quê</span><p class="summary">${summary}${extra}</p></div>
+    ${pickVisual(q, r, adaptOn ? adaptKey : null)}
     <span class="best">Mais relevante: <b>${best.name}</b> (${best.id}) · nota ${f1(best.nota)}/10 · ${best.where}</span>
-    <span class="ai-label">Exemplo fictício gerado por IA · abra as fontes nos detalhes</span>
+    <span class="ai-label">Ranking e notas: ${sourceLabel()} · números <span class="tbv">a validar</span> · texto de apoio gerado no navegador</span>
     <div class="details" role="group" aria-label="Detalhes da resposta">
       <button type="button" data-p="cond" aria-expanded="false">Condições usadas${state.missing.length ? ` <span class="count warn">${state.missing.length} padrão</span>` : ""}</button>
       <button type="button" data-p="inv" aria-expanded="false">Investigações <span class="count">${r.top.length}</span></button>
@@ -660,27 +1419,42 @@ function aiAnswer(lead) {
     </div>
     <div class="panel-slot"></div>
     <div class="followups">
+      ${extraFollow}
       ${q.env !== "iss" ? `<button type="button" data-f="E se fosse na ISS a 14,7 psi e 21%?">E se fosse na ISS?</button>` : `<button type="button" data-f="E no habitat lunar a 8,2 psi e 34%?">E no habitat lunar?</button>`}
-      ${q.flow !== 0 ? `<button type="button" data-f="E com ar parado?">E com ar parado?</button>` : `<button type="button" data-f="E com ventilação de 20 cm/s?">E com 20 cm/s?</button>`}
-      <button type="button" data-f="E se o material for ${q.material === "plastico" ? "tecido" : "plástico acrílico"}?">E com ${q.material === "plastico" ? "tecido" : "acrílico"}?</button>
+      ${extraFollow ? "" : `<button type="button" data-f="E se o material for ${q.material === "plastico" ? "tecido" : "plástico acrílico"}?">E com ${q.material === "plastico" ? "tecido" : "acrílico"}?</button>`}
     </div>`;
-  state.msgs.push({ id, q: { ...q }, missing: [...state.missing], r, prof });
+  state.msgs.push({ id, q: { ...q }, missing: [...state.missing], r, w, wlabel });
   m.querySelectorAll(".details button").forEach(b => b.onclick = () => togglePanel(m, b));
-  m.querySelectorAll(".followups button").forEach(b => b.onclick = () => { $("msg").value = b.dataset.f; send(); });
+  m.querySelectorAll(".followups button").forEach(b => b.onclick = () => { if (!state.infer.lock) { addSignal("grad", .3, "usou as sugestões prontas"); addSignal("prof", .1); } $("msg").value = b.dataset.f; send(); });
   $("welcome").hidden = true;
   $("thread-inner").appendChild(m); scrollDown();
+  announce("Resposta pronta. " + v[1] + ". " + (adaptOn ? "Adaptado para " + PROFILES[adaptKey].short + ". " : "") + "Mais relevante: " + best.name + ".");
+  // abre o detalhe que costuma interessar ao perfil (só com confiança alta)
+  const autoK = state.infer.lock && state.infer.lock !== "neutro" ? state.infer.lock : (dom.conf >= .7 ? dom.k : null);
+  const autoP = { pesq: "inv", pos: "src", eng: "cond", prof: "ev" }[autoK];
+  if (autoP) togglePanel(m, m.querySelector(`.details [data-p="${autoP}"]`), true);
+  renderWho();
   return r;
 }
 
-function togglePanel(m, btn) {
+function togglePanel(m, btn, auto) {
   const open = btn.getAttribute("aria-expanded") === "true";
   m.querySelectorAll(".details button").forEach(b => b.setAttribute("aria-expanded", "false"));
   const slot = m.querySelector(".panel-slot");
   if (open) { slot.innerHTML = ""; return; }
   btn.setAttribute("aria-expanded", "true");
   const data = state.msgs.find(x => x.id === m.id);
+  const BEH = {
+    inv:  [["pesq", .5, "abriu as investigações"], ["pos", .3]],
+    src:  [["pesq", .5, "abriu as fontes"], ["pos", .5], ["prof", .3]],
+    cond: [["eng", .6, "conferiu as condições"]],
+    ev:   [["grad", .3, "abriu a força da evidência"], ["prof", .3]],
+    gaps: [["pesq", .4, "abriu o que falta testar"], ["pos", .3]]
+  };
+  if (!auto && !state.infer.lock && BEH[btn.dataset.p]) BEH[btn.dataset.p].forEach(s => addSignal(...s));
   slot.innerHTML = PANELS[btn.dataset.p](data);
   if (btn.dataset.p === "cond") wireCondForm(slot, data);
+  slot.querySelectorAll("details.crit").forEach(dt => dt.addEventListener("toggle", () => { if (dt.open && !state.infer.lock) addSignal("pesq", .5, "abriu os critérios de uma nota"); }));
   slot.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
@@ -713,23 +1487,24 @@ const PANELS = {
         <div class="full row"><button type="submit">Refazer a análise</button><span class="error" hidden></span></div>
       </form></details></div>`;
   },
-  inv: ({ r, prof }) => `<div class="panel"><div class="row" style="justify-content:space-between;"><b>Investigações da NASA</b><span class="hint">Pesos do perfil ${PROFILES[prof].name}</span></div>
-      <span class="hint">Ordenadas pela relevância para a sua pergunta (C₁). A nota junta os 5 critérios com os pesos do perfil.</span>
+  inv: ({ q, r, w, wlabel }) => `<div class="panel"><div class="row" style="justify-content:space-between;"><b>Investigações da NASA</b><span class="hint">${wlabel}</span></div>
+      <span class="hint">Ordem do ranking da API para ${ENV[q.env]}, com as investigações do mesmo material primeiro. Fonte: ${sourceLabel()}.</span>
       ${r.top.map((d, i) => `<div class="item"><div class="top"><span class="n">${i + 1}</span>
         <div class="body"><b>${d.name} <span style="color:var(--muted); font-weight:400; font-size:13px;">· ${d.id}</span></b>
-          <span class="why">Testou ${d.what}. O₂: ${d.o2[0] === d.o2[1] ? fmt(d.o2[0]) : fmt(d.o2[0]) + "–" + fmt(d.o2[1])}% · fluxo: ${d.flow[0] === d.flow[1] ? d.flow[0] : d.flow[0] + "–" + d.flow[1]} cm/s · ${d.where}.</span>
-          <span><a href="https://psi.nasa.gov/physci/repo/data/investigations/${d.id}" target="_blank" rel="noopener">Ver no PSI →</a>${d.doi ? ` &nbsp;·&nbsp; <a href="https://doi.org/${d.doi}" target="_blank" rel="noopener">DOI</a>` : ""}</span></div>
+          <span class="why">${d.what}${d.materialsTxt ? ` · ${esc(d.materialsTxt)}` : ""} · ${d.where}</span>
+          <span class="why">O₂ ${d.o2[0] === d.o2[1] ? fmt(d.o2[0]) : fmt(d.o2[0]) + "–" + fmt(d.o2[1])}% · ${d.psi[0] === d.psi[1] ? fmt(d.psi[0]) : fmt(d.psi[0]) + "–" + fmt(d.psi[1])} psi · fluxo ${d.flow[0] === d.flow[1] ? fmt(d.flow[0], 0) : fmt(d.flow[0], 0) + "–" + fmt(d.flow[1], 0)} cm/s <span class="tbv">a validar</span></span>
+          <span><a href="${d.url}" target="_blank" rel="noopener">Ver no PSI →</a></span></div>
         <div class="score"><b>${f1(d.nota)}</b><small>nota /10</small><small>relevância ${f1(d.vals.prox * 10)}</small></div></div>
         <details class="crit"><summary>Por que essa nota · ${d.have} de 5 critérios com dado</summary><div class="bars">${CRIT.map(([k, l]) => d.vals[k] === null
           ? `<div class="bar nodata"><span>${l}</span><div class="track"></div><span class="v">sem dado</span></div>`
-          : `<div class="bar"><span>${l}</span><div class="track"><div class="fill" style="width:${Math.round(d.vals[k] * 100)}%"></div></div><span class="v">${fmt(d.vals[k] * 10)} · ${Math.round(WEIGHTS[prof][k] * 100)}%</span></div>`).join("")}<span class="hint">Valor de 0 a 10 · peso do perfil. "Sem dado": a investigação não mediu esse critério.</span></div></details>
+          : `<div class="bar"><span>${l}</span><div class="track"><div class="fill" style="width:${Math.round(d.vals[k] * 100)}%"></div></div><span class="v">${fmt(d.vals[k] * 10)} · ${Math.round(w[k] * 100)}%</span></div>`).join("")}<span class="hint">Critérios calculados pela API (C₁–C₅, de 0 a 10) · peso estimado para você · valores <span class="tbv">a validar</span>.</span></div></details>
       </div>`).join("")}</div>`,
   ev: ({ q, r }) => {
     const where = [...new Set(r.top.map(d => d.where))].join(" e ");
     return `<div class="panel"><b>Força da evidência: ${r.level[1].replace("Evidência ", "")}</b>
       <div class="evidence">
         <div class="ev"><small>Confiabilidade no ambiente</small><b>${r.partialG ? "Baixa" : "Alta"}</b><small>${r.partialG ? "sem teste em gravidade parcial" : "testado em microgravidade"}</small></div>
-        <div class="ev"><small>Investigações em condições próximas</small><b>${r.near} de ${DATA.length}</b><small>O₂ até 2 pontos e fluxo até 5 cm/s</small></div>
+        <div class="ev"><small>Investigações em condições próximas</small><b>${r.near} de ${r.total}</b><small>mesmo material, O₂ até 2 pontos e fluxo até 5 cm/s</small></div>
         <div class="ev"><small>Onde foi testado</small><b>${where}</b><small>${where.includes("Cygnus") ? "Cygnus: cargueiro sem tripulação" : "laboratório na ISS"}</small></div>
       </div></div>`;
   },
@@ -737,7 +1512,8 @@ const PANELS = {
       ${r.gaps.length ? `<ul>${r.gaps.map(g => `<li>${g}</li>`).join("")}</ul>` : `<span class="why">Nenhuma lacuna importante para essas condições.</span>`}
       ${r.partialG ? `<div class="test"><b style="color:var(--navy);">Ensaio sugerido em solo:</b> queimar o material em câmara com pressão reduzida, técnica usada para imitar gravidade reduzida (a ~30 kPa a propagação ficou parecida com a de microgravidade).</div>` : ""}</div>`,
   src: ({ r }) => `<div class="panel"><b>Fontes</b><ul>
-      ${r.top.map(d => `<li>${d.name}: <a href="https://psi.nasa.gov/physci/repo/data/investigations/${d.id}" target="_blank" rel="noopener">${d.id} no PSI</a>${d.doi ? ` · DOI <a href="https://doi.org/${d.doi}" target="_blank" rel="noopener">${d.doi}</a>` : ""}</li>`).join("")}
+      ${r.top.map(d => `<li>${d.name}: <a href="${d.url}" target="_blank" rel="noopener">${d.id} no PSI</a>${d.doi ? ` · DOI informado pela API: ${d.doi} <span class="tbv">a validar</span>` : ""}</li>`).join("")}
+      <li>Dados do ranking: ${r.live ? "API Blue Ember ao vivo" : "cópia da API Blue Ember de " + SNAPSHOT_DATE}, a partir do NASA PSI (GEODE)</li>
       <li>Atmosferas: <a href="https://ntrs.nasa.gov/api/citations/20220013669/downloads/Internal%20Layout%20of%20a%20Lunar%20Surface%20Habitat.pdf" target="_blank" rel="noopener">habitat lunar da NASA (NTRS)</a></li>
       <li>Gravidade parcial: <a href="https://www.nasa.gov/flammability-of-materials-on-the-moon-fm2/" target="_blank" rel="noopener">FM2, NASA</a></li>
       <li>Pressão × gravidade: Thomsen e Olson, Proc. Combust. Inst. 37 (2019)</li></ul></div>`
@@ -757,8 +1533,10 @@ function wireCondForm(slot, data) {
     const nq = { env: f.elements.env.value, material: f.elements.material.value, o2, psi, flow, thick: f.elements.thick.value, dir: f.elements.dir.value, gas: f.elements.gas.value, goal: f.elements.goal.value };
     const changed = Object.keys(nq).filter(k => nq[k] !== state.q[k]);
     state.q = nq; state.missing = state.missing.filter(k => !changed.includes(k));
-    const r = aiAnswer(changed.length ? `Refiz com as condições ajustadas: ${changed.map(k => condLabel(k, nq[k])).join(", ")}.` : "Refiz com as mesmas condições.");
-    if (state.current) Object.assign(state.current, { q: { ...nq }, level: r.level, top: r.top[0].name });
+    state.ctx = { text: "", p: Object.fromEntries(["env","material","o2","psi","flow","gas","goal"].map(k => [k, changed.includes(k) ? nq[k] : null])), first: false, changed, manual: true };
+    if (!state.infer.lock) { addSignal("eng", 1, "ajustou as condições à mão"); }
+    reanswer(changed.length ? `Refiz com as condições ajustadas: ${changed.map(k => condLabel(k, nq[k])).join(", ")}.` : "Refiz com as mesmas condições.").then(r => {
+      if (state.current) Object.assign(state.current, { q: { ...nq }, level: r.level, top: r.top[0].name }); save(); });
     save();
   };
 }
@@ -767,8 +1545,7 @@ function wireCondForm(slot, data) {
 // ===== Tema claro / escuro (segue o sistema até a pessoa escolher)
 function applyTheme(t) {
   document.documentElement.dataset.theme = t;
-  $("theme").textContent = t === "dark" ? "☀ Claro" : "☾ Escuro";
-  $("theme").setAttribute("aria-pressed", t === "dark");
+
 }
 (function initTheme() {
   let t = null;
@@ -776,16 +1553,70 @@ function applyTheme(t) {
   if (!t) t = window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   applyTheme(t);
 })();
-$("theme").onclick = () => {
+function toggleTheme() {
   const t = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
   applyTheme(t);
   try { localStorage.setItem("blueEmberTheme", t); } catch (e) {}
-};
+}
 
-// ===== Abertura: 1º uso → perfil; depois → início
+// ===== Menu (hambúrguer): limpar histórico e perfil guardados no navegador
+function menuHome() {
+  const n = state.history.length;
+  const dark = document.documentElement.dataset.theme === "dark";
+  $("app-menu").innerHTML = `
+    <button type="button" class="item m-only" role="menuitem" id="menu-home">Início<small>Suas análises recentes</small></button>
+    <button type="button" class="item m-only" role="menuitem" id="menu-new">Nova análise<small>Começar uma conversa do zero</small></button>
+    <button type="button" class="item m-only" role="menuitem" id="menu-profile">Perfil das respostas<small>Ver como o Blue Ember se ajustou a você</small></button>
+    <button type="button" class="item" role="menuitemcheckbox" aria-checked="${dark}" id="menu-theme">${dark ? "☀ Tema claro" : "☾ Tema escuro"}<small>${dark ? "Voltar ao fundo claro" : "Fundo escuro, melhor à noite"}</small></button>
+    <hr class="sep">
+    <button type="button" class="item danger" role="menuitem" id="menu-clear">Limpar histórico e perfil
+      <small>${n ? `Apaga ${n} ${n === 1 ? "análise" : "análises"} e o perfil estimado deste navegador.` : "Zera o perfil estimado e começa do zero."}</small></button>
+    <div class="src-line" role="menuitem" aria-disabled="true" tabindex="-1"><span class="dot ${API.live ? "on" : ""}"></span>Fonte dos dados: ${sourceLabel()}</div>
+    <button type="button" class="item" role="menuitem" id="menu-api">Tentar a API de novo<small>Endereço: ${API.base}</small></button>
+    <button type="button" class="item" role="menuitemcheckbox" aria-checked="${!!state.simFail}" id="menu-fail">${state.simFail ? "✓ " : ""}Simular falha da IA (demo)
+      <small>A próxima resposta mostra o plano B: o ranking direto da base.</small></button>`;
+  $("menu-clear").onclick = menuConfirm;
+  $("menu-theme").onclick = () => { toggleTheme(); menuHome(); };
+  $("menu-home").onclick = () => { toggleMenu(false); $("nav-home").click(); };
+  $("menu-new").onclick = () => { toggleMenu(false); $("nav-new").click(); };
+  $("menu-profile").onclick = () => { toggleMenu(false); setTimeout(togglePop, 0); };
+  $("menu-fail").onclick = () => { state.simFail = !state.simFail; menuHome(); };
+  $("menu-api").onclick = async () => { API.live = null; API.cache = {}; await apiGet("/api/health"); await loadProfileWeights(); menuHome(); };
+}
+function menuConfirm() {
+  $("app-menu").innerHTML = `
+    <div class="confirm"><span>Apagar o histórico de análises e o perfil estimado? Não dá para desfazer. O tema escolhido continua.</span>
+      <div class="row"><button type="button" class="yes" id="menu-yes">Apagar</button><button type="button" class="no" id="menu-no">Cancelar</button></div></div>`;
+  $("menu-yes").onclick = clearAll; $("menu-no").onclick = menuHome; $("menu-no").focus();
+}
+function clearAll() {
+  try { localStorage.removeItem("blueEmberChat"); } catch (e) {}
+  state.history = []; state.current = null;
+  state.infer = { s: Object.fromEntries(PKEYS.map(k => [k, 0])), reasons: [], lock: null };
+  $("infer-pop").hidden = true;
+  newChat();
+  $("app-menu").innerHTML = `<div class="done" role="status">Pronto: histórico e perfil apagados.</div>`;
+  setTimeout(() => toggleMenu(false), 1400);
+}
+function toggleMenu(open) {
+  const m = $("app-menu"), b = $("menu-btn");
+  if (open === undefined) open = m.hidden;
+  if (open) { menuHome(); $("infer-pop").hidden = true; }
+  m.hidden = !open; b.setAttribute("aria-expanded", open);
+  if (open) m.querySelector("button")?.focus();
+}
+$("menu-btn").onclick = e => { e.stopPropagation(); toggleMenu(); };
+$("app-menu").addEventListener("click", e => e.stopPropagation());
+document.addEventListener("click", e => { const m = $("app-menu"); if (!m.hidden && !m.contains(e.target) && e.target !== $("menu-btn")) toggleMenu(false); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("infer-pop").hidden) { $("infer-pop").hidden = true; if (getComputedStyle($("who")).display !== "none") $("who").focus(); } });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("app-menu").hidden) { toggleMenu(false); $("menu-btn").focus(); } });
+
+// ===== Dados: pesos dos perfis vêm da API (ou da cópia local)
+loadProfileWeights();
+
+// ===== Abertura: 1º uso → direto no chat; depois → início
 load();
-if (!state.profile) { renderProfiles(); show("profile"); }
-else if (state.history.length) { renderHome(); show("home"); }
+if (state.history.length) { renderHome(); show("home"); }
 else newChat();
 </script>
 </body>
