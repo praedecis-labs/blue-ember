@@ -11,7 +11,7 @@ import { DetailPanels } from './detail-panels'
 import { HypothesisDashboard } from './HypothesisDashboard'
 import { CoverageMap } from './CoverageMap'
 import { EstimatedBadge } from './EstimatedBadge'
-import { CitedText } from './CitedText'
+import { CitedText, FALLBACK } from './CitedText'
 import { splitNextStep } from '../domain/next-step'
 import { coverageStatus } from '../domain/coverage-status'
 import { psiUrl } from '../domain/psi-url'
@@ -43,7 +43,7 @@ export function AiBubble({
   const [translateFailed, setTranslateFailed] = useState<Record<string, boolean>>({})
   const translated = translations[locale]
   useEffect(() => {
-    if (!staleAi || !msg.lead || translations[locale] || translateFailed[locale]) return
+    if (!staleAi || !msg.lead || FALLBACK.test(msg.lead) || translations[locale] || translateFailed[locale]) return
     let alive = true
     setTranslating(locale)
     translateAgentText(msg.lead, locale)

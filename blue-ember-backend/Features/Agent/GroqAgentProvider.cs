@@ -59,6 +59,7 @@ public sealed class GroqAgentProvider(
         var maxRounds = Math.Clamp(opts.MaxToolRounds, 1, 8);
         string? finalText = null;
 
+        var rateLimitRetries = 0;
         for (var round = 0; round < maxRounds; round++)
         {
             var payload = new JsonObject
@@ -84,6 +85,17 @@ public sealed class GroqAgentProvider(
             {
                 logger.LogError(ex, "Failed to parse Groq response");
                 throw new InvalidOperationException("Invalid response from Groq.");
+            }
+
+            // Limite por minuto (TPM) do Groq: espera o tempo que a própria API indica e repete a rodada.
+            if ((int)httpResponse.StatusCode == 429 && rateLimitRetries < 2
+                && RetryAfterSeconds(body) is { } waitSec && waitSec <= 20)
+            {
+                rateLimitRetries++;
+                logger.LogWarning("Groq rate limit on round {Round}; waiting {Wait:0.0}s and retrying", round, waitSec);
+                await Task.Delay(TimeSpan.FromSeconds(waitSec + 0.5), ct);
+                round--;
+                continue;
             }
 
             var apiError = root?["error"];
@@ -179,6 +191,13 @@ public sealed class GroqAgentProvider(
         }
 
         return await AgentCompletion.FinalizeAsync(request, tools, finalText, ct);
+    }
+
+    private static double? RetryAfterSeconds(string body)
+    {
+        var m = System.Text.RegularExpressions.Regex.Match(body, @"try again in ([0-9]+(?:\.[0-9]+)?)s");
+        return m.Success && double.TryParse(m.Groups[1].Value, System.Globalization.NumberStyles.Float,
+            System.Globalization.CultureInfo.InvariantCulture, out var s) ? s : null;
     }
 
     private static bool IsRecoverableProviderError(string message, int statusCode)
