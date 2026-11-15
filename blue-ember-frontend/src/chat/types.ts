@@ -71,6 +71,8 @@ export type ComputeResult = {
   maxO2: number
   above: boolean
   partialG: boolean
+  /** Trimmed partial-gravity warning from gaps API (GapsPanel callout). */
+  partialGravityWarning: string
   /** Featured fire-safety count from gaps API (evidence panel denominator). */
   featuredCount: number
 }

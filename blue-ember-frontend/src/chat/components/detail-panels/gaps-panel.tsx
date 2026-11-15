@@ -1,28 +1,53 @@
 import type { AiMsg } from './types'
 
 export function GapsPanel({ msg }: { msg: AiMsg }) {
-  const { r } = msg
+  const { r, rankingStatus, rankingError } = msg
+
+  if (rankingStatus === 'loading') {
+    return (
+      <div className="panel gaps">
+        <b>O que falta testar</b>
+        <span className="hint">Carregando lacunas da API…</span>
+        <div className="skel-stack" aria-hidden>
+          <div className="skel-line" />
+          <div className="skel-line short" />
+        </div>
+      </div>
+    )
+  }
+
+  if (rankingStatus === 'error') {
+    return (
+      <div className="panel gaps">
+        <b>O que falta testar</b>
+        <span className="hint" role="alert">
+          {rankingError ?? 'Não foi possível carregar as lacunas.'}
+        </span>
+      </div>
+    )
+  }
+
+  const hasWarning = Boolean(r.partialGravityWarning)
+  const hasGaps = r.gaps.length > 0
+
   return (
     <div className="panel gaps">
       <b>O que falta testar</b>
-      {r.gaps.length ? (
+      {hasGaps ? (
         <ul>
           {r.gaps.map((g) => (
             <li key={g}>{g}</li>
           ))}
         </ul>
-      ) : (
+      ) : !hasWarning ? (
         <span className="why">Nenhuma lacuna importante para essas condições.</span>
-      )}
-      {r.partialG ? (
+      ) : null}
+      {hasWarning ? (
         <div className="test">
-          <b style={{ color: 'var(--navy)' }}>Ensaio sugerido em solo:</b> queimar
-          o material em câmara com pressão reduzida, técnica usada para imitar
-          gravidade reduzida (a ~30 kPa a propagação ficou parecida com a de
-          microgravidade).
+          <b style={{ color: 'var(--navy)' }}>Gravidade parcial (API):</b>{' '}
+          {r.partialGravityWarning}
         </div>
       ) : null}
     </div>
   )
 }
-

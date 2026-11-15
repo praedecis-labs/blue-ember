@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import type { EnvironmentDto } from '@/services/contracts'
 import { getGaps } from '@/services/gaps'
+import { getInvestigation } from '@/services/investigations'
 import { getRankingFireSafety } from '@/services/ranking'
 import { messageFromUnknown } from '@/services/request-state'
 import { rankingItemToScored, toApiEnvironment, toApiProfile } from './adapters'
 import { EXTRA_KEYS, MAIN_KEYS, PROFILES } from './data'
 import { buildQueryDefaults } from './env-defaults'
 import { evidenceFromRankingAndGaps } from './evidence-from-api'
+import { gapsFromApi } from './gaps-from-api'
 import {
   buildVerdict,
   localGaps,
@@ -23,6 +25,7 @@ import type {
   HistoryItem,
   ProfileId,
   QueryState,
+  ScoredInvestigation,
   ScreenId,
 } from './types'
 import { scoreWeightsToCrit } from './weight-map'
@@ -51,17 +54,37 @@ let msgSeq = 0
 const nextId = (prefix: string) => `${prefix}-${++msgSeq}`
 
 function emptyComputeResult(q: QueryState) {
-  const { gaps, maxO2, above } = localGaps(q)
+  const { maxO2, above } = localGaps(q)
   return {
     top: [],
     level: ['unknown', 'Carregando evidência…'] as [EvidenceLevel, string],
-    gaps,
+    gaps: [] as string[],
     near: 0,
     maxO2,
     above,
     partialG: false,
+    partialGravityWarning: '',
     featuredCount: 0,
   }
+}
+
+async function enrichTopWithDetails(
+  top: ScoredInvestigation[],
+): Promise<ScoredInvestigation[]> {
+  return Promise.all(
+    top.map(async (scored) => {
+      try {
+        const detail = await getInvestigation(scored.id)
+        return {
+          ...scored,
+          doi: detail.doi || null,
+          nasaPsiUrl: detail.nasaPsiUrl || scored.nasaPsiUrl,
+        }
+      } catch {
+        return scored
+      }
+    }),
+  )
 }
 
 export function useChatSession(options: ChatSessionOptions = {}) {
@@ -166,12 +189,19 @@ export function useChatSession(options: ChatSessionOptions = {}) {
         if (!stillThere) return
 
         const evidence = evidenceFromRankingAndGaps(ranking, gaps)
-        const top = ranking.items.slice(0, 3).map(rankingItemToScored)
+        const gapUi = gapsFromApi(gaps)
+        const topBase = ranking.items.slice(0, 3).map(rankingItemToScored)
+        const top = await enrichTopWithDetails(topBase)
         const weights = scoreWeightsToCrit(ranking.weights)
         const verdict =
           opts.shouldVerdict
             ? buildVerdict(opts.claimForVerdict ?? null, evidence.level[0])
             : undefined
+
+        const stillThereAfterDetails = snapRef.current.messages.some(
+          (m) => m.kind === 'ai' && m.id === msgId,
+        )
+        if (!stillThereAfterDetails) return
 
         patchAiMessage(msgId, (msg) => ({
           ...msg,
@@ -185,6 +215,8 @@ export function useChatSession(options: ChatSessionOptions = {}) {
             level: evidence.level,
             near: evidence.near,
             partialG: evidence.partialG,
+            partialGravityWarning: gapUi.partialGravityWarning,
+            gaps: gapUi.gaps,
             featuredCount: evidence.featuredCount,
           },
         }))

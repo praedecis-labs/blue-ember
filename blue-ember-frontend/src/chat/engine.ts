@@ -94,8 +94,8 @@ export function parseHypothesis(t: string): ParseResult {
 }
 
 /**
- * Local gap copy for the Gaps panel until T4 consumes GET /api/gaps fully.
- * Does not score or rank investigations (API owns ranking in T3).
+ * Local maxO2/above (+ legacy gap strings for `compute` tests).
+ * Chat Gaps panel uses GET /api/gaps via gapsFromApi (T4).
  */
 export function localGaps(q: QueryState): {
   gaps: string[]
@@ -217,6 +217,9 @@ export function compute(q: QueryState, prof: ProfileId): ComputeResult {
     maxO2,
     above,
     partialG,
+    partialGravityWarning: partialG
+      ? 'Gravidade parcial: dados locais (legado; preferir API).'
+      : '',
     featuredCount: DATA.length,
   }
 }

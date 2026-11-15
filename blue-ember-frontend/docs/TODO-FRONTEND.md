@@ -1,7 +1,7 @@
 # To-dos — Frontend Blue Ember (chat → API)
 
 **Objetivo:** o protótipo em `src/chat/` deixar de ser só mock local e consumir a API .NET com contrato estável, pronto para demo do hackathon.  
-**Estado atual:** UI/fluxo em React; **T1+T2+T3** fechados (client HTTP + perfil/ambientes + ranking fire-safety / evidência via API). Painel Gaps ainda usa copy local (`localGaps`) até T4; chat→params finos fica em T5.  
+**Estado atual:** UI/fluxo em React; **T1+T2+T3+T4** fechados (client HTTP + perfil/ambientes + ranking/evidência + gaps/fontes via API). Chat→params finos fica em T5.  
 **Fora desta fatia (hackathon):** auth real, `/ask` no backend, pgvector, Planetary Computer.
 
 **Mapa de IDs (alinhar antes de integrar):**
@@ -132,12 +132,12 @@ Sugestão de donos (preencher):
 
 ### T4 — Gaps e fontes
 
-- [ ] Painel **O que falta testar**: consumir `GET /api/gaps?environment=`
+- [x] Painel **O que falta testar**: consumir `GET /api/gaps?environment=`
   - Usar `partialGravityWarning` e células / near targets
-- [ ] Painel **Fontes**: links oficiais a partir dos IDs retornados (PSI URL + DOI)
-- [ ] Manter disclaimer honesto: “síntese da UI; score da API”
+- [x] Painel **Fontes**: links oficiais a partir dos IDs retornados (PSI URL + DOI)
+- [x] Manter disclaimer honesto: “síntese da UI; score da API”
 
-**Done quando:** ambiente Moon mostra alerta de gravidade parcial vindo do backend.
+**Done quando:** ambiente Moon mostra alerta de gravidade parcial vindo do backend. ✅ (15/11/2026)
 
 ---
 
@@ -223,4 +223,4 @@ Se forem **3+ pessoas:** T1 sozinho → em seguida T2 ∥ T3 ∥ T4 → T5 integ
 
 ---
 
-*Atualizado 15/11/2026 — T1 + T2 + T3 fechados (ranking fire-safety + evidência via API nos painéis). Próximo: T4 gaps & fontes.*
+*Atualizado 15/11/2026 — T1–T4 fechados (ranking, evidência, gaps e fontes via API). Próximo: T5 chat → params.*
