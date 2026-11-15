@@ -14,7 +14,7 @@ export const enUS = {
     apiLoading: 'API…',
     apiOnline: 'API online',
     apiOffline: 'API offline',
-    scoreTag: 'Score via API · local synthesis',
+    scoreTag: 'NASA PSI data via API',
     environmentsError: 'Environments: {{error}}',
     exportCsv: 'Export CSV',
     exportJson: 'JSON',
@@ -69,7 +69,7 @@ export const enUS = {
     hintKeys: 'Enter sends · Shift+Enter new line',
     send: 'Send',
     composerNote:
-      'Score and PSI/DOI come from the API; synthesis and verdict text are local in the UI.',
+      'Scores, investigations and coverage come from NASA PSI data via our API. Answers are written by Gemini, or by local templates when the AI is offline.',
     writeHypothesis: 'Write your hypothesis or question.',
     profileSwitched:
       'Profile switched to {{name}}. Reordered investigations with the new weights.',
@@ -79,16 +79,16 @@ export const enUS = {
   },
   bubble: {
     thinking: 'Thinking with Gemini…',
-    thinkingPanels: 'Loading panels…',
+    thinkingPanels: 'Gemini answered · loading NASA ranking and gaps…',
     thinkingRanking: 'Thinking with Gemini and loading ranking…',
     loadingRanking: 'Loading ranking from the API…',
     rankingFail: 'Failed to load ranking.',
     mostRelevant: 'Most relevant:',
     noneTop: 'No investigation at the top of the ranking.',
     agentLabel:
-      'Gemini reply · ranking/gaps tools · open sources in details',
+      'Answer by Gemini, based on the API ranking and gaps · sources in the details below',
     localLabel:
-      'Score via API · local synthesis in text · open sources in details',
+      'Answer from local templates · scores from the API · sources in the details below',
     yourHypothesis: 'Your hypothesis:',
     conditions: 'Conditions used',
     defaultCount: '{{n}} default',
@@ -99,13 +99,26 @@ export const enUS = {
     followIss: 'What if it were on the ISS?',
     followLunar: 'What about a lunar habitat?',
     followStill: 'What about still air?',
-    followVent: 'What about 20 cm/s?',
+    followVent: 'What about 20 cm/s airflow?',
     followMaterial: 'What about {{material}}?',
     fabric: 'fabric',
+    followIssPrompt: 'What if it were on the ISS at 14.7 psi and 21% O₂?',
+    followLunarPrompt: 'What about a lunar habitat at 8.2 psi and 34% O₂?',
+    followStillPrompt: 'What about still air?',
+    followVentPrompt: 'What about 20 cm/s ventilation?',
+    followFabricPrompt: 'What if the material were fabric?',
+    followAcrylicPrompt: 'What if the material were acrylic plastic?',
     acrylic: 'acrylic',
     dashboardChip:
       'Build an interpretive dashboard for this hypothesis with relative hazard and legends.',
     dashboardChipLabel: 'Build dashboard for this hypothesis',
+  },
+  gapsApi: {
+    noneNear:
+      'No featured investigation near the target (O₂ {{o2}}% ±5%, {{kpa}} kPa ±15 kPa).',
+    noCoverage: 'No coverage at O₂ {{o2}}% × {{kpa}} kPa',
+    partialGWarning:
+      'The PSI has almost no partial-gravity data (Moon ~0.16 g / Mars ~0.38 g). Most tests ran at 0 g or 1 g; interpolating between those regimes may underestimate the risk.',
   },
   dashboard: {
     label: 'Dashboard',
@@ -117,9 +130,9 @@ export const enUS = {
     legendPrediction:
       'Legend: High = many comparable data (e.g. ISS); Medium/Low = less coverage or gaps (e.g. Moon/Mars, partial gravity).',
     legendHazard:
-      'Legend: higher score = higher relative criticality in the API ranking. Red pill = high; yellow = medium; green = lower in the list.',
+      'Legend: higher score = higher relative criticality in the API ranking. Red = high; yellow = medium; green = lower in the list.',
     legendDefault:
-      'Legend: levels and pills reflect API data for this request; technical details are in the buttons below.',
+      'Legend: levels and badges reflect API data for this request; technical details are in the buttons below.',
   },
   panels: {
     loadingGaps: 'Loading gaps from the API…',
@@ -132,7 +145,7 @@ export const enUS = {
     nasaInv: 'NASA investigations',
     profileWeights: 'Weights for profile {{name}}',
     invHint:
-      'Ordered by the API fire-safety ranking (C₁–C₅ with profile weights).',
+      'Ordered by the API fire-safety ranking (C₁–C₅ with the profile weights).',
     relevance: 'relevance {{n}}',
     loadingSources: 'Loading official links…',
     sourcesFail: 'Could not load sources.',
@@ -158,7 +171,7 @@ export const enUS = {
     awaitingInv: 'awaiting investigations',
     sourcesTitle: 'Sources',
     onPsi: '{{id}} on PSI',
-    localContext: 'Local context (UI synthesis, not API IDs):',
+    localContext: 'Background references (not from the API):',
     atmLabel: 'Atmospheres:',
     lunarHabitat: 'NASA lunar habitat (NTRS)',
     partialGLabel: 'Partial gravity:',
@@ -214,6 +227,11 @@ export const enUS = {
     spread: 'C3 Spread',
     hrr: 'C4 Heat (HRR)',
     tox: 'C5 Toxicity',
+  },
+  grav: {
+    lua: '0.16 g (Moon)',
+    marte: '0.38 g (Mars)',
+    iss: 'Microgravity (~0 g)',
   },
   env: {
     lua: 'Moon',
