@@ -78,15 +78,15 @@ export const enUS = {
     rerunSame: 'Rerun the analysis with the same conditions.',
   },
   bubble: {
-    thinking: 'Thinking with Gemini…',
+    thinking: 'Thinking…',
     thinkingPanels: 'Loading panels…',
-    thinkingRanking: 'Thinking with Gemini and loading ranking…',
+    thinkingRanking: 'Thinking and loading ranking…',
     loadingRanking: 'Loading ranking from the API…',
     rankingFail: 'Failed to load ranking.',
     mostRelevant: 'Most relevant:',
     noneTop: 'No investigation at the top of the ranking.',
     agentLabel:
-      'Gemini reply · ranking/gaps tools · open sources in details',
+      'Agent reply · ranking/gaps tools · open sources in details',
     localLabel:
       'Score via API · local synthesis in text · open sources in details',
     yourHypothesis: 'Your hypothesis:',

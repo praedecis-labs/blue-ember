@@ -81,15 +81,15 @@ export const ptBR: MessageTree = {
     rerunSame: 'Refaça a análise com as mesmas condições.',
   },
   bubble: {
-    thinking: 'Pensando com Gemini…',
+    thinking: 'Pensando…',
     thinkingPanels: 'Carregando painéis…',
-    thinkingRanking: 'Pensando com Gemini e consultando ranking…',
+    thinkingRanking: 'Pensando e consultando ranking…',
     loadingRanking: 'Carregando ranking da API…',
     rankingFail: 'Falha ao carregar o ranking.',
     mostRelevant: 'Mais relevante:',
     noneTop: 'Nenhuma investigação no topo do ranking.',
     agentLabel:
-      'Resposta Gemini · tools ranking/gaps · abra as fontes nos detalhes',
+      'Resposta do agente · tools ranking/gaps · abra as fontes nos detalhes',
     localLabel:
       'Score via API · síntese local nos textos · abra as fontes nos detalhes',
     yourHypothesis: 'Sua hipótese:',
