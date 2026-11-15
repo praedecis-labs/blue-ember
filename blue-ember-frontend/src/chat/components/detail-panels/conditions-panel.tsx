@@ -6,7 +6,6 @@ import { GRAV } from '../../data'
 import {
   buildQueryDefaults,
   environmentLabel,
-  findEnvironmentDto,
 } from '../../env-defaults'
 import { fmt, kpa } from '../../engine'
 import type { EnvId, QueryState } from '../../types'
@@ -26,10 +25,9 @@ function buildAtmChips(
   if (environments?.length) {
     return ENV_IDS.map((env) => {
       const defaults = buildQueryDefaults(env, environments)
-      const dto = findEnvironmentDto(env, environments)
       return {
         env,
-        label: dto?.label ?? environmentLabel(env, environments),
+        label: environmentLabel(env, environments),
         psi: defaults.psi,
         o2: defaults.o2,
         flow: defaults.flow,
@@ -72,7 +70,7 @@ export function ConditionsPanel({
     ['env', envLabel],
     [
       null,
-      GRAV[q.env][0] + (GRAV[q.env][1] ? ` ${t('panels.estimated')}` : ''),
+      t(`grav.${q.env}`) + (GRAV[q.env][1] ? ` ${t('panels.estimated')}` : ''),
     ],
     ['material', t(`material.${q.material}`)],
     ['o2', `${fmt(q.o2)}% O₂`],
