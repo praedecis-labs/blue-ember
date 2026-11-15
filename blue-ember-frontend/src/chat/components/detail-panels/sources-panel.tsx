@@ -1,8 +1,15 @@
 import { useT } from '@/i18n'
-import { psiUrl } from '../../psi-url'
+import { psiUrl } from '../../domain/psi-url'
 import { SHOW_DOI, type AiMsg } from './types'
 
-const psiHref = psiUrl
+function psiHref(d: {
+  id: string
+  nasaPsiUrl?: string | null
+}): string {
+  return (
+    psiUrl(d)
+  )
+}
 
 export function SourcesPanel({ msg }: { msg: AiMsg }) {
   const t = useT()

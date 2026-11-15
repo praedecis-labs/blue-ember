@@ -1,5 +1,5 @@
-import type { EnvironmentDto } from '@/services/contracts'
-import type { PanelId, QueryState } from '../../types'
+import type { EnvironmentDto } from '@/services/shared/contracts'
+import type { PanelId, QueryState } from '../../domain/types'
 import { ConditionsPanel } from './conditions-panel'
 import { EvidencePanel } from './evidence-panel'
 import { GapsPanel } from './gaps-panel'

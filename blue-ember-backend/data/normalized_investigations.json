@@ -4,7 +4,7 @@
     "api_endpoint": "https://psi.nasa.gov/geode-py/ws/repo/search",
     "total_investigations": 133,
     "featured_fire_safety_count": 19,
-    "timestamp": "2026-11-14T19:57:40.4878976Z"
+    "timestamp": "2026-11-15T12:24:17.9343997Z"
   },
   "investigations": [
     {
@@ -553,28 +553,24 @@
       "hypothesis": "BASS experiments were based on the hypothesis that materials in microgravity, with adequate ventilation, burn as well if not better than the same material in normal gravity with other conditions being identical (pressure, oxygen concentration, temperature, etc.) To test this hypothesis with any but the thinnest materials requires extended microgravity time \u2013 longer than available in drop towers or parabolic aircraft.",
       "earth_benefits": "Current NASA spacecraft materials selection is based on a standard test method (NASA\u2013STD\u20136001 Test 1) that segregates material based on 1-g behavior without consideration of low gravity effects. A critical element of this understanding is the radiative heat emission from the flame. These results are used in first order models and predictions of heat release in spacecraft fires and as a means to extend heat release data from tests like the NASA cone calorimeter test (NASA\u2013STD\u20136001 Test 2) to a performance-based material selection process. Using nitrogen as a flame suppressant in microgravity provides a direct link to current and planned extinguishment techniques.\nBASS results provide essential guidance to ground-based microgravity combustion research efforts. Detailed combustion models are validated using the simpler flow environment afforded by tests in microgravity. Once validated, they can be used to build more complex combustion models needed to capture the important details of flames burning in normal gravity. These models have wide applicability to the general understanding of many terrestrial combustion problems and will guide novel spacecraft design and ensure the safety of future crewed missions.",
       "materials": [
-        "Cotton-Fiberglass Fabric",
-        "Cast PMMA Rods",
-        "Polyethylene"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Narrow Solid Strips and Rods (10cm)",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        18,
-        25
+        21
       ],
       "pressure_kpa": [
         101.3
       ],
       "flow_speed_cms": [
-        2,
-        15
+        5
       ],
-      "flame_spread_rate_mms": 1.1,
-      "moc_percent": 17.5,
-      "hrr_kw": 1.8,
-      "co_ppm": 180,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Space Station",
+        "ISS",
         "Spacecraft"
       ],
       "is_featured_fire_safety": true,
@@ -747,25 +743,24 @@
       "hypothesis": "The hypothesis is that the structure and stability of laminar diffusion flames in microgravity are significantly influenced by burner diameter, coflow velocity, and fuel composition and are fundamentally different than flames observed on Earth.",
       "earth_benefits": "1. Improved numerical models for flame behavior lead to more efficient combustion technologies on Earth.\n2. Understanding soot formation aids in designing combustion systems with minimum emissions.\n3. Insights into flame stability and behavior to enhance fire safety.\n4. Findings will inform the development of cleaner, more efficient engines and industrial burners.",
       "materials": [
-        "Methane \u0026 Ethylene with inert diluents"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Laminar Jet",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        18,
-        30
+        21
       ],
       "pressure_kpa": [
         101.3
       ],
       "flow_speed_cms": [
-        10,
-        40
+        5
       ],
-      "flame_spread_rate_mms": 0,
-      "moc_percent": 15.8,
-      "hrr_kw": 1.2,
-      "co_ppm": 140,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
+        "ISS",
         "Spacecraft"
       ],
       "is_featured_fire_safety": true,
@@ -786,29 +781,24 @@
       "hypothesis": "This investigation hypothesizes that due to large differences between fire behavior in normal and reduced gravity, the use of terrestrial fires and fire standards to design spacecraft fire safety systems presents an inherent risk to the vehicle because of the significant level of uncertainty. While this approach has been successful thus far, the uncertainty and risk will increase as exploration missions venture further from earth with considerably longer transit times for a safe return. There is a significant lack of microgravity data available for spacecraft designers on which to base their fire safety designs and procedures. To address this knowledge gap, this investigation proposed to conduct large-scale fire safety experiments in an expendable spacecraft without risk to a crew.",
       "earth_benefits": "The Saffire-I experiment provides a new way to study a realistic fire on an exploration vehicle, which has not been possible in the past because the risks are too high. Instruments on an unmanned cargo vessel measure oxygen, carbon dioxide, heat, pressure and flame growth, and two video cameras provide views of the flame. Results determine microgravity flammability limits for several spacecraft materials, help to validate NASA\u2019s material selection criteria, and how microgravity and limited oxygen affect flame size. The investigation is crucial for the safety of current and future space missions. Studying fire in small, sealed environments such as the Cygnus cargo supply vehicle benefits fire safety and prevention efforts on Earth, including inside mines, airplanes, or submarines.",
       "materials": [
-        "Cotton/Fiberglass (SIBAL fabric)",
-        "PMMA (Plexiglas)"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Large Solid Sheet (0.4m x 1.0m)",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21,
-        30
+        21
       ],
       "pressure_kpa": [
-        101.3,
-        70
+        101.3
       ],
       "flow_speed_cms": [
-        10,
-        25
+        5
       ],
-      "flame_spread_rate_mms": 2.4,
-      "moc_percent": 16,
-      "hrr_kw": 8.5,
-      "co_ppm": 450,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Moon Base",
-        "Pressurized Rover",
+        "ISS",
         "Spacecraft"
       ],
       "is_featured_fire_safety": true,
@@ -1475,10 +1465,9 @@
       "hypothesis": "The TSI P-Trak operates by condensing isopropanol around aerosol particulates that are subsequently laser counted. It was hypothesized that the P-Trak would not work in microgravity due to two potential failure modes that exist. 1) the system would clog or become obscured by isopropanol, and 2) the internal air-flow dynamics of the optics chamber of the device will cause an over counting of particulates.\n\nThe TSI P-Trak was modified for microgravity use via using capillary action to recycle the isopropanol. Therefore, there are two basic hypotheses:\n    1) that the P-Trak, as modified for use in SAME, would function normally in microgravity.\n    2) that the aerosol created and filtered per the experiment design would be within the measurement capabilities of the test devices.",
       "earth_benefits": "Extended duration space flight missions with larger vessels will require fire detection systems with increased reliability and sensitivity. This research will impact the development of novel fire and smoke detection systems for the International Space Station and future spacecrafts. Additionally, the successful adaptation of the TSI P-Trak for microgravity can inform the design of instruments for use in other challenging Earth environments, such as submarines or underwater laboratories where accurate detection of smoke can save lives.",
       "materials": [
-        "Lunar Regolith Simulant",
-        "Aerosol Dust Particles"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Aerosol Sampling Duct",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
         21
       ],
@@ -1486,15 +1475,15 @@
         101.3
       ],
       "flow_speed_cms": [
-        10
+        5
       ],
-      "flame_spread_rate_mms": 0,
-      "moc_percent": 21,
-      "hrr_kw": 0,
-      "co_ppm": 10,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Moon Base",
-        "Pressurized Rover"
+        "ISS",
+        "Spacecraft"
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-47",
@@ -1514,29 +1503,25 @@
       "hypothesis": "This investigation hypothesizes that due to large differences between fire behavior in normal and reduced gravity, the use of terrestrial fires and fire standards to design spacecraft fire safety systems presents an inherent risk to the vehicle because of the significant level of uncertainty. While this approach has been successful thus far, the uncertainty and risk will increase as exploration missions venture further from earth with considerably longer transit times for a safe return. There is a significant lack of microgravity data available for spacecraft designers on which to base their fire safety designs and procedures. To address this knowledge gap, this investigation proposed to conduct large-scale fire safety experiments in an expendable spacecraft without risk to a crew.",
       "earth_benefits": "The Saffire-I experiment provides a new way to study a realistic fire on an exploration vehicle, which has not been possible in the past because the risks are too high. Instruments on an unmanned cargo vessel measure oxygen, carbon dioxide, heat, pressure and flame growth, and two video cameras provide views of the flame. Results determine microgravity flammability limits for several spacecraft materials, help to validate NASA\u2019s material selection criteria, and how microgravity and limited oxygen affect flame size. The investigation is crucial for the safety of current and future space missions. Studying fire in small, sealed environments such as the Cygnus cargo supply vehicle benefits fire safety and prevention efforts on Earth, including inside mines, airplanes, or submarines.",
       "materials": [
-        "SIBAL Fabric",
-        "Acrylic Glass"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Large-Scale Fuel Board",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21,
-        32
+        21
       ],
       "pressure_kpa": [
-        95,
-        70.3
+        101.3
       ],
       "flow_speed_cms": [
-        15,
-        20
+        5
       ],
-      "flame_spread_rate_mms": 2.8,
-      "moc_percent": 16.2,
-      "hrr_kw": 9.8,
-      "co_ppm": 510,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Space Station",
-        "Moon Base"
+        "ISS",
+        "Spacecraft"
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-100",
@@ -1556,28 +1541,25 @@
       "hypothesis": "Flame combustion of liquid hydrocarbon fuels such as n-dodecane, n-dodecane/iso-dodecane mixtures, and faresane in microgravity can provide insights into low-temperature chemical kinetics, revealing critical parameters like droplet extinction diameters and flame dynamics that are not observable on Earth.",
       "earth_benefits": "A basic understanding of cool flames is important for understanding ignition phenomena of practical fuels and fuel additives. Cool flames play a key role in the development and selection of new fuels and the design of advanced engines such as clean, high-efficiency Homogeneous Charge Compression Ignition (HCCI) engines. The research will also help combustion chemists to develop new computational models to compute combustion performance in for many practical applications on earth, including an understanding of how cool flame reactivity determines octane and cetane number for fuels in spark ignition and diesel engines.\nCool Flames Investigation (CFI) will provide critical validation for complex chemical kinetic mechanisms, advance the understanding of flame dynamics and instabilities in low-temperature combustion, and support the design of safer spacecraft systems by refining knowledge of combustion in microgravity environments.",
       "materials": [
-        "Heptane Droplets",
-        "Decane"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Isolated Spherical Droplets",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        16,
-        30
+        21
       ],
       "pressure_kpa": [
-        70,
         101.3
       ],
       "flow_speed_cms": [
-        0
+        5
       ],
-      "flame_spread_rate_mms": 0,
-      "moc_percent": 14,
-      "hrr_kw": 0.5,
-      "co_ppm": 110,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Space Station",
-        "Moon Base"
+        "ISS",
+        "Spacecraft"
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-39",
@@ -1597,9 +1579,9 @@
       "hypothesis": "The three hypotheses that motivated this investigation:\nIn a \u03BCg environment, with the absence of the strong buoyancy-induced flows, smoke particle growth from a pyrolyzing/smoldering source, as a result of nucleation, condensation, and coagulation, will lead to larger particles compared to those produced in 1g. The formation of the larger particles is favored by the expected higher vapor concentration and smoke residence times near the source due to the reduced velocities and mixing at \u03BCg conditions. In particular, it is hypothesized that liquid aerosol smokes produced in microgravity will exhibit substantially larger droplet sizes than under the same conditions in normal gravity (with a corresponding decrease in the particle number density for the same mass of smoke). The change in the size distribution and number density will, in turn, affect the response of the smoke detectors and possibly result in some detectors not producing an alarm when exposed to this smoke.",
       "earth_benefits": "The SAME experiment will provide technology for an advanced fire detector for future spacecraft that will be used for long duration missions. SAME will provide quantitative data on the sensitivity of these detectors to reduced gravity smokes that will allow evaluation of the adequacy of these existing technologies using relevant data. The current Fire Prevention, Detection, and Suppression (FPDS) program plan allows for the re-evaluation of future sensor technology, to allow new technology and capability to be utilized. The results from SAME are needed to provide the reduced gravity baseline data against which future detection technology developments can be evaluated.The smoke detectors developed from the results of SAME can also be useful in other extreme environments on Earth, such as submarines or underwater laboratories. Accurate detection of smoke in these environments can save lives.",
       "materials": [
-        "Combustion Aerosols from Overheated Wiring/Polymers"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Particulate Cloud in Flow Loop",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
         21
       ],
@@ -1607,17 +1589,15 @@
         101.3
       ],
       "flow_speed_cms": [
-        5,
-        15
+        5
       ],
-      "flame_spread_rate_mms": 0,
-      "moc_percent": 21,
-      "hrr_kw": 0.2,
-      "co_ppm": 50,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Spacecraft",
-        "Space Station",
-        "Moon Base"
+        "ISS",
+        "Spacecraft"
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-102",
@@ -1979,28 +1959,25 @@
       "hypothesis": "The hypotheses of this research are that testing aboard the ISS can demonstrate the following for the first time, contributing to an improved understanding of cool flame kinetics.\n  1. Steady-state cool diffusion flames on spherical porous burners.\n  2. Cool diffusion flames burning propane, n-butane, and n-pentane.\n  3. Cool diffusion flames for a wide range of Zst, Tad, and pressures.\n  4. Inverse cool diffusion flames.\n  5. Cool diffusion flames for which a decrease in fluent flow rate will cause extinction, whereas an increase will cause a transition to a hot diffusion flame, with oscillation possible between hot and cool flames.",
       "earth_benefits": "Combustion provides 86% of the world\u2019s energy and an even higher fraction of the energy used for transportation. The internal combustion engines used for transportation generally have thermal efficiencies of 38% or lower because of thermal losses. These efficiencies may increase to 60% if future engines can take advantage of ultra-lean combustion. However, this progress is being impeded by the limited understanding of the chemistry of cool flames. Research into cool diffusion flames (whose peak temperatures are 500 \u2013 1000 K) has grown exponentially since they were discovered in 2012.  The measurements performed for this project will help to test and advance cool flame kinetics mechanisms. This should facilitate the development of more efficient internal combustion engines.",
       "materials": [
-        "Propane / Nitrogen mixture",
-        "Oxygen-Enriched Flow"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Spherical Porous Burner (Inside-Out Flame)",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21,
-        85
+        21
       ],
       "pressure_kpa": [
-        70,
         101.3
       ],
       "flow_speed_cms": [
         5
       ],
-      "flame_spread_rate_mms": 0,
-      "moc_percent": 11.5,
-      "hrr_kw": 2.1,
-      "co_ppm": 310,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Moon Base (High O2)",
-        "Spacesuit Atmosphere"
+        "ISS",
+        "Spacecraft"
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-159",
@@ -2096,9 +2073,9 @@
       "hypothesis": "The three hypotheses that motivated the original SAME investigation is also applicable for the reflight SAME-R investigation:\nIn a \u03BCg environment, with the absence of the strong buoyancy-induced flows, smoke particle growth from a pyrolyzing/smoldering source, as a result of nucleation, condensation, and coagulation, will lead to larger particles compared to those produced in 1g. The formation of the larger particles is favored by the expected higher vapor concentration and smoke residence times near the source due to the reduced velocities and mixing at \u03BCg conditions. In particular, it is hypothesized that liquid aerosol smokes produced in microgravity will exhibit substantially larger droplet sizes than under the same conditions in normal gravity (with a corresponding decrease in the particle number density for the same mass of smoke). The change in the size distribution and number density will, in turn, affect the response of the smoke detectors and possibly result in some detectors not producing an alarm when exposed to this smoke.",
       "earth_benefits": "Along with the results from the original SAME investigation, the results from SAME-R can lead to technology for an advanced fire detector for future spacecraft that will be used for long duration missions. SAME will provide quantitative data on the sensitivity of these detectors to reduced gravity smokes that will allow evaluation of the adequacy of these existing technologies using relevant data. The current Fire Prevention, Detection, and Suppression (FPDS) program plan allows for the re-evaluation of future sensor technology, to allow new technology and capability to be utilized. The results from SAME are needed to provide the reduced gravity baseline data against which future detection technology developments can be evaluated. The smoke detectors developed from the results of SAME can also be useful in other extreme environments on Earth, such as submarines or underwater laboratories. Accurate detection of smoke in these environments can save lives.",
       "materials": [
-        "Aerosols from Pyrolyzing Aircraft Materials"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Sensor Chamber",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
         21
       ],
@@ -2106,15 +2083,15 @@
         101.3
       ],
       "flow_speed_cms": [
-        10
+        5
       ],
-      "flame_spread_rate_mms": 0,
-      "moc_percent": 21,
-      "hrr_kw": 0.2,
-      "co_ppm": 60,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Space Station",
-        "Pressurized Rover"
+        "ISS",
+        "Spacecraft"
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-101",
@@ -2210,31 +2187,25 @@
       "hypothesis": "BASS\u2013II tests the hypothesis that materials in microgravity, with adequate ventilation, burn as well if not better than the same material in normal gravity with other conditions being identical (pressure, O2\nconcentration, temperature, etc.). NASA tests and controls materials from a flammability perspective using an upward burning test in normal gravity, which is considered to be the worst-case geometry for\nflammability of the material on Earth. However, it may not be conservative for flammability in space. Testing at constant O2 mole fractions permits studying flame spread and extinction at low and high flow speed. We are interested in finding the fundamental limit for a given material.",
       "earth_benefits": "A primary goal of BASS-II is improved spacecraft fire safety, improved understanding of combustion in space and how to avoid it. If you\u2019re on a mission far from Earth, a fire can be catastrophic. BASS-II helps engineers select the safest materials and improve firefighting methods on future space missions. In outer space, fuels burn as oval balls rather than with an upward pointed cone flame as they do on Earth. This simpler combustion process enables researchers to evaluate computer models of fuel burning. These models can then be used to more accurately study flames on Earth, such as in wildfires, building fires, energy recapture from waste recycling, and other combustion problems.",
       "materials": [
-        "Nomex",
-        "Cotton",
-        "Delrin",
-        "Polycarbonate"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Flat Strips and Thin Rods",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        16,
-        30
+        21
       ],
       "pressure_kpa": [
-        101.3,
-        70.3
+        101.3
       ],
       "flow_speed_cms": [
-        1,
-        20
+        5
       ],
-      "flame_spread_rate_mms": 1.7,
-      "moc_percent": 16.8,
-      "hrr_kw": 2.4,
-      "co_ppm": 240,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Moon Base",
-        "Space Station"
+        "ISS",
+        "Spacecraft"
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-25",
@@ -2558,30 +2529,25 @@
       "hypothesis": "This investigation hypothesizes that due to large differences between fire behavior in normal and reduced gravity, the use of terrestrial fires and fire standards to design spacecraft fire safety systems presents an inherent risk to the vehicle because of the significant level of uncertainty. While this approach has been successful thus far, the uncertainty and risk will increase as exploration missions venture further from earth with considerably longer transit times for a safe return. There is a significant lack of microgravity data available for spacecraft designers on which to base their fire safety designs and procedures. To address this knowledge gap, this investigation proposed to conduct large-scale fire safety experiments in an expendable spacecraft without risk to a crew.",
       "earth_benefits": "The Saffire-II experiment provides a new way to study a realistic fire on an exploration vehicle, which has not been possible in the past because the risks are too high. Instruments on an unmanned cargo vessel measure oxygen, carbon dioxide, heat, pressure and flame growth, and two video cameras provide views of the flame. Results determine microgravity flammability limits for several spacecraft materials, help to validate NASA\u2019s material selection criteria, and how microgravity and limited oxygen affect flame size. The investigation is crucial for the safety of current and future space missions. Studying fire in small, sealed environments such as the Cygnus cargo supply vehicle benefits fire safety and prevention efforts on Earth, including inside mines, airplanes, or submarines.",
       "materials": [
-        "PMMA",
-        "Silicone",
-        "Nomex Blend"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Solid Samples Array",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21,
-        34
+        21
       ],
       "pressure_kpa": [
-        101.3,
-        56.5
+        101.3
       ],
       "flow_speed_cms": [
-        12,
-        30
+        5
       ],
-      "flame_spread_rate_mms": 3.1,
-      "moc_percent": 15.5,
-      "hrr_kw": 11.2,
-      "co_ppm": 620,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Moon Base",
-        "Pressurized Rover"
+        "ISS",
+        "Spacecraft"
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-99",
@@ -2715,27 +2681,25 @@
       "hypothesis": "The application of electric fields in microgravity environments will significantly influence laminar diffusion flames by enabling precise manipulation of flame stability, soot behavior, and combustion dynamics through ion-driven convection and chemi-ionization processes.",
       "earth_benefits": "The E-FIELD Flames research is not being conducted to serve any space applications, but it is possible that its findings could aid the development of future space-based combustion devices (e.g., for solid waste processing). The use of electric fields to control flames can reduce the production of harmful pollutants in practical terrestrial combustion. The combustion of fossil fuel is the primary human source of greenhouse gas and acid rain and furthermore creates soot, which can be beneficial but is also a health hazard. Combustion using electrical fields may also allow for more efficient combustion, reducing fuel consumption in addition to unwanted emissions.",
       "materials": [
-        "Methane / Ethylene Gas"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Coflow Burner with High Voltage Electrodes",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21,
-        30
+        21
       ],
       "pressure_kpa": [
         101.3
       ],
       "flow_speed_cms": [
-        5,
-        20
+        5
       ],
-      "flame_spread_rate_mms": 0.5,
-      "moc_percent": 15.5,
-      "hrr_kw": 1.6,
-      "co_ppm": 120,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Moon Base (0.16g proxy)",
-        "Mars Base (0.38g proxy)"
+        "ISS",
+        "Spacecraft"
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-22",
@@ -3021,26 +2985,25 @@
       "hypothesis": "The research hypothesizes that by minimizing gravity-driven transport phenomena scientists can study the laminar smoke-point properties of non-buoyant jet diffusion flames. Flame properties are expected to differ significantly from those observed under normal gravity.",
       "earth_benefits": "(1) Will improve our understanding of soot formation mechanisms and help design safer spacecraft environments.\n(2) Will contribute to refining our computational models for predicting flame behaviors under non-buoyant conditions.\n(3) Will enhance our knowledge of soot generation\n(4) Could possibly provide insights to better fuel formulations and combustion processes.",
       "materials": [
-        "Gaseous Hydrocarbons (Ethylene, Propane)"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Coflow Laminar Burner",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        21,
-        30
+        21
       ],
       "pressure_kpa": [
         101.3
       ],
       "flow_speed_cms": [
-        5,
-        30
+        5
       ],
-      "flame_spread_rate_mms": 0,
-      "moc_percent": 16,
-      "hrr_kw": 1.4,
-      "co_ppm": 220,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Space Station"
+        "ISS",
+        "Spacecraft"
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-107",
@@ -3250,28 +3213,25 @@
       "hypothesis": "The BRE investigation hypothesizes that there can exist a regime of quasi-steady burning in microgravity as a function of materials properties. Steady burning may never be achieved, and only slowly changing unsteady flames are possible. The proposed tests aboard the ISS aims to query this hypothesis by establishing a range of quasi-steady burning conditions for condensed fuels in the microgravity environment. It is hypothesized that BRE can determine a range of burning conditions in microgravity as a function of heat of gasification, reradiation heat flux, applied radiant heat flux, heat of combustion and smoke point. This could enable the Cone Calorimeter (NASA Test 2) test as a basis for establishing flammability maps for real materials.\n\nThe key hypothesis is that the heat of combustion, smoke point, and heat of gasification of the fuel mixture will represent a real solid fuel (or liquid fuel absorbed in an inert matrix). Thus achieved steady burning would represent the potential for real solid fuels to achieve steady burning in microgravity. Other than a candle flame, this has not been shown before.",
       "earth_benefits": "BRE yielded important data relevant to spacecraft fire safety. Quasi-steady burning corresponding to various condensed-phase materials (such as PMMA and Nylon) was observed in microgravity despite the absence of air flow, where the cessation of ventilation is an established step in putting out spacecraft fires. The ongoing combustion without air flow was notably seen in elevated-oxygen atmospheres which are being considered for use in future spacecraft, whereas such flames in a normal atmosphere of 21% oxygen self-extinguished in a short time. While BRE\u2019s results are still preliminary, they suggest that NASA may want to increase use of its alternative flammability Test 2, with the cone calorimeter, where that test can measure material properties corresponding to the microgravity flames observed with the BRE burner.",
       "materials": [
-        "Gaseous Fuels (CH4, C2H4) emulating Solids"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Flat Porous Burner",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        16,
-        35
+        21
       ],
       "pressure_kpa": [
-        70,
         101.3
       ],
       "flow_speed_cms": [
-        0,
-        10
+        5
       ],
-      "flame_spread_rate_mms": 0.8,
-      "moc_percent": 15,
-      "hrr_kw": 3.2,
-      "co_ppm": 160,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Moon Base",
-        "Mars Base"
+        "ISS",
+        "Spacecraft"
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-20",
@@ -4659,30 +4619,25 @@
       "hypothesis": "The primary hypothesis of the FLEX mission is that microgravity conditions fundamentally alter the combustion and extinction characteristics of liquid fuel droplets due to changes in species and energy transport dynamics, radiative heat loss, and chemical kinetics. Specifically, the hypothesis posits that the lack of buoyant convection in microgravity will lead to significant differences in the flammability limits and suppression efficacy of various fire suppressant agents compared to normal gravity conditions. This hypothesis underpins the design of the FLEX experiments, which aim to map flammability boundaries, quantify suppressant efficacy, and develop predictive models to improve fire safety in space environments.",
       "earth_benefits": "The research impacts and Earth benefits of the FLEX mission are significant and multifaceted. By enhancing our understanding of microgravity combustion, the mission directly contributes to improved fire safety protocols for future space missions, ensuring the safety of crew members in environments where traditional fire suppression methods may be ineffective. On Earth, the insights gained from these experiments have the potential to advance fire safety in confined and reduced-gravity environments, such as submarines or high-altitude aircraft. The mission\u0027s findings on the effectiveness of various fire suppressants, including CO2, He, and SF6, in microgravity can lead to the development of more efficient and less harmful fire suppression systems, reducing the risk of toxic byproducts during fire events. Additionally, the study of \u0027\u0027cool flames\u0027\u0027 and low-temperature combustion processes observed in microgravity can inform the design of advanced combustion engines, leading to improved fuel efficiency and reduced emissions in automotive and industrial applications. Overall, the FLEX mission\u0027s contributions to combustion science have the potential to enhance both space exploration safety and terrestrial fire safety technologies.",
       "materials": [
-        "n-Heptane",
-        "Methanol",
-        "Ethanol Droplets"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Free \u0026 Tethered Liquid Droplets (1-5mm)",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        15,
-        40
+        21
       ],
       "pressure_kpa": [
-        50,
-        101.3,
-        300
+        101.3
       ],
       "flow_speed_cms": [
-        0
+        5
       ],
-      "flame_spread_rate_mms": 0,
-      "moc_percent": 13,
-      "hrr_kw": 0.8,
-      "co_ppm": 85,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
-        "Spacecraft",
-        "Space Station"
+        "ISS",
+        "Spacecraft"
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-69",
@@ -4968,26 +4923,24 @@
       "hypothesis": "Fairly sophisticated numerical simulations of convective droplet combustion have been developed in the last decade where the key contribution is the inclusion of full Navier-Stokes equations for the gas-phase flow field. However, due to the inherent complexity of the problem, varying degrees of approximations have been made in treating the chemistry, radiation, and the coupling between the gas and liquid phases. The validity of the assumptions or the hypothesis used in these simulation have not been confirmed by using benchmark data. By conducting these experiments in a microgravity environment, the effects of buoyancy are minimized, and the droplet can be characterized only as a function of thermocapillary or solutalcapillary stresses allowing for a clear observation of the fundamental combustion processes,  The present FLEX-2 experiments using bi-component mixtures. In addition, the microgravity environment allows study of such phenomena as the transitions between radiative and diffusive extension of the flame. The primary goal of the flight experiments is to provide benchmark experimental data on bi-component droplet combustion over a wide range of initial conditions that could be used to validate numerical simulations and to develop new theoretical models.",
       "earth_benefits": "The combustion of liquid fuels is the overwhelming energy source in the transportation sector. Insights gained from these studies can lead to more efficient and cleaner combustion technologies which are crucial for reducing pollution and greenhouse gas emissions. By improving fuel efficiency and developing better fuels, these experiments can contribute to:\n\n  1) More sustainable energy production.\n  2) Future combustor designs with minimal carbon footprint, maximum fuel efficiency and less pollutant emissions.\n  3) Allow quantitative evaluation of the performance of future fuels in combustors through the development of surrogates (mixtures of pure fuels that simulate the behavior of real fuels).\n  4) Validation of jet engine models by engine manufacturers with support from prior droplet results.",
       "materials": [
-        "Alkane Mixtures",
-        "Bio-derived Fuels"
+        "Amostras Diversas de Pesquisa"
       ],
-      "geometry": "Liquid Droplet Matrix",
+      "geometry": "Geometria Padr\u00E3o de Ensaio",
       "o2_range": [
-        14,
-        35
+        21
       ],
       "pressure_kpa": [
-        70,
         101.3
       ],
       "flow_speed_cms": [
-        0
+        5
       ],
-      "flame_spread_rate_mms": 0,
-      "moc_percent": 12.8,
-      "hrr_kw": 0.9,
-      "co_ppm": 95,
+      "flame_spread_rate_mms": 1,
+      "moc_percent": 18,
+      "hrr_kw": 1.5,
+      "co_ppm": 100,
       "relevance_habitat": [
+        "ISS",
         "Spacecraft"
       ],
       "is_featured_fire_safety": true,

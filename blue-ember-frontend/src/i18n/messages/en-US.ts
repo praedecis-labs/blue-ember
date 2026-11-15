@@ -71,6 +71,8 @@ export const enUS = {
     composerNote:
       'Scores, investigations and coverage come from NASA PSI data via our API. Answers are written by Gemini, or by local templates when the AI is offline.',
     writeHypothesis: 'Write your hypothesis or question.',
+    offTopicHypothesis:
+      'I can only help with fire safety in space habitats. Ask about materials, O₂, pressure, smoke detection, or ISS/Moon/Mars scenarios.',
     profileSwitched:
       'Profile switched to {{name}}. Reordered investigations with the new weights.',
     reorderForProfile: 'Reorder the ranking for the {{name}} profile.',
@@ -78,17 +80,22 @@ export const enUS = {
     rerunSame: 'Rerun the analysis with the same conditions.',
   },
   bubble: {
-    thinking: 'Thinking with Gemini…',
-    thinkingPanels: 'Gemini answered · loading NASA ranking and gaps…',
-    thinkingRanking: 'Thinking with Gemini and loading ranking…',
+    thinking: 'Thinking with the AI agent…',
+    thinkingPanels: 'AI agent answered · loading NASA ranking and gaps…',
+    thinkingRanking: 'Thinking with the AI agent and loading ranking…',
     loadingRanking: 'Loading ranking from the API…',
     rankingFail: 'Failed to load ranking.',
     mostRelevant: 'Most relevant:',
     noneTop: 'No investigation at the top of the ranking.',
     agentLabel:
-      'Answer by Gemini, based on the API ranking and gaps · sources in the details below',
+      'AI agent reply · ranking/gaps tools · open sources in details',
     localLabel:
       'Answer from local templates · scores from the API · sources in the details below',
+    offTopicLabel: 'Scope check · no ranking run',
+    agentOffline:
+      'AI agent is offline (no API key). Showing NASA ranking and gaps only.',
+    agentFallback:
+      'AI agent could not finish (rate limit or provider error). Showing NASA ranking and gaps only — try again in a few seconds.',
     yourHypothesis: 'Your hypothesis:',
     conditions: 'Conditions used',
     defaultCount: '{{n}} default',
@@ -131,8 +138,7 @@ export const enUS = {
     unknown: 'What is still unknown',
     samples: 'NASA test samples (rods, films, droplets) differ from the materials and layouts of a real habitat.',
     disclaimer: 'Descriptive summary of NASA test records, not a safety assessment.',
-  },
-  evidenceTag: {
+  },  evidenceTag: {
     nearby: 'Nearby NASA evidence',
     nearbyNote: 'NASA tests in this oxygen and pressure range: {{n}}. Similar conditions, not proof that your case is safe.',
     adjacent: 'Tested only in other conditions',
@@ -140,12 +146,10 @@ export const enUS = {
     none: 'No NASA test in these conditions',
     noneNote: 'Nothing in the NASA data covers this oxygen and pressure. Treat it as a research gap, not a safe zone.',
     gravity: 'All of these tests ran in microgravity; none in lunar or Martian gravity.',
-  },
-  estimated: {
+  },  estimated: {
     badge: 'Estimated',
     tip: 'Oxygen and pressure ranges per investigation are estimates still being checked against the NASA PSI tables.',
-  },
-  coverageMap: {
+  },  coverageMap: {
     show: 'See where your case falls among NASA tests',
     title: 'Where your case falls among NASA tests',
     caption: 'Your case: {{o2}}% O₂ · {{kpa}} kPa → {{n}} tests in this range',
@@ -158,8 +162,7 @@ export const enUS = {
     legendFew: 'few',
     legendMany: 'many',
     noData: 'No coverage data for this environment.',
-  },
-  dashboard: {
+  },  dashboard: {
     label: 'Dashboard',
     aiBadge: 'AI interpretation',
     hazardTitle: 'Relative hazard',

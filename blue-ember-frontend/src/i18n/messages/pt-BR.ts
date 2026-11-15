@@ -74,6 +74,8 @@ export const ptBR: MessageTree = {
     composerNote:
       'Notas, investigações e cobertura vêm dos dados do PSI da NASA pela nossa API. As respostas são escritas pelo Gemini, ou por modelos locais quando a IA está fora do ar.',
     writeHypothesis: 'Escreva sua hipótese ou pergunta.',
+    offTopicHypothesis:
+      'Só consigo ajudar com segurança contra incêndio em habitats espaciais. Pergunte sobre materiais, O₂, pressão, detecção de fumaça ou cenários ISS/Lua/Marte.',
     profileSwitched:
       'Perfil trocado para {{name}}. Reordenei as investigações com os novos pesos.',
     reorderForProfile: 'Reordene o ranking para o perfil {{name}}.',
@@ -81,17 +83,22 @@ export const ptBR: MessageTree = {
     rerunSame: 'Refaça a análise com as mesmas condições.',
   },
   bubble: {
-    thinking: 'Pensando com Gemini…',
-    thinkingPanels: 'O Gemini respondeu · carregando ranking e lacunas da NASA…',
-    thinkingRanking: 'Pensando com Gemini e consultando ranking…',
+    thinking: 'Pensando com o agente de IA…',
+    thinkingPanels: 'O agente respondeu · carregando ranking e lacunas da NASA…',
+    thinkingRanking: 'Pensando com o agente de IA e consultando ranking…',
     loadingRanking: 'Carregando ranking da API…',
     rankingFail: 'Falha ao carregar o ranking.',
     mostRelevant: 'Mais relevante:',
     noneTop: 'Nenhuma investigação no topo do ranking.',
     agentLabel:
-      'Resposta do Gemini, com base no ranking e nas lacunas da API · fontes nos detalhes abaixo',
+      'Resposta do agente · tools ranking/gaps · abra as fontes nos detalhes',
     localLabel:
       'Resposta por modelos locais · notas da API · fontes nos detalhes abaixo',
+    offTopicLabel: 'Checagem de escopo · ranking não executado',
+    agentOffline:
+      'Agente de IA offline (sem API key). Mostrando só ranking e gaps da NASA.',
+    agentFallback:
+      'O agente de IA não concluiu (limite de taxa ou erro do provedor). Mostrando só ranking e gaps da NASA — tente de novo em alguns segundos.',
     yourHypothesis: 'Sua hipótese:',
     conditions: 'Condições usadas',
     defaultCount: '{{n}} padrão',
@@ -134,8 +141,7 @@ export const ptBR: MessageTree = {
     unknown: 'O que ainda não se sabe',
     samples: 'As amostras dos testes da NASA (bastões, filmes, gotas) são diferentes dos materiais e da disposição de um habitat real.',
     disclaimer: 'Resumo descritivo dos testes da NASA, não é avaliação de segurança.',
-  },
-  evidenceTag: {
+  },  evidenceTag: {
     nearby: 'Evidência próxima da NASA',
     nearbyNote: 'Testes da NASA nessa faixa de oxigênio e pressão: {{n}}. Condições parecidas, não prova de que o seu caso é seguro.',
     adjacent: 'Testado só em outras condições',
@@ -143,12 +149,10 @@ export const ptBR: MessageTree = {
     none: 'Nenhum teste da NASA nessas condições',
     noneNote: 'Nada nos dados da NASA cobre esse oxigênio e essa pressão. Trate como lacuna de pesquisa, não como zona segura.',
     gravity: 'Todos esses testes foram em microgravidade; nenhum na gravidade da Lua ou de Marte.',
-  },
-  estimated: {
+  },  estimated: {
     badge: 'Estimado',
     tip: 'As faixas de oxigênio e pressão de cada investigação são estimativas que ainda estão sendo conferidas com as tabelas do PSI da NASA.',
-  },
-  coverageMap: {
+  },  coverageMap: {
     show: 'Ver onde o seu caso cai entre os testes da NASA',
     title: 'Onde o seu caso cai entre os testes da NASA',
     caption: 'Seu caso: {{o2}}% de O₂ · {{kpa}} kPa → {{n}} testes nessa faixa',
@@ -161,8 +165,7 @@ export const ptBR: MessageTree = {
     legendFew: 'poucos',
     legendMany: 'muitos',
     noData: 'Sem dados de cobertura para este ambiente.',
-  },
-  dashboard: {
+  },  dashboard: {
     label: 'Dashboard',
     aiBadge: 'Interpretação da IA',
     hazardTitle: 'Periculosidade relativa',

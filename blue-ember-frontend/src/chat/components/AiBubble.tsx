@@ -1,16 +1,17 @@
 import { useState } from 'react'
 import { useI18n } from '@/i18n'
 import { retranslate } from '@/i18n/retranslate'
-import { emptyCellBullets } from '../gaps-from-api'
-import type { EnvironmentDto } from '@/services/contracts'
-import { LOGO_SRC } from '../data'
-import { f1, kpa, summaryFor } from '../engine'
-import type { ChatMessage, PanelId, QueryState } from '../types'
+import { emptyCellBullets } from '../domain/gaps-from-api'
+import type { EnvironmentDto } from '@/services/shared/contracts'
+import { LOGO_SRC } from '../domain/data'
+import { f1, kpa, summaryFor } from '../domain/engine'
+import type { ChatMessage, PanelId, QueryState } from '../domain/types'
 import { DetailPanels } from './detail-panels'
+import { HypothesisDashboard } from './HypothesisDashboard'
 import { CoverageMap } from './CoverageMap'
 import { EstimatedBadge } from './EstimatedBadge'
-import { coverageStatus } from '../coverage-status'
-import { psiUrl } from '../psi-url'
+import { coverageStatus } from '../domain/coverage-status'
+import { psiUrl } from '../domain/psi-url'
 
 type Props = {
   msg: Extract<ChatMessage, { kind: 'ai' }>
@@ -87,6 +88,21 @@ export function AiBubble({
   const altMaterial =
     q.material === 'plastico' ? t('bubble.fabric') : t('bubble.acrylic')
 
+  if (msg.offTopic) {
+    return (
+      <div className="msg-ai" id={msg.id}>
+        <div className="head">
+          <span className="by">
+            <img className="avatar" src={LOGO_SRC} alt="" />
+            Blue Ember
+          </span>
+        </div>
+        {msg.lead ? <span className="why">{msg.lead}</span> : null}
+        <span className="ai-label">{t('bubble.offTopicLabel')}</span>
+      </div>
+    )
+  }
+
   return (
     <div className="msg-ai" id={msg.id}>
       <div className="head">
@@ -147,7 +163,7 @@ export function AiBubble({
                   ) : null}
                 </>
               ) : msg.agentReply && msg.lead ? (
-                <p className="summary">{msg.lead}</p>
+                <p className="summary">{retranslate(msg.lead, t)}</p>
               ) : (
                 <>
                   {msg.lead && msg.lead !== t('bubble.thinking') ? (
@@ -254,6 +270,9 @@ export function AiBubble({
           <span className="ai-label">
             {msg.agentReply ? t('bubble.agentLabel') : t('bubble.localLabel')}
           </span>
+          {msg.dashboard && rankingStatus === 'ok' ? (
+            <HypothesisDashboard spec={msg.dashboard} top={r.top} />
+          ) : null}
         </>
       )}
       {/* Painéis e perguntas de continuação só depois que a resposta chega */}

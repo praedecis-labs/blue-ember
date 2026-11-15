@@ -1,7 +1,7 @@
 import { useEffect, useRef, type KeyboardEvent } from 'react'
 import { translatedExamples, useT } from '@/i18n'
-import type { EnvironmentDto } from '@/services/contracts'
-import type { ChatMessage, QueryState } from '../types'
+import type { EnvironmentDto } from '@/services/shared/contracts'
+import type { ChatMessage, QueryState } from '../domain/types'
 import { AiBubble } from './AiBubble'
 
 /** O quadro interpretativo da IA só aparece quando a pessoa pede um dashboard. */

@@ -1,7 +1,7 @@
 import { useT } from '@/i18n'
-import type { DashboardSpec, DashboardWidget } from '@/services/contracts'
-import { f1 } from '../engine'
-import type { ScoredInvestigation } from '../types'
+import type { DashboardSpec, DashboardWidget } from '@/services/shared/contracts'
+import { f1 } from '../domain/engine'
+import type { ScoredInvestigation } from '../domain/types'
 
 type Props = {
   spec: DashboardSpec

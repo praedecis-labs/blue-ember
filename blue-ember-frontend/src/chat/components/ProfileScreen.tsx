@@ -1,10 +1,10 @@
 import { useT } from '@/i18n'
-import type { ProfileDto } from '@/services/contracts'
-import type { RequestState } from '@/services/request-state'
-import { PROFILE_IDS, toApiProfile } from '../adapters'
-import { WEIGHTS } from '../data'
-import type { CritKey, ProfileId } from '../types'
-import { critWeightsFromProfileDto, type CritWeights } from '../weight-map'
+import type { ProfileDto } from '@/services/shared/contracts'
+import type { RequestState } from '@/services/shared/request-state'
+import { PROFILE_IDS, toApiProfile } from '../domain/adapters'
+import { WEIGHTS } from '../domain/data'
+import type { CritKey, ProfileId } from '../domain/types'
+import { critWeightsFromProfileDto, type CritWeights } from '../domain/weight-map'
 
 type Props = {
   pending: ProfileId | null

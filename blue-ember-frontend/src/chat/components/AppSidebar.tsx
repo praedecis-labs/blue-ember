@@ -1,10 +1,4 @@
-import {
-  House,
-  MessageSquarePlus,
-  Moon,
-  Sun,
-  UserRound,
-} from 'lucide-react'
+import { House, MessageSquarePlus, Moon, Sun } from 'lucide-react'
 import {
   Sidebar,
   SidebarContent,
@@ -19,30 +13,25 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar'
 import { useI18n } from '@/i18n'
-import type { HistoryItem, ProfileId, ScreenId, ThemeId } from '../types'
+import { LOGO_SRC } from '../domain/data'
+import type { HistoryItem, ScreenId, ThemeId } from '../domain/types'
 
 type Props = {
   screen: ScreenId
-  profile: ProfileId | null
-  profileLabel: string | null
   theme: ThemeId
   history: HistoryItem[]
   onHome: () => void
   onNew: () => void
-  onProfile: () => void
   onOpenDoc: (item: HistoryItem) => void
   onToggleTheme: () => void
 }
 
 export function AppSidebar({
   screen,
-  profile,
-  profileLabel,
   theme,
   history,
   onHome,
   onNew,
-  onProfile,
   onOpenDoc,
   onToggleTheme,
 }: Props) {
@@ -54,11 +43,10 @@ export function AppSidebar({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" onClick={onHome}>
-              {/* Símbolo do StellarHub (fundo transparente: serve nos temas claro e escuro) */}
               <img
-                src="/stellarhub-simbolo.png"
-                alt="StellarHub"
-                className="size-12 object-contain"
+                src={LOGO_SRC}
+                alt=""
+                className="size-12 rounded-lg"
               />
               <span className="flex flex-col leading-tight">
                 <span className="font-semibold text-xl">Blue Ember</span>
@@ -90,16 +78,6 @@ export function AppSidebar({
                 >
                   <MessageSquarePlus />
                   <span>{t('nav.newAnalysis')}</span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  isActive={screen === 'profile'}
-                  onClick={onProfile}
-                  tooltip={t('nav.profile')}
-                >
-                  <UserRound />
-                  <span>{t('nav.profile')}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -155,19 +133,6 @@ export function AppSidebar({
               </span>
             </SidebarMenuButton>
           </SidebarMenuItem>
-          {profile ? (
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                onClick={onProfile}
-                tooltip={t('nav.switchProfile')}
-              >
-                <UserRound />
-                <span className="truncate">
-                  {profileLabel ?? profile}
-                </span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ) : null}
         </SidebarMenu>
       </SidebarFooter>
       <SidebarRail />

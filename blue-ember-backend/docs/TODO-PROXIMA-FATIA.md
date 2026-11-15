@@ -32,6 +32,12 @@
 
 ---
 
+- [ ] **Broken PSI links (`nasa_psi_url`)**: reported 15/11 by Luan
+  - `scripts/normalize_nasa_data.py` (around line 282) builds `https://psi.nasa.gov/physci/repo/investigations/<PSI-n>`. That address opens the PSI **404 page**.
+  - The working address has `/data/`: `https://psi.nasa.gov/physci/repo/data/investigations/<PSI-n>` (checked 15/11 for the 19 featured fire-safety investigations).
+  - Fix: add `/data/` in the normalizer and regenerate `data/normalized_investigations.json`.
+  - Frontend workaround (already on `main`): `src/chat/domain/psi-url.ts` builds the link from the id, so the screen is correct even before the backend fix.
+
 ## Medium priority
 
 - [x] **GEODE cache with TTL / data age**

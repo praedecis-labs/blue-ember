@@ -1,13 +1,20 @@
 import { useT } from '@/i18n'
-import { psiUrl } from '../../psi-url'
-import { WEIGHTS } from '../../data'
-import { f1, fmt } from '../../engine'
-import type { CritKey, CritWeights } from '../../types'
+import { WEIGHTS } from '../../domain/data'
+import { f1, fmt } from '../../domain/engine'
+import { psiUrl } from '../../domain/psi-url'
+import type { CritKey, CritWeights } from '../../domain/types'
 import { SHOW_DOI, type AiMsg } from './types'
 
 const CRIT_KEYS: CritKey[] = ['prox', 'moc', 'spread', 'hrr', 'tox']
 
-const psiHref = psiUrl
+function psiHref(d: {
+  id: string
+  nasaPsiUrl?: string | null
+}): string {
+  return (
+    psiUrl(d)
+  )
+}
 
 function hasFlow(flow: [number, number]): boolean {
   return !(flow[0] === 0 && flow[1] === 0)

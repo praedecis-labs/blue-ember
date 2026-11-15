@@ -1,4 +1,4 @@
-import type { ChatMessage } from '../../types'
+import type { ChatMessage } from '../../domain/types'
 
 export type AiMsg = Extract<ChatMessage, { kind: 'ai' }>
 

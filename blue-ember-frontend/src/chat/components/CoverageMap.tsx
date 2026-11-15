@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 import { useT } from '@/i18n'
 import { EstimatedBadge } from './EstimatedBadge'
-import type { CoverageCellDto } from '@/services/contracts'
-import { fmt, kpa } from '../engine'
-import type { QueryState } from '../types'
+import type { CoverageCellDto } from '@/services/shared/contracts'
+import { fmt, kpa } from '../domain/engine'
+import type { QueryState } from '../domain/types'
 
 type Props = {
   cells: CoverageCellDto[] | null | undefined
