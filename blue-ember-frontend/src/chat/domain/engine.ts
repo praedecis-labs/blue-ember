@@ -297,7 +297,9 @@ export function summaryFor(
   const source = r.maxO2Source ? ` (${r.maxO2Source})` : ''
   const o2Range =
     best?.o2[1]
-      ? t('summary.o2Range', { lo: fmt(best.o2[0]), hi: fmt(best.o2[1]) })
+      ? best.o2[0] === best.o2[1]
+        ? t('summary.o2Single', { v: fmt(best.o2[0]) })
+        : t('summary.o2Range', { lo: fmt(best.o2[0]), hi: fmt(best.o2[1]) })
       : ''
   const base = r.above
     ? t('summary.above', {

@@ -282,16 +282,21 @@ export function useChatHydration(deps: HydrationDeps) {
         if (!stillThere) return
         const translate = tRef.current
         const offline = err instanceof ApiError && err.status === 503
+        // Sem resposta nenhuma do servidor: o backend está fora do ar
+        const serverDown = !(err instanceof ApiError)
         if (!offline) {
           setError(messageFromUnknown(err))
         }
         // Keep agentReply so local summary templates are not shown as if the LLM answered.
         patchAiMessage(msgId, (msg) => ({
           ...msg,
-          lead: offline
-            ? translate('bubble.agentOffline')
-            : translate('bubble.agentFallback'),
+          lead: serverDown
+            ? translate('bubble.serverOffline')
+            : offline
+              ? translate('bubble.agentOffline')
+              : translate('bubble.agentFallback'),
           agentReply: true,
+          agentFailed: true,
           loadingPhase: 'ranking',
         }))
         hydrateAiRanking(msgId, prof, query, opts)

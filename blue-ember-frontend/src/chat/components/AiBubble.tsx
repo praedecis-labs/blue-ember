@@ -43,7 +43,7 @@ export function AiBubble({
   const [translateFailed, setTranslateFailed] = useState<Record<string, boolean>>({})
   const translated = translations[locale]
   useEffect(() => {
-    if (!staleAi || !msg.lead || FALLBACK.test(msg.lead) || translations[locale] || translateFailed[locale]) return
+    if (!staleAi || !msg.lead || msg.agentFailed || FALLBACK.test(msg.lead) || translations[locale] || translateFailed[locale]) return
     let alive = true
     setTranslating(locale)
     translateAgentText(msg.lead, locale)
@@ -176,7 +176,13 @@ export function AiBubble({
             <h4 className="ans-h">{t('answer.shows')}</h4>
               {/* 2. A resposta: texto da IA ou, sem IA, o resumo local.
                   Esconde o "pensando…" provisório se ele sobrar no modo sem IA */}
-              {msg.agentReply && msg.lead && staleAi && translated ? (
+              {msg.agentFailed && rankingStatus === 'ok' ? (
+                // IA indisponível: resumo automático com os dados da NASA, com aviso honesto
+                <>
+                  <p className="summary">{summaryFor(q, r, t)}</p>
+                  <span className="lang-note auto-note">{t('bubble.autoSummaryNote')}</span>
+                </>
+              ) : msg.agentReply && msg.lead && staleAi && translated ? (
                 <AnswerText text={translated} invs={r.top.slice(0, 8)} />
               ) : msg.agentReply && msg.lead && staleAi && translating === locale ? (
                 <p className="summary translating" aria-busy="true">
@@ -344,7 +350,7 @@ export function AiBubble({
             <span className="ans-disclaimer">{t('answer.disclaimer')}</span>
           ) : null}
           <span className="ai-label">
-            {msg.agentReply ? t('bubble.agentLabel') : t('bubble.localLabel')}
+            {msg.agentReply && !msg.agentFailed ? t('bubble.agentLabel') : t('bubble.localLabel')}
           </span>
           {rankingStatus === 'ok' && r.top.length > 0 ? (
             <HypothesisDashboard
