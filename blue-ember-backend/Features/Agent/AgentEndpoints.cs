@@ -9,7 +9,7 @@ public static class AgentEndpoints
     {
         app.MapPost("/api/agent/ask", async (
                 [FromBody] AgentAskRequest? body,
-                GeminiAgentService agent,
+                AgentProviderResolver providers,
                 CancellationToken ct) =>
             {
                 if (body is null || string.IsNullOrWhiteSpace(body.Message))
@@ -18,11 +18,13 @@ public static class AgentEndpoints
                 if (body.Message.Trim().Length < 4)
                     return Results.BadRequest(new ErrorResponse("message is too short."));
 
+                var agent = providers.Current;
+
                 if (!agent.IsConfigured)
                 {
                     return Results.Json(
                         new ErrorResponse(
-                            "Gemini agent is not configured. Set Gemini:ApiKey via user-secrets or environment."),
+                            $"{agent.DisplayName} agent is not configured. Check the provider's API key in configuration."),
                         statusCode: StatusCodes.Status503ServiceUnavailable);
                 }
 
@@ -34,7 +36,7 @@ public static class AgentEndpoints
                 catch (OperationCanceledException) when (!ct.IsCancellationRequested)
                 {
                     return Results.Json(
-                        new ErrorResponse("Gemini request timed out."),
+                        new ErrorResponse($"{agent.DisplayName} request timed out."),
                         statusCode: StatusCodes.Status504GatewayTimeout);
                 }
                 catch (InvalidOperationException ex)
@@ -53,7 +55,7 @@ public static class AgentEndpoints
             .WithOpenApi(op =>
             {
                 op.Summary =
-                    "Agente Gemini com tools (ranking, gaps, investigations). Prosa livre para o chat.";
+                    "Agente com LLM + tools (ranking, gaps, investigations, Jev). Provedor via Agent:Provider.";
                 return op;
             });
 

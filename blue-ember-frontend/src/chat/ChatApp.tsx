@@ -66,21 +66,33 @@ export function ChatApp() {
 
   if (!session.booted) return null
 
+  if (session.screen === 'profile') {
+    return (
+      <ToastProvider>
+        <div className="chat-app" data-theme={theme}>
+          <ProfileScreen
+            pending={session.pendingProfile}
+            profilesState={profilesState}
+            onSelect={session.setPendingProfile}
+            onContinue={session.confirmProfile}
+          />
+        </div>
+      </ToastProvider>
+    )
+  }
+
   return (
     <TooltipProvider>
       <ToastProvider>
         <SidebarProvider>
           <AppSidebar
             screen={session.screen}
-            profile={session.profile}
-            profileLabel={profileLabel}
             theme={theme}
             history={session.history}
             onHome={session.goHome}
             onNew={() =>
               session.profile ? session.newChat() : session.setScreen('profile')
             }
-            onProfile={session.goProfile}
             onOpenDoc={session.openDoc}
             onToggleTheme={toggleTheme}
           />
@@ -110,14 +122,6 @@ export function ChatApp() {
                 onWho={session.goProfile}
                 onToggleTheme={toggleTheme}
               />
-              {session.screen === 'profile' ? (
-                <ProfileScreen
-                  pending={session.pendingProfile}
-                  profilesState={profilesState}
-                  onSelect={session.setPendingProfile}
-                  onContinue={session.confirmProfile}
-                />
-              ) : null}
               {session.screen === 'home' && session.profile ? (
                 <AnalysesHome
                   history={session.history}
