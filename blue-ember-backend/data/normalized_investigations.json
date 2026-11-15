@@ -32,8 +32,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-119",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-17",
@@ -60,8 +59,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-17",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-16",
@@ -88,8 +86,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-16",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-142",
@@ -116,8 +113,12 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-142",
+<<<<<<< HEAD
       "doi": "10.1016/j.combustflame.2016.01.008",
       "test_conditions": []
+=======
+      "doi": "10.1016/j.combustflame.2016.01.008"
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-182",
@@ -144,8 +145,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-182",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-148",
@@ -172,8 +172,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-148",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-177",
@@ -200,8 +199,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-177",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-62",
@@ -228,8 +226,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-62",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-60",
@@ -256,8 +253,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-60",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-34",
@@ -284,8 +280,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-34",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-184",
@@ -312,8 +307,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-184",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-67",
@@ -340,8 +334,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-67",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-185",
@@ -368,8 +361,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-185",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-138",
@@ -396,8 +388,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-138",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-26",
@@ -439,6 +430,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-26",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -468,6 +460,9 @@
           "regime": "solid_panel"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-189",
@@ -494,8 +489,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-189",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-137",
@@ -522,8 +516,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-137",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-174",
@@ -550,8 +543,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-174",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-35",
@@ -578,8 +570,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-35",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-106",
@@ -618,6 +609,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-106",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -647,6 +639,9 @@
           "regime": "gas"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-98",
@@ -689,6 +684,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-98",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -718,6 +714,9 @@
           "regime": "solid_panel"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-74",
@@ -744,8 +743,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-74",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-117",
@@ -772,8 +770,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-117",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-42",
@@ -800,8 +797,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-42",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-50",
@@ -828,8 +824,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-50",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-37",
@@ -856,8 +851,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-37",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-181",
@@ -884,8 +878,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-181",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-90",
@@ -912,8 +905,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-90",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-43",
@@ -940,8 +932,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-43",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-76",
@@ -968,8 +959,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-76",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-31",
@@ -996,8 +986,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-31",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-115",
@@ -1024,8 +1013,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-115",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-27",
@@ -1052,8 +1040,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-27",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-66",
@@ -1080,8 +1067,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-66",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-105",
@@ -1108,8 +1094,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-105",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-28",
@@ -1136,8 +1121,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-28",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-30",
@@ -1164,8 +1148,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-30",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-96",
@@ -1192,8 +1175,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-96",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-47",
@@ -1232,6 +1214,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-47",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -1248,6 +1231,9 @@
           "regime": "detection"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-100",
@@ -1289,6 +1275,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-100",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -1318,6 +1305,9 @@
           "regime": "solid_panel"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-39",
@@ -1358,6 +1348,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-39",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -1387,6 +1378,9 @@
           "regime": "droplet"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-102",
@@ -1426,6 +1420,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-102",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -1455,6 +1450,9 @@
           "regime": "detection"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-89",
@@ -1481,8 +1479,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-89",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-13",
@@ -1509,8 +1506,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-13",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-18",
@@ -1537,8 +1533,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-18",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-88",
@@ -1565,8 +1560,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-88",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-24",
@@ -1593,8 +1587,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-24",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-75",
@@ -1621,8 +1614,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-75",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-32",
@@ -1649,8 +1641,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-32",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-33",
@@ -1677,8 +1668,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-33",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-41",
@@ -1705,8 +1695,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-41",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-159",
@@ -1747,6 +1736,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-159",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -1776,6 +1766,9 @@
           "regime": "gas"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-36",
@@ -1802,8 +1795,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-36",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-109",
@@ -1830,8 +1822,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-109",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-101",
@@ -1869,6 +1860,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-101",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -1885,6 +1877,9 @@
           "regime": "detection"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-93",
@@ -1911,8 +1906,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-93",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-7",
@@ -1939,8 +1933,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-7",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-25",
@@ -1984,6 +1977,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-25",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -2013,6 +2007,9 @@
           "regime": "solid_panel"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-94",
@@ -2039,8 +2036,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-94",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-58",
@@ -2067,8 +2063,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-58",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-6",
@@ -2095,8 +2090,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-6",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-45",
@@ -2123,8 +2117,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-45",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-15",
@@ -2151,8 +2144,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-15",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-77",
@@ -2179,8 +2171,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-77",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-52",
@@ -2207,8 +2198,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-52",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-103",
@@ -2235,8 +2225,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-103",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-99",
@@ -2279,6 +2268,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-99",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -2308,6 +2298,9 @@
           "regime": "solid_panel"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-40",
@@ -2334,8 +2327,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-40",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-179",
@@ -2362,8 +2354,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-179",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-91",
@@ -2390,8 +2381,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-91",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-22",
@@ -2431,6 +2421,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-22",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -2460,6 +2451,9 @@
           "regime": "gas"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-3",
@@ -2486,8 +2480,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-3",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-110",
@@ -2514,8 +2507,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-110",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-160",
@@ -2542,8 +2534,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-160",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-59",
@@ -2570,8 +2561,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-59",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-187",
@@ -2598,8 +2588,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-187",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-108",
@@ -2626,8 +2615,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-108",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-178",
@@ -2654,8 +2642,12 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-178",
+<<<<<<< HEAD
       "doi": "10.1007/s12217-018-9631-8",
       "test_conditions": []
+=======
+      "doi": "10.1007/s12217-018-9631-8"
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-107",
@@ -2694,6 +2686,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-107",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -2723,6 +2716,9 @@
           "regime": "gas"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-12",
@@ -2749,8 +2745,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-12",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-191",
@@ -2777,8 +2772,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-191",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-153",
@@ -2805,8 +2799,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-153",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-113",
@@ -2833,8 +2826,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-113",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-21",
@@ -2875,6 +2867,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-21",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -2904,6 +2897,9 @@
           "regime": "gas"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-20",
@@ -2944,6 +2940,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-20",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -2973,6 +2970,9 @@
           "regime": "gas"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-38",
@@ -2999,8 +2999,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-38",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-78",
@@ -3027,8 +3026,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-78",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-167",
@@ -3055,8 +3053,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-167",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-169",
@@ -3083,8 +3080,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-169",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-70",
@@ -3111,8 +3107,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-70",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-86",
@@ -3139,8 +3134,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-86",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-84",
@@ -3167,8 +3161,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-84",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-44",
@@ -3195,8 +3188,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-44",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-83",
@@ -3223,8 +3215,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-83",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-29",
@@ -3251,8 +3242,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-29",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-79",
@@ -3279,8 +3269,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-79",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-186",
@@ -3307,8 +3296,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-186",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-168",
@@ -3335,8 +3323,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-168",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-165",
@@ -3363,8 +3350,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-165",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-114",
@@ -3391,8 +3377,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-114",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-82",
@@ -3419,8 +3404,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-82",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-111",
@@ -3447,8 +3431,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-111",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-95",
@@ -3475,8 +3458,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-95",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-80",
@@ -3503,8 +3485,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-80",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-49",
@@ -3531,8 +3512,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-49",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-57",
@@ -3559,8 +3539,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-57",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-87",
@@ -3587,8 +3566,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-87",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-166",
@@ -3615,8 +3593,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-166",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-85",
@@ -3643,8 +3620,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-85",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-1",
@@ -3671,8 +3647,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-1",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-23",
@@ -3713,6 +3688,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-23",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -3742,6 +3718,9 @@
           "regime": "gas"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-5",
@@ -3768,8 +3747,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-5",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-97",
@@ -3796,8 +3774,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-97",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-190",
@@ -3824,8 +3801,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-190",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-64",
@@ -3852,8 +3828,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-64",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-19",
@@ -3880,8 +3855,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-19",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-51",
@@ -3908,8 +3882,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-51",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-10",
@@ -3950,6 +3923,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-10",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -3979,6 +3953,9 @@
           "regime": "gas"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-81",
@@ -4005,8 +3982,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-81",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-8",
@@ -4033,8 +4009,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-8",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-9",
@@ -4061,8 +4036,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-9",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-69",
@@ -4105,6 +4079,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-69",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -4147,6 +4122,9 @@
           "regime": "droplet"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-71",
@@ -4173,8 +4151,12 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-71",
+<<<<<<< HEAD
       "doi": "10.1016/0273-1177(91)90263-J",
       "test_conditions": []
+=======
+      "doi": "10.1016/0273-1177(91)90263-J"
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-48",
@@ -4201,8 +4183,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-48",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-125",
@@ -4229,8 +4210,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-125",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-72",
@@ -4257,8 +4237,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-72",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-2",
@@ -4285,8 +4264,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-2",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-112",
@@ -4313,8 +4291,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-112",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-73",
@@ -4341,8 +4318,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-73",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-68",
@@ -4382,6 +4358,7 @@
       ],
       "is_featured_fire_safety": true,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-68",
+<<<<<<< HEAD
       "doi": "",
       "test_conditions": [
         {
@@ -4411,6 +4388,9 @@
           "regime": "droplet"
         }
       ]
+=======
+      "doi": ""
+>>>>>>> 4d294d4 (feat(agent): provedor NVIDIA NIM com fallback Gemini e DOI real)
     },
     {
       "id": "PSI-188",
@@ -4437,8 +4417,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-188",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-46",
@@ -4465,8 +4444,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-46",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     },
     {
       "id": "PSI-4",
@@ -4493,8 +4471,7 @@
       "relevance_habitat": [],
       "is_featured_fire_safety": false,
       "nasa_psi_url": "https://psi.nasa.gov/physci/repo/investigations/PSI-4",
-      "doi": "",
-      "test_conditions": []
+      "doi": ""
     }
   ]
 }
