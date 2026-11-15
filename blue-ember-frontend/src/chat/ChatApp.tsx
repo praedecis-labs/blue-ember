@@ -128,6 +128,7 @@ export function ChatApp() {
                   environments={environments}
                   onNew={session.newChat}
                   onOpen={session.openDoc}
+                  onDelete={session.removeHistory}
                   onExample={session.startExample}
                 />
               ) : null}

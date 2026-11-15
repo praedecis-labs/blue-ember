@@ -1,4 +1,14 @@
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { useT } from '@/i18n'
+import { cn } from '@/lib/utils'
 import type { ProfileDto } from '@/services/shared/contracts'
 import type { RequestState } from '@/services/shared/request-state'
 import { PROFILE_IDS, toApiProfile } from '../domain/adapters'
@@ -32,7 +42,6 @@ function labelFor(
   profilesState: RequestState<ProfileDto[]>,
   fallback: string,
 ): string {
-  // O nome traduzido tem prioridade: o rótulo da API vem sempre em português
   if (fallback && fallback !== id) return fallback
   if (profilesState.status === 'ok' && profilesState.data) {
     const apiId = toApiProfile(id)
@@ -68,68 +77,132 @@ export function ProfileScreen({
     (profilesState.status === 'ok' && !profilesState.data?.length)
 
   return (
-    <section id="screen-profile" className="screen">
-      <div className="profile-box">
-        <span className="step">{t('profile.step')}</span>
-        <h1>{t('profile.title')}</h1>
-        <p className="why" style={{ maxWidth: 640 }}>
-          {t('profile.why')}
-        </p>
+    <section
+      id="screen-profile"
+      className="screen flex min-h-0 items-center justify-center overflow-auto p-4 md:p-10"
+    >
+      <div className="flex w-full max-w-4xl flex-col gap-4 md:gap-5">
+        <Badge variant="secondary" size="sm" className="w-fit uppercase tracking-wide">
+          {t('profile.step')}
+        </Badge>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground md:text-[26px]">
+            {t('profile.title')}
+          </h1>
+          <p className="max-w-xl text-sm text-muted-foreground">{t('profile.why')}</p>
+        </div>
+
         {loading ? (
-          <p className="hint" role="status">
+          <p className="text-xs text-muted-foreground" role="status">
             {t('profile.loading')}
           </p>
         ) : null}
         {profilesState.status === 'error' ? (
-          <p className="hint" role="alert">
+          <p className="text-xs text-destructive" role="alert">
             {profilesState.message ?? t('profile.apiError')}
           </p>
         ) : null}
         {!loading && profilesState.status === 'ok' && !offlineFallback ? (
-          <p className="hint" role="status">
+          <p className="text-xs text-muted-foreground" role="status">
             {t('profile.apiOk')}
           </p>
         ) : null}
-        <div className="profiles">
+
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-3.5">
           {PROFILE_IDS.map((k) => {
             const weights = weightsFor(k, profilesState)
+            const selected = k === pending
             return (
-              <button
+              <Card
                 key={k}
-                type="button"
-                className="profile-opt"
-                aria-pressed={k === pending}
-                disabled={loading}
-                onClick={() => onSelect(k)}
+                role="button"
+                tabIndex={loading ? -1 : 0}
+                aria-pressed={selected}
+                aria-disabled={loading}
+                onClick={() => {
+                  if (!loading) onSelect(k)
+                }}
+                onKeyDown={(e) => {
+                  if (loading) return
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    onSelect(k)
+                  }
+                }}
+                className={cn(
+                  'cursor-pointer text-left shadow-none hover:shadow-none',
+                  loading && 'pointer-events-none opacity-50',
+                  selected
+                    ? '!border-[#1B2B85] !bg-[#1B2B85] text-white hover:!border-[#1B2B85]'
+                    : '!bg-[var(--white)]',
+                )}
               >
-                <b>
-                  {labelFor(k, profilesState, t(profileNameKey(k)))}
-                </b>
-                <span className="focus">{t(profileFocusKey(k))}</span>
-                <span className="weights">
-                  {CRIT_KEYS.map((c) => (
-                    <span className="w" key={c}>
-                      <span>{critShort(t, c)}</span>
-                      <i>
-                        <span
-                          style={{
-                            width: `${Math.round(weights[c] * 100)}%`,
-                          }}
-                        />
-                      </i>
-                      <span>{Math.round(weights[c] * 100)}%</span>
-                    </span>
-                  ))}
-                </span>
-              </button>
+                <CardHeader className="gap-2 p-4 md:p-[22px]">
+                  <CardTitle
+                    className={cn(
+                      'text-lg',
+                      selected ? '!text-white' : '!text-[var(--navy)]',
+                    )}
+                  >
+                    {labelFor(k, profilesState, t(profileNameKey(k)))}
+                  </CardTitle>
+                  <CardDescription
+                    className={cn(
+                      selected ? '!text-white/80' : '!text-[var(--sub)]',
+                    )}
+                  >
+                    {t(profileFocusKey(k))}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-1 px-4 pb-4 md:px-[22px] md:pb-[22px]">
+                  {CRIT_KEYS.map((c) => {
+                    const pct = Math.round(weights[c] * 100)
+                    return (
+                      <div
+                        key={c}
+                        className={cn(
+                          'grid grid-cols-[72px_1fr_28px] items-center gap-2 text-xs md:grid-cols-[92px_1fr_34px]',
+                          selected ? 'text-white/90' : 'text-[var(--sub)]',
+                        )}
+                      >
+                        <span className="truncate">{critShort(t, c)}</span>
+                        <div
+                          className={cn(
+                            'h-1.5 overflow-hidden rounded-full',
+                            selected ? 'bg-white/20' : 'bg-[var(--field)]',
+                          )}
+                        >
+                          <div
+                            className={cn(
+                              'h-full rounded-full',
+                              selected
+                                ? 'bg-[var(--yellow)]'
+                                : 'bg-[var(--sky)]',
+                            )}
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                        <span className="text-right tabular-nums">{pct}%</span>
+                      </div>
+                    )
+                  })}
+                </CardContent>
+              </Card>
             )
           })}
         </div>
-        <div className="row">
-          <button type="button" disabled={!pending || loading} onClick={onContinue}>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            type="button"
+            size="lg"
+            disabled={!pending || loading}
+            onClick={onContinue}
+            className="!bg-[var(--yellow)] !text-[var(--ink)] hover:!bg-[var(--yellow)]/90"
+          >
             {t('profile.continue')}
-          </button>
-          <span className="hint">
+          </Button>
+          <span className="text-xs text-muted-foreground">
             {pending ? '' : t('profile.pick')}
           </span>
         </div>

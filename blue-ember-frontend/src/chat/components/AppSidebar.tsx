@@ -42,11 +42,11 @@ export function AppSidebar({
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" onClick={onHome}>
+            <SidebarMenuButton size="lg" onClick={onHome} tooltip="Blue Ember">
               <img
                 src={LOGO_SRC}
                 alt=""
-                className="size-12 rounded-lg"
+                className="aspect-square size-8 shrink-0 rounded-lg object-contain"
               />
               <span className="flex flex-col leading-tight">
                 <span className="font-semibold text-xl">Blue Ember</span>
@@ -84,7 +84,7 @@ export function AppSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
         {history.length > 0 ? (
-          <SidebarGroup>
+          <SidebarGroup className="group-data-[collapsible=icon]:hidden">
             <SidebarGroupLabel>{t('nav.recent')}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>

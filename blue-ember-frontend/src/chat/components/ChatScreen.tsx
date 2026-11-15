@@ -1,4 +1,6 @@
 import { useEffect, useRef, type KeyboardEvent } from 'react'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { translatedExamples, useT } from '@/i18n'
 import type { EnvironmentDto } from '@/services/shared/contracts'
 import type { ChatMessage, QueryState } from '../domain/types'
@@ -48,26 +50,49 @@ export function ChatScreen({
   }
 
   return (
-    <section id="screen-chat" className="screen">
-      <div className="thread" ref={threadRef} id="thread">
-        <div className="thread-inner" id="thread-inner">
+    <section
+      id="screen-chat"
+      className="screen flex min-h-0 min-w-0 flex-col"
+    >
+      <div
+        className="min-w-0 flex-1 overflow-auto"
+        ref={threadRef}
+        id="thread"
+      >
+        <div
+          className="mx-auto flex w-full max-w-[820px] flex-col gap-3.5 px-3 py-4 md:gap-4.5 md:px-6 md:py-7"
+          id="thread-inner"
+        >
           {empty ? (
-            <div className="welcome" id="welcome">
-              <span className="step">
+            <div
+              className="flex flex-col items-center gap-3 px-0 py-[4vh] text-center"
+              id="welcome"
+            >
+              <Badge
+                variant="secondary"
+                size="sm"
+                className="w-fit uppercase tracking-wide"
+              >
                 {t('chat.profileStep', { name: profileLabel })}
-              </span>
-              <h1>{t('chat.welcomeTitle')}</h1>
-              <p className="why">{t('chat.welcomeWhy')}</p>
-              <div className="chips" style={{ justifyContent: 'center' }}>
+              </Badge>
+              <h1 className="max-w-[720px] text-balance text-2xl font-semibold tracking-tight text-[var(--navy)] md:text-[30px]">
+                {t('chat.welcomeTitle')}
+              </h1>
+              <p className="max-w-[560px] text-sm text-muted-foreground">
+                {t('chat.welcomeWhy')}
+              </p>
+              <div className="flex flex-wrap justify-center gap-1.5">
                 {examples.map(([label, text]) => (
-                  <button
+                  <Button
                     key={label}
                     type="button"
-                    className="chip"
+                    variant="secondary"
+                    size="sm"
+                    className="rounded-full font-medium"
                     onClick={() => onExample(text)}
                   >
                     {label}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -75,7 +100,10 @@ export function ChatScreen({
 
           {messages.map((m) =>
             m.kind === 'user' ? (
-              <div className="msg-user" key={m.id}>
+              <div
+                className="animate-[rise_0.35s_ease-out_both] max-w-[min(92%,520px)] self-end rounded-2xl rounded-br-sm bg-[#1B2B85] px-3.5 py-3 text-white [overflow-wrap:anywhere]"
+                key={m.id}
+              >
                 {m.text}
               </div>
             ) : (
@@ -91,24 +119,38 @@ export function ChatScreen({
         </div>
       </div>
 
-      <div className="composer-wrap">
-        <div className="composer">
+      <div className="shrink-0 bg-[var(--bg)] px-3 py-2 md:px-6 md:pb-4.5 md:pt-2">
+        <div className="mx-auto flex w-full max-w-[820px] flex-col gap-2 rounded-2xl border border-border bg-card p-2.5 pl-3.5 text-card-foreground shadow-sm">
           <textarea
             aria-label={t('chat.messageAria')}
             placeholder={t('chat.placeholder')}
             value={draft}
             onChange={(e) => onDraftChange(e.target.value)}
             onKeyDown={onKeyDown}
+            className="min-h-[52px] w-full resize-none bg-transparent px-0 py-1.5 text-base text-foreground outline-none placeholder:text-muted-foreground focus-visible:outline-none"
           />
-          {error ? <span className="error">{error}</span> : null}
-          <div className="actions">
-            <span className="hint">{t('chat.hintKeys')}</span>
-            <button type="button" className="send" onClick={onSend}>
+          {error ? (
+            <span className="text-sm text-destructive" role="alert">
+              {error}
+            </span>
+          ) : null}
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="text-xs text-muted-foreground">
+              {t('chat.hintKeys')}
+            </span>
+            <Button
+              type="button"
+              size="lg"
+              onClick={onSend}
+              className="!bg-[var(--yellow)] !text-[var(--ink)] hover:!bg-[var(--yellow)]/90"
+            >
               {t('chat.send')}
-            </button>
+            </Button>
           </div>
         </div>
-        <p className="hint composer-note">{t('chat.composerNote')}</p>
+        <p className="mx-auto mt-1.5 max-w-[820px] text-center text-xs text-muted-foreground">
+          {t('chat.composerNote')}
+        </p>
       </div>
     </section>
   )

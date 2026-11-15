@@ -1,4 +1,5 @@
 import { useT } from '@/i18n'
+import { PanelShell, PanelSkeleton } from './panel-shell'
 import type { AiMsg } from './types'
 
 export function EvidencePanel({ msg }: { msg: AiMsg }) {
@@ -7,25 +8,22 @@ export function EvidencePanel({ msg }: { msg: AiMsg }) {
 
   if (rankingStatus === 'loading') {
     return (
-      <div className="panel">
-        <b>{t('panels.evidenceTitle')}</b>
-        <span className="hint">{t('panels.loadingEvidence')}</span>
-        <div className="skel-stack" aria-hidden>
-          <div className="skel-line" />
-          <div className="skel-line short" />
-        </div>
-      </div>
+      <PanelShell title={t('panels.evidenceTitle')}>
+        <span className="text-xs text-muted-foreground">
+          {t('panels.loadingEvidence')}
+        </span>
+        <PanelSkeleton />
+      </PanelShell>
     )
   }
 
   if (rankingStatus === 'error') {
     return (
-      <div className="panel">
-        <b>{t('panels.evidenceTitle')}</b>
-        <span className="hint" role="alert">
+      <PanelShell title={t('panels.evidenceTitle')}>
+        <span className="text-xs text-muted-foreground" role="alert">
           {rankingError ?? t('panels.evidenceFail')}
         </span>
-      </div>
+      </PanelShell>
     )
   }
 
@@ -38,27 +36,34 @@ export function EvidencePanel({ msg }: { msg: AiMsg }) {
     .replace(/\s+evidence$/i, '')
 
   return (
-    <div className="panel">
-      <b>{t('panels.evidenceTitleNamed', { level: levelShort })}</b>
-      <div className="evidence">
-        <div className="ev">
-          <small>{t('panels.reliabilityEnv')}</small>
-          <b>{r.partialG ? t('panels.low') : t('panels.high')}</b>
-          <small>
+    <PanelShell title={t('panels.evidenceTitleNamed', { level: levelShort })}>
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+        <div className="flex flex-col gap-0.5 rounded-[10px] bg-[var(--white)] p-3">
+          <small className="text-xs text-muted-foreground">
+            {t('panels.reliabilityEnv')}
+          </small>
+          <b className="text-base">{r.partialG ? t('panels.low') : t('panels.high')}</b>
+          <small className="text-xs text-muted-foreground">
             {r.partialG ? t('panels.partialGAlert') : t('panels.noPartialGAlert')}
           </small>
         </div>
-        <div className="ev">
-          <small>{t('panels.nearTarget')}</small>
-          <b>
+        <div className="flex flex-col gap-0.5 rounded-[10px] bg-[var(--white)] p-3">
+          <small className="text-xs text-muted-foreground">
+            {t('panels.nearTarget')}
+          </small>
+          <b className="text-base">
             {r.near} / {denom}
           </b>
-          <small>{t('panels.nearTargetHint')}</small>
+          <small className="text-xs text-muted-foreground">
+            {t('panels.nearTargetHint')}
+          </small>
         </div>
-        <div className="ev">
-          <small>{t('panels.testedWhere')}</small>
-          <b>{where || '—'}</b>
-          <small>
+        <div className="flex flex-col gap-0.5 rounded-[10px] bg-[var(--white)] p-3">
+          <small className="text-xs text-muted-foreground">
+            {t('panels.testedWhere')}
+          </small>
+          <b className="text-base">{where || '—'}</b>
+          <small className="text-xs text-muted-foreground">
             {where.includes('Cygnus')
               ? t('panels.cygnusHint')
               : where
@@ -67,6 +72,6 @@ export function EvidencePanel({ msg }: { msg: AiMsg }) {
           </small>
         </div>
       </div>
-    </div>
+    </PanelShell>
   )
 }

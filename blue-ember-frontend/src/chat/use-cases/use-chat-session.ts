@@ -168,6 +168,14 @@ export function useChatSession(options: ChatSessionOptions = {}) {
     })
   }
 
+  function removeHistory(id: string) {
+    setHistory((prev) => prev.filter((h) => h.id !== id))
+    if (snapRef.current.current?.id === id) {
+      setCurrent(null)
+      syncSnap({ current: null })
+    }
+  }
+
   function newChat() {
     setQ(null)
     setMissing([])
@@ -312,18 +320,15 @@ export function useChatSession(options: ChatSessionOptions = {}) {
       ? buildQueryDefaults(seedEnv, environmentsRef.current)
       : { ...snap.q! }
 
-    const changed: Array<keyof QueryState> = []
     for (const [k] of MAIN_KEYS) {
       const val = p[k as keyof typeof p]
       if (val !== null && val !== undefined) {
-        if (base[k] !== val) changed.push(k)
         ;(base as Record<string, unknown>)[k] = val
       }
     }
     for (const k of EXTRA_KEYS) {
       const val = p[k]
       if (val !== null && val !== undefined) {
-        if (base[k] !== val) changed.push(k)
         ;(base as Record<string, unknown>)[k] = val
       }
     }
@@ -490,6 +495,7 @@ export function useChatSession(options: ChatSessionOptions = {}) {
     newChat,
     confirmProfile,
     openDoc,
+    removeHistory,
     sendText,
     applyConditions,
     startExample,

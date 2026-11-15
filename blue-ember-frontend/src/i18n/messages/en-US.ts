@@ -56,6 +56,7 @@ export const enUS = {
     latest: 'Latest analyses',
     empty: 'No analyses yet.',
     mostRelevant: 'Most relevant:',
+    deleteAnalysis: 'Delete analysis',
     examplesTitle: 'Start from an example',
   },
   chat: {
