@@ -207,6 +207,8 @@ export function useChatHydration(deps: HydrationDeps) {
   ) {
     const rankingParams = rankingParamsFromQuery(prof, query)
     const environmentApi = toApiEnvironment(query.env)
+    // Etapa real: buscando ranking e lacunas direto na API (modo sem IA)
+    patchAiMessage(msgId, (msg) => ({ ...msg, loadingPhase: 'ranking' }))
     void (async () => {
       try {
         const [ranking, gaps] = await Promise.all([
@@ -305,6 +307,8 @@ export function useChatHydration(deps: HydrationDeps) {
         lead,
         agentReply: true,
         dashboard,
+        // Etapa real: o agente respondeu, faltam ranking e lacunas
+        loadingPhase: 'panels',
       }))
 
       try {

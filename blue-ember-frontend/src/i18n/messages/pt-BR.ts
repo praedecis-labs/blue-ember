@@ -112,6 +112,7 @@ export const ptBR: MessageTree = {
   },
   dashboard: {
     label: 'Dashboard',
+    aiBadge: 'Interpretação da IA',
     hazardTitle: 'Periculosidade relativa',
     noRanking: 'Sem dados de ranking para interpretar.',
     predictabilityTitle: 'Previsibilidade por cenário',
