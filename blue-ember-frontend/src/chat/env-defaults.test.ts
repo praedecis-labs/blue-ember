@@ -37,11 +37,11 @@ describe('buildQueryDefaults', () => {
 })
 
 describe('environmentLabel', () => {
-  it('prefers API label', () => {
-    expect(environmentLabel('iss', apiEnvs)).toBe('ISS / estação')
+  it('uses the English label in the default locale (API labels are Portuguese)', () => {
+    expect(environmentLabel('iss', apiEnvs)).toBe('ISS')
   })
 
   it('falls back to local ENV', () => {
-    expect(environmentLabel('marte', null)).toBe('base em Marte')
+    expect(environmentLabel('marte', null)).toBe('Mars base')
   })
 })
