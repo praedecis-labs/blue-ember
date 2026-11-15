@@ -164,13 +164,17 @@ export function HypothesisDashboard({ spec, top }: Props) {
 
   return (
     <div className="hypothesis-dashboard" data-intent={spec.intent}>
-      <header className="dash-head">
+      {/* div, não <header>: o estilo global de header pinta o fundo de azul */}
+      <div className="dash-head">
         <div>
-          <span className="step">{t('dashboard.label')}</span>
+          <span className="step">
+            {t('dashboard.label')}
+            <span className="dash-ai-badge">{t('dashboard.aiBadge')}</span>
+          </span>
           <h2>{spec.title}</h2>
           {spec.subtitle ? <p className="why">{spec.subtitle}</p> : null}
         </div>
-      </header>
+      </div>
       <div className="dash-grid interpretive">
         {widgets.map((w, i) => (
           <div key={`${w.type}-${i}`} className="dash-cell">
@@ -178,9 +182,12 @@ export function HypothesisDashboard({ spec, top }: Props) {
           </div>
         ))}
       </div>
-      <p className="dash-legend hint">
-        {legendForIntent(String(spec.intent), t)}
-      </p>
+      {/* Se a IA já trouxe "leitura e legendas", não repete a legenda fixa */}
+      {widgets.some((w) => w.type === 'insight') ? null : (
+        <p className="dash-legend hint">
+          {legendForIntent(String(spec.intent), t)}
+        </p>
+      )}
     </div>
   )
 }
