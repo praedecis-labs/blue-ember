@@ -125,7 +125,7 @@ export function useChatHydration(deps: HydrationDeps) {
 
     const translate = tRef.current
     const evidence = evidenceFromRankingAndGaps(ranking, gaps, translate)
-    const gapUi = gapsFromApi(gaps)
+    const gapUi = gapsFromApi(gaps, translate)
     const topBase = ranking.items.slice(0, 8).map(rankingItemToScored)
     const top = await enrichTopWithDetails(topBase)
     const topIds = top.slice(0, 3).map((item) => item.id)
