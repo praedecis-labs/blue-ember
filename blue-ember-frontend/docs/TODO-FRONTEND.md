@@ -1,7 +1,7 @@
 # To-dos — Frontend Blue Ember (chat → API)
 
 **Objetivo:** o protótipo em `src/chat/` deixar de ser só mock local e consumir a API .NET com contrato estável, pronto para demo do hackathon.  
-**Estado atual:** UI/fluxo portados do `blue-ember-chat.html`; score, gaps e ranking ainda são **locais** (`src/chat/data.ts` + `engine.ts`). Só existe `services/health.ts`.  
+**Estado atual:** UI/fluxo portados do protótipo visual v1 (`docs/prototipos/blue-ember-chat-v1.html` → `src/chat/`); score, gaps e ranking ainda são **locais** (`src/chat/data.ts` + `engine.ts`). Só existe `services/health.ts` (+ adapters de IDs).  
 **Fora desta fatia (hackathon):** auth real, `/ask` no backend, pgvector, Planetary Computer.
 
 **Mapa de IDs (alinhar antes de integrar):**
@@ -15,6 +15,49 @@
 
 ---
 
+## Protótipos visuais (Notion · Stellar Hub)
+
+Fonte: páginas [Telas e diferenciais](https://app.notion.com/p/4187d339a47981c2b28cc13bb0b38c90) e [Protótipo Visual v1 — Chat Blue Ember](https://app.notion.com/p/Prot-tipo-Visual-v1-Chat-Blue-Ember-4197d339a479817d9bc0e8ef2fe8b56f).
+
+### Feito — Protótipo Visual v1 (chat)
+
+- [x] HTML standalone interativo (dados fictícios) — fluxo de hipótese em linguagem natural
+- [x] 3 telas: **Perfil** → **Início** (histórico + chips) → **Chat** (veredicto + painéis)
+- [x] Perfis com pesos visuais C₁–C₅ (engenheiro / pesquisador / estudante)
+- [x] Painéis expansíveis: condições, investigações, evidência, lacunas, follow-ups
+- [x] Design system: navy `#1B2B85`, blue `#0050D8`, sky `#2491FF`, yellow `#E7F434`, Fira Sans
+- [x] Portado para React em `src/chat/`
+- [x] Documentado no Notion (Stellar Hub) + arquivo no repo
+
+**Arquivos de referência**
+
+| Onde | Caminho / link |
+| --- | --- |
+| Repo | `docs/prototipos/blue-ember-chat-v1.html` |
+| Repo (cópia raiz) | `blue-ember-chat.html` |
+| Notion | [Protótipo Visual v1](https://app.notion.com/p/Prot-tipo-Visual-v1-Chat-Blue-Ember-4197d339a479817d9bc0e8ef2fe8b56f) |
+| Escopo | Tag “DADOS FICTÍCIOS · protótipo” — nomes/PSI/DOI reais; notas e textos da IA fictícios |
+
+### Ainda não desenhados / não implementados (Telas e diferenciais)
+
+Estas telas estão no backlog de UI do Notion; o v1 **só** materializa o fluxo de chat (antes da tela principal de ranking).
+
+| # | Tela | Status | Notas |
+| --- | --- | --- | --- |
+| 1 | **Ranking** com filtros e pesos (tela principal) | [ ] | Wireframe no Notion; não está no chat v1 |
+| 2 | **Detalhe da investigação** (ficha, condições, insights, fontes) | [ ] | Parcialmente coberto pelos painéis do chat; falta tela dedicada |
+| 3 | **Comparador** lado a lado (2–3 investigações) | [ ] | Diferencial listado; API `compare` depois |
+| 4 | **Mapa de lacunas** (O₂ × pressão vs ambiente lunar) | [ ] | Painel de gaps no chat ≠ mapa 2D |
+| 5 | **Aplicações na Terra** (spinoffs por investigação) | [ ] | Dados estáticos OK; seção própria |
+
+**Diferenciais a preservar na UI (Notion):**
+
+- Aviso explícito de ausência de dados de gravidade parcial
+- Export CSV / JSON
+- Rastreabilidade: cada insight aponta para fonte (PSI / DOI)
+
+---
+
 ## Como dividir (tracks)
 
 | Track | Foco | Pode paralelizar com |
@@ -25,6 +68,7 @@
 | **T4 — Gaps & fontes** | painel lacunas + links PSI | após T1 |
 | **T5 — Chat → query** | parser → params de ranking/gaps | após T2/T3 |
 | **T6 — Demo polish** | export, erros, limpeza, README | após T3/T4 |
+| **T7 — Telas além do chat** | ranking principal, detalhe, mapa, spinoffs | após T3/T4 (ou pós-demo) |
 
 Sugestão de donos (preencher):
 
@@ -34,6 +78,7 @@ Sugestão de donos (preencher):
 - T4: ________  
 - T5: ________  
 - T6: ________  
+- T7: ________  
 
 ---
 
@@ -52,8 +97,9 @@ Sugestão de donos (preencher):
   - `getRanking` / `getRankingFireSafety`
   - `getGaps`, `exportRanking` (json/csv)
   - Base: proxy Vite `/api` → `:5006` (já existe)
-- [ ] **Mapeamento de IDs** UI ↔ API (tabela acima) num único módulo (`src/chat/adapters.ts`)
-- [ ] **Estados de rede** reutilizáveis: `idle | loading | ok | error` + mensagem amigável
+- [x] **Mapeamento de IDs** UI ↔ API (`src/chat/adapters.ts`)
+- [ ] **Estados de rede** reutilizáveis: `idle | loading | ok | error` + mensagem amigável  
+  - Parcial: `use-api-health.ts` existe; falta padrão nos demais serviços
 
 **Done quando:** dá para chamar ranking fire-safety no DevTools/console tipado e tipar a resposta sem `any`.
 
@@ -123,13 +169,18 @@ Sugestão de donos (preencher):
 
 ---
 
-## Prioridade baixa / depois
+## Prioridade baixa / depois (T7 — além do chat)
 
-- [ ] Tela compare (2–3 IDs) com `GET /api/investigations/compare`
+Alinhado a [Telas e diferenciais](https://app.notion.com/p/4187d339a47981c2b28cc13bb0b38c90) e [Próximos passos](https://app.notion.com/p/4187d339a47981788c76ec96609afc2d) (“Desenhar as telas no Figma” ainda aberto).
+
+- [ ] Tela **Ranking principal** (filtros categoria / O₂ / pressão + sliders de pesos) — wireframe Notion
+- [ ] Tela **Detalhe** dedicada da investigação
+- [ ] Tela **Comparador** (2–3 IDs) com `GET /api/investigations/compare`
+- [ ] **Mapa de lacunas** O₂ × pressão (visual 2D; não só lista no painel)
+- [ ] Seção **Spinoffs / aplicações na Terra** por investigação
 - [ ] Catálogo browse (`featured=false`) fora do chat
 - [ ] Testes unitários do parser + adapter de IDs
 - [ ] Endpoint futuro `/ask` (só quando o BE existir)
-- [ ] Spinoffs / Apollo-Mir como seção narrativa (dados estáticos OK)
 
 ---
 
@@ -141,8 +192,9 @@ Sugestão de donos (preencher):
 4. **T4** gaps  
 5. **T5** ligar o chat às chamadas  
 6. **T6** export + polish da demo  
+7. **T7** telas além do chat (se sobrar tempo)
 
-Se forem **3+ pessoas:** T1 sozinho → em seguida T2 ∥ T3 ∥ T4 → T5 integra → T6 fecha.
+Se forem **3+ pessoas:** T1 sozinho → em seguida T2 ∥ T3 ∥ T4 → T5 integra → T6 fecha → T7 opcional.
 
 ---
 
@@ -163,11 +215,12 @@ Se forem **3+ pessoas:** T1 sozinho → em seguida T2 ∥ T3 ∥ T4 → T5 integ
 
 ## Referências
 
+- Notion Stellar Hub: [Telas e diferenciais](https://app.notion.com/p/4187d339a47981c2b28cc13bb0b38c90) · [Protótipo Visual v1](https://app.notion.com/p/Prot-tipo-Visual-v1-Chat-Blue-Ember-4197d339a479817d9bc0e8ef2fe8b56f) · [Próximos passos](https://app.notion.com/p/4187d339a47981788c76ec96609afc2d)
 - Backend contratos: `blue-ember-backend/docs/RELATORIO-BACKEND-MVP.md` §9  
 - Backend próximos: `blue-ember-backend/docs/TODO-PROXIMA-FATIA.md`  
 - UI atual: `src/chat/`  
-- Protótipo original: `blue-ember-chat.html`
+- Protótipo v1: `docs/prototipos/blue-ember-chat-v1.html`
 
 ---
 
-*Atualizar este arquivo quando um track fechar (marcar checkboxes + data).*
+*Atualizado 14/11/2026 — sincronizado com Notion (protótipos visuais). Atualizar quando um track fechar (marcar checkboxes + data).*
