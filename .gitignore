@@ -12,3 +12,5 @@ obj/
 appsettings.*.local.json
 
 .docs/
+# backend run logs
+blue-ember-backend/*.log
