@@ -6,7 +6,6 @@ import { GRAV } from '../../domain/data'
 import {
   buildQueryDefaults,
   environmentLabel,
-  findEnvironmentDto,
 } from '../../domain/env-defaults'
 import { fmt, kpa } from '../../domain/engine'
 import type { EnvId, QueryState } from '../../domain/types'
