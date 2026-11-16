@@ -1,8 +1,9 @@
-import Highcharts from 'highcharts'
 import { useEffect, useRef } from 'react'
+import type { Options } from 'highcharts'
+import { loadHighchartsWithHeatmap } from './highcharts-setup.ts'
 
 type Props = {
-  options: Highcharts.Options
+  options: Options
   className?: string
 }
 
@@ -11,9 +12,18 @@ export function HighchartsHost({ options, className }: Props) {
 
   useEffect(() => {
     if (!ref.current) return
-    const chart = Highcharts.chart(ref.current, options)
+    const el = ref.current
+    let cancelled = false
+    let chart: { destroy: () => void } | null = null
+
+    void loadHighchartsWithHeatmap().then((hc) => {
+      if (cancelled || !el.isConnected) return
+      chart = hc.chart(el, options)
+    })
+
     return () => {
-      chart.destroy()
+      cancelled = true
+      chart?.destroy()
     }
   }, [options])
 

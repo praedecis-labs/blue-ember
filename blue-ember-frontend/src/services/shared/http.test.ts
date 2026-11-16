@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { ApiError, buildQuery, requestJson } from './http'
+import { ApiError, buildQuery, requestJson, resolveApiUrl } from './http'
 
 vi.mock('axios', () => ({
   default: {
@@ -16,6 +16,24 @@ vi.mock('axios', () => ({
 }))
 
 const mockedRequest = vi.mocked(axios.request)
+
+describe('resolveApiUrl', () => {
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
+  it('returns relative path when VITE_API_BASE_URL is unset', () => {
+    vi.stubEnv('VITE_API_BASE_URL', '')
+    expect(resolveApiUrl('/api/health')).toBe('/api/health')
+  })
+
+  it('prefixes absolute API base without double slashes', () => {
+    vi.stubEnv('VITE_API_BASE_URL', 'https://blue-ember-api.onrender.com/')
+    expect(resolveApiUrl('/api/health')).toBe(
+      'https://blue-ember-api.onrender.com/api/health',
+    )
+  })
+})
 
 describe('buildQuery', () => {
   it('returns empty string when params missing or empty', () => {

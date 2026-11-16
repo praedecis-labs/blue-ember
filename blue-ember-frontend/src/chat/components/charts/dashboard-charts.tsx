@@ -1,21 +1,14 @@
 import { memo, useMemo } from 'react'
 import type { CoverageCellDto } from '@/services/shared/contracts'
 import type { Options } from 'highcharts'
-import Highcharts from 'highcharts'
-import HeatmapModule from 'highcharts/modules/heatmap'
 import type { ScoredInvestigation } from '../../domain/types'
 import { HighchartsHost } from './HighchartsHost'
+import { highcharts as Highcharts } from './highcharts-setup.ts'
 
 const Navy = '#1B2B85'
 const Blue = '#0050D8'
 const Sky = '#2491FF'
 const Gap = '#FF8A3D' // laranja do vídeo (antes #B23E00)
-
-type HeatmapFactory = (hc: typeof Highcharts) => void
-const applyHeatmap = HeatmapModule as unknown as HeatmapFactory
-if (typeof applyHeatmap === 'function') {
-  applyHeatmap(Highcharts)
-}
 
 function isChatDark(): boolean {
   if (typeof document === 'undefined') return false

@@ -61,10 +61,19 @@ function throwApiError(error: unknown): never {
   throw error
 }
 
+/** Prefix `/api/...` with `VITE_API_BASE_URL` in production; keep relative in local Vite proxy. */
+export function resolveApiUrl(path: string): string {
+  const base = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim()
+  if (!base) return path
+  const normalizedBase = base.replace(/\/+$/, '')
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`
+  return `${normalizedBase}${normalizedPath}`
+}
+
 export async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     const { data } = await axios.request<T>({
-      url: path,
+      url: resolveApiUrl(path),
       ...toAxiosConfig(init),
     })
     return data
@@ -76,7 +85,7 @@ export async function requestJson<T>(path: string, init?: RequestInit): Promise<
 export async function requestBlob(path: string, init?: RequestInit): Promise<Blob> {
   try {
     const { data } = await axios.request<Blob>({
-      url: path,
+      url: resolveApiUrl(path),
       responseType: 'blob',
       ...toAxiosConfig(init),
     })
