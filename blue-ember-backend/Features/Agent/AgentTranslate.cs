@@ -18,7 +18,7 @@ public sealed class AgentTranslator(
     IHttpClientFactory httpClientFactory,
     IOptions<AgentOptions> agentOptions,
     IOptions<GeminiOptions> geminiOptions,
-    IOptions<GroqOptions> groqOptions)
+    IOptions<NvidiaOptions> nvidiaOptions)
 {
     private static string Prompt(string targetLocale) =>
         DashboardComposer.IsPortuguese(targetLocale)
@@ -33,22 +33,22 @@ public sealed class AgentTranslator(
     public async Task<AgentTranslateResponse> TranslateAsync(
         string text, string targetLocale, CancellationToken ct)
     {
-        // Gemini primeiro quando houver chave: poupa a cota por minuto do Groq, que o agente usa.
-        var preferGroq = string.IsNullOrWhiteSpace(geminiOptions.Value.ApiKey)
-            && string.Equals(agentOptions.Value.Provider, "groq", StringComparison.OrdinalIgnoreCase);
-        var hasGroq = !string.IsNullOrWhiteSpace(groqOptions.Value.ApiKey);
+        // Gemini primeiro quando houver chave: poupa a cota por minuto da NVIDIA, que o agente usa.
+        var preferNvidia = string.IsNullOrWhiteSpace(geminiOptions.Value.ApiKey)
+            && string.Equals(agentOptions.Value.Provider, "nvidia", StringComparison.OrdinalIgnoreCase);
+        var hasNvidia = !string.IsNullOrWhiteSpace(nvidiaOptions.Value.ApiKey);
         var hasGemini = !string.IsNullOrWhiteSpace(geminiOptions.Value.ApiKey);
 
-        var order = preferGroq ? new[] { "groq", "gemini" } : new[] { "gemini", "groq" };
+        var order = preferNvidia ? new[] { "nvidia", "gemini" } : new[] { "gemini", "nvidia" };
         Exception? last = null;
         foreach (var provider in order)
         {
-            if (provider == "groq" && !hasGroq) continue;
+            if (provider == "nvidia" && !hasNvidia) continue;
             if (provider == "gemini" && !hasGemini) continue;
             try
             {
-                var translated = provider == "groq"
-                    ? await GroqAsync(text, targetLocale, ct)
+                var translated = provider == "nvidia"
+                    ? await NvidiaAsync(text, targetLocale, ct)
                     : await GeminiAsync(text, targetLocale, ct);
                 return new AgentTranslateResponse(
                     AgentCompletion.SanitizeProse(translated.Trim()), targetLocale, provider);
@@ -106,11 +106,11 @@ public sealed class AgentTranslator(
         return sb.ToString();
     }
 
-    private async Task<string> GroqAsync(string text, string targetLocale, CancellationToken ct)
+    private async Task<string> NvidiaAsync(string text, string targetLocale, CancellationToken ct)
     {
-        var opts = groqOptions.Value;
-        var model = string.IsNullOrWhiteSpace(opts.Model) ? "openai/gpt-oss-20b" : opts.Model;
-        var client = httpClientFactory.CreateClient("groq");
+        var opts = nvidiaOptions.Value;
+        var model = string.IsNullOrWhiteSpace(opts.Model) ? "nvidia/nemotron-3.5-super-vl-120b-a12b" : opts.Model;
+        var client = httpClientFactory.CreateClient("nvidia");
         var payload = new JsonObject
         {
             ["model"] = model,
@@ -130,9 +130,9 @@ public sealed class AgentTranslator(
         var root = JsonNode.Parse(body);
         if (!res.IsSuccessStatusCode || root?["error"] is not null)
             throw new InvalidOperationException(
-                root?["error"]?["message"]?.GetValue<string>() ?? $"Groq HTTP {(int)res.StatusCode}");
+                root?["error"]?["message"]?.GetValue<string>() ?? $"NVIDIA HTTP {(int)res.StatusCode}");
         var content = root?["choices"]?[0]?["message"]?["content"]?.GetValue<string>();
-        if (string.IsNullOrWhiteSpace(content)) throw new InvalidOperationException("Groq returned an empty translation.");
+        if (string.IsNullOrWhiteSpace(content)) throw new InvalidOperationException("NVIDIA returned an empty translation.");
         return content;
     }
 }
