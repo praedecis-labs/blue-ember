@@ -1,0 +1,12 @@
+**/bin/
+**/obj/
+**/BlueEmber.Api.Tests/
+**/.vs/
+**/*.user
+**/*.log
+**/secrets.json
+appsettings.*.local.json
+.git/
+.gitignore
+docs/
+*.md
